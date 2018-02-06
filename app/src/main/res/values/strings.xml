@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">IOTApp</string>
+    <string name="username">Username</string>
+    <string name="pass">  Pass</string>
+    <string name="login">  Login</string>
+    <string name="home">Home</string>
+    <string name="config">Config</string>
+    <string name="logout">Logout</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
