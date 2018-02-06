@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:id="@+id/tab_floor"
-            android:background="@color/colorPrimaryDark"
+            android:background="@android:color/darker_gray"
             app:tabMode="scrollable"
             app:tabTextColor="@android:color/white"
            app:tabSelectedTextColor="@color/colorAccent"

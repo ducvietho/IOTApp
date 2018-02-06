@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:focusableInTouchMode="true"
-    android:background="@drawable/ic_background"
+    android:background="@android:color/darker_gray"
     tools:context="com.example.ducvietho.iotapp.screen.login.LoginActivity">
 <RelativeLayout
     android:layout_width="match_parent"
