@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Group;
+import com.example.ducvietho.iotapp.util.OnLongClickItem;
 
 import java.util.List;
 
@@ -20,9 +21,11 @@ import butterknife.ButterKnife;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> {
     private List<Group> mList;
+    private OnLongClickItem<Group> mLongClickItem;
 
-    public GroupAdapter(List<Group> list) {
+    public GroupAdapter(List<Group> list, OnLongClickItem<Group> longClickItem) {
         mList = list;
+        mLongClickItem = longClickItem;
     }
 
     @Override
@@ -50,8 +53,15 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(Group group) {
+        public void bind(final Group group) {
             mTextView.setText(group.getName());
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mLongClickItem.onLongClick(group);
+                    return true;
+                }
+            });
         }
     }
 }

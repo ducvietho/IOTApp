@@ -1,6 +1,7 @@
 package com.example.ducvietho.iotapp.data.resource.remote;
 
 import com.example.ducvietho.iotapp.data.model.Equipment;
+import com.example.ducvietho.iotapp.data.model.Response;
 
 import java.util.List;
 
@@ -21,5 +22,14 @@ public class EquipmentDataRepository implements EquipmentDataResource {
     @Override
     public Observable<List<Equipment>> getAllEquipmentByFloor(int idFloor) {
         return mDataResource.getAllEquipmentByFloor(idFloor);
+    }
+    @Override
+    public Observable<Response> turnOnEquiment(int idEquip, int idFloor) {
+        return mDataResource.turnOnEquiment( idEquip, idFloor);
+    }
+
+    @Override
+    public Observable<Response> turnOffEquiment(int idEquip,int idFloor) {
+        return mDataResource.turnOffEquiment(idEquip,idFloor);
     }
 }

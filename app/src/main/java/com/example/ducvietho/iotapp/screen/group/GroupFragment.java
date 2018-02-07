@@ -15,6 +15,8 @@ import com.example.ducvietho.iotapp.data.model.Group;
 import com.example.ducvietho.iotapp.data.resource.remote.GroupDataRepository;
 import com.example.ducvietho.iotapp.data.resource.remote.api.GroupRemoteDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
+import com.example.ducvietho.iotapp.util.DialogAlarm;
+import com.example.ducvietho.iotapp.util.OnLongClickItem;
 
 import java.util.List;
 
@@ -24,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class GroupFragment extends Fragment implements GroupContract.View {
+public class GroupFragment extends Fragment implements GroupContract.View,OnLongClickItem<Group> {
     @BindView(R.id.rec_group)
     RecyclerView mRecyclerView;
     private View v;
@@ -50,12 +52,17 @@ public class GroupFragment extends Fragment implements GroupContract.View {
     public void getAllGroupSuccess(List<Group> groups) {
         GridLayoutManager manager = new GridLayoutManager(v.getContext(), 1);
         mRecyclerView.setLayoutManager(manager);
-        GroupAdapter adapter = new GroupAdapter(groups);
+        GroupAdapter adapter = new GroupAdapter(groups,GroupFragment.this);
         mRecyclerView.setAdapter(adapter);
     }
 
     @Override
     public void getAllGroupFailure(String message) {
         Toast.makeText(v.getContext(),"Error:"+message,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onLongClick(Group group) {
+        new DialogAlarm(v.getContext()).showDialodAlarmGroup(group);
     }
 }

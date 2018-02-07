@@ -6,4 +6,5 @@ package com.example.ducvietho.iotapp.util;
 
 public interface OnCLickItem<T> {
     void onClick(T object);
+
 }

@@ -1,6 +1,7 @@
 package com.example.ducvietho.iotapp.data.resource.remote;
 
 import com.example.ducvietho.iotapp.data.model.Floor;
+import com.example.ducvietho.iotapp.data.model.Response;
 
 import java.util.List;
 
@@ -22,4 +23,6 @@ public class FloorDataRepository implements FloorDataResource {
     public Observable<List<Floor>> getAllFloor() {
         return mDataResource.getAllFloor();
     }
+
+
 }

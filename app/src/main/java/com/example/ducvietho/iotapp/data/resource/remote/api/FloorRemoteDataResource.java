@@ -2,6 +2,7 @@ package com.example.ducvietho.iotapp.data.resource.remote.api;
 
 import com.example.ducvietho.iotapp.data.model.Floor;
 import com.example.ducvietho.iotapp.data.model.FloorResponse;
+import com.example.ducvietho.iotapp.data.model.Response;
 import com.example.ducvietho.iotapp.data.resource.remote.FloorDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTApi;
 
@@ -29,4 +30,6 @@ public class FloorRemoteDataResource extends BaseRemoteDataResource implements F
             }
         });
     }
+
+
 }

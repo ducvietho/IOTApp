@@ -1,6 +1,7 @@
 package com.example.ducvietho.iotapp.data.resource.remote;
 
 import com.example.ducvietho.iotapp.data.model.Equipment;
+import com.example.ducvietho.iotapp.data.model.Response;
 
 import java.util.List;
 
@@ -12,4 +13,6 @@ import io.reactivex.Observable;
 
 public interface EquipmentDataResource {
     Observable<List<Equipment>> getAllEquipmentByFloor(int idFloor);
+    Observable<Response> turnOnEquiment(int idEquip, int idFloor);
+    Observable<Response> turnOffEquiment(int idEquip,int idFloor);
 }

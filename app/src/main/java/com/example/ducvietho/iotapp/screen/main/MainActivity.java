@@ -90,13 +90,7 @@ public class MainActivity extends AppCompatActivity {
         if (mToolbar != null) {
             mToolbar.setTitle(getResources().getString(R.string.home));
             setSupportActionBar(mToolbar);
-
-        }
-    }
-
-    private void setUpNavDrawer() {
-        if (mToolbar != null) {
-            mToolbar.setNavigationIcon(R.drawable.ic_menu);
+           mToolbar.setNavigationIcon(R.drawable.icon_menu);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void setUpNavDrawer() {
         View header = mNavigationView.inflateHeaderView(R.layout.header_navigation);
         TextView textView = header.findViewById(R.id.tv_name);
         UserManager userManager = new UserManager(MainActivity.this);

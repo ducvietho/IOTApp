@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
+import com.example.ducvietho.iotapp.util.OnCLickItem;
+import com.example.ducvietho.iotapp.util.OnLongClickItem;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -22,9 +24,13 @@ import butterknife.ButterKnife;
 
 public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.ViewHolder> {
     private List<Equipment> mList;
+    private OnCLickItem<Equipment> mOnCLick;
+    private OnLongClickItem<Equipment> mLongClick;
 
-    public EquipmentAdapter(List<Equipment> list) {
+    public EquipmentAdapter(List<Equipment> list, OnCLickItem<Equipment> onCLick, OnLongClickItem<Equipment> longClick) {
         mList = list;
+        mOnCLick = onCLick;
+        mLongClick = longClick;
     }
 
     @Override
@@ -54,14 +60,27 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             ButterKnife.bind(this, itemView);
         }
 
-        public void bind(Equipment equipment) {
+        public void bind(final Equipment equipment) {
             mName.setText(equipment.getName());
             if (equipment.getState() == 0) {
-                Picasso.with(itemView.getContext()).load(equipment.getIconOff()).into
+                Picasso.with(itemView.getContext()).load(equipment.getIconOff()).resize(300,300).into
                         (mImageView);
             } else {
-                Picasso.with(itemView.getContext()).load(equipment.getIconOn()).into(mImageView);
+                Picasso.with(itemView.getContext()).load(equipment.getIconOn()).resize(300,300).into(mImageView);
             }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnCLick.onClick(equipment);
+                }
+            });
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    mLongClick.onLongClick(equipment);
+                    return true;
+                }
+            });
         }
     }
 }
