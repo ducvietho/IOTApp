@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:card_view="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-    android:background="@android:color/holo_orange_light"
-    android:focusableInTouchMode="true">
+              android:background="@color/colorPrimaryDark"
+              android:focusableInTouchMode="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,7 +20,7 @@
             android:layout_height="@dimen/_40dp"
             android:gravity="center"
             android:text="@string/config"
-            android:textColor="@android:color/black"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/text_size" />
 
         <LinearLayout
@@ -30,25 +31,30 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:textSize="@dimen/text_size"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:text="@string/default_server"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/_15dp"/>
-            <EditText
-                android:id="@+id/ed_default"
+                android:paddingLeft="@dimen/_30dp"/>
+            <android.support.v7.widget.CardView
                 android:layout_width="0dp"
-                android:layout_weight="4"
                 android:layout_height="@dimen/height"
-                android:background="@android:color/white"
-                android:textSize="@dimen/text_size"
+                android:layout_weight="7"
                 android:layout_marginLeft="@dimen/margin"
                 android:layout_marginRight="@dimen/margin"
-                android:padding="@dimen/padding"
-                android:gravity="center_vertical"
+                card_view:cardCornerRadius="4dp">
+                <EditText
+                    android:id="@+id/ed_default"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:textSize="@dimen/text_size"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="@dimen/padding_text"
 
-                />
+                    />
+            </android.support.v7.widget.CardView>
         </LinearLayout>
 
         <LinearLayout
@@ -59,37 +65,49 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:textSize="@dimen/text_size"
-                android:textColor="@android:color/black"
+                android:textColor="@android:color/white"
                 android:text="@string/public_server"
                 android:gravity="center_vertical"
-                android:paddingLeft="@dimen/_15dp"/>
-            <EditText
-                android:id="@+id/ed_public"
+                android:paddingLeft="@dimen/_30dp"/>
+            <android.support.v7.widget.CardView
                 android:layout_width="0dp"
-                android:layout_weight="4"
                 android:layout_height="@dimen/height"
-                android:background="@android:color/white"
-                android:textSize="@dimen/text_size"
+                android:layout_weight="7"
                 android:layout_marginLeft="@dimen/margin"
                 android:layout_marginRight="@dimen/margin"
-                android:padding="@dimen/padding"
-                android:gravity="center_vertical"
+                card_view:cardCornerRadius="4dp">
+                <EditText
+                    android:id="@+id/ed_public"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/white"
+                    android:textSize="@dimen/text_size"
+                    android:paddingLeft="@dimen/padding_text"
+                    android:gravity="center_vertical"
 
-                />
+                    />
+            </android.support.v7.widget.CardView>
+
         </LinearLayout>
 
     </LinearLayout>
-    <TextView
-        android:layout_width="@dimen/width_login"
-        android:layout_height="@dimen/_40dp"
-        android:background="@android:color/holo_blue_dark"
+    <android.support.v7.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin"
         android:layout_gravity="center"
-        android:textSize="@dimen/text_size"
-        android:textColor="@android:color/black"
-        android:text="@string/Ok"
-        android:gravity="center"
-        android:layout_marginBottom="@dimen/margin"/>
+        card_view:cardCornerRadius="6dp">
+        <TextView
+            android:layout_width="@dimen/width_login"
+            android:layout_height="@dimen/_40dp"
+            android:background="@android:color/holo_blue_dark"
+            android:textSize="@dimen/text_size"
+            android:textColor="@android:color/black"
+            android:text="@string/Ok"
+            android:gravity="center"
+            />
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

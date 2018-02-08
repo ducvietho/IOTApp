@@ -5,5 +5,5 @@ package com.example.ducvietho.iotapp.util;
  */
 
 public class Constant {
-    public static final String IOT_API = "http://118.70.223.182:50280/volumn/api/";
+    public static final String IOT_API = "http://118.70.223.182:50280/";
 }

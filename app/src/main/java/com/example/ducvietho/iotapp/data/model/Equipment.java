@@ -20,6 +20,15 @@ public class Equipment {
     @SerializedName("icon_off")
     private String mIconOff;
 
+    public Equipment(int id, int idFloor, String name, int state, String iconOn, String iconOff) {
+        mId = id;
+        mIdFloor = idFloor;
+        mName = name;
+        mState = state;
+        mIconOn = iconOn;
+        mIconOff = iconOff;
+    }
+
     public int getId() {
         return mId;
     }

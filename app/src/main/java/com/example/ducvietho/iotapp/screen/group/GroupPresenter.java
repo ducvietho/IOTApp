@@ -27,7 +27,7 @@ public class GroupPresenter implements GroupContract.Presenter {
 
     @Override
     public void getAllGroup() {
-        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers
+        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
             public void onNext(List<Group> value) {

@@ -71,7 +71,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
     @Override
     public void turnOffEquip(int idEquip, int idFloor) {
-        mDisposable.add(mRepository.turnOffEquiment(idEquip,idFloor).subscribeOn(Schedulers.newThread()).observeOn
+        mDisposable.add(mRepository.turnOffEquiment(idEquip,idFloor).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
             @Override
             public void onNext(Response value) {
@@ -89,4 +89,10 @@ public class FloorPresenter implements FloorContract.Presenter {
             }
         }));
     }
+
+    @Override
+    public void clear() {
+        mDisposable.clear();
+    }
+
 }

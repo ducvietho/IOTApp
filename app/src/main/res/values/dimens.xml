@@ -7,9 +7,10 @@
     <dimen name="height_view">0.5dp</dimen>
     <dimen name="margin">20dp</dimen>
     <dimen name="margin_login">120dp</dimen>
-    <dimen name="height_tab">50dp</dimen>
+
     <dimen name="height_header">120dp</dimen>
     <dimen name="padding">15dp</dimen>
+    <dimen name="padding_text">8dp</dimen>
     <dimen name="drawable">20dp</dimen>
     <dimen name="image">50dp</dimen>
     <dimen name="_10dp">10dp</dimen>
@@ -17,10 +18,12 @@
     <dimen name="_20dp">20dp</dimen>
     <dimen name="_15dp">15dp</dimen>
     <dimen name="_30dp">30dp</dimen>
+    <dimen name="height_tab">48dp</dimen>
     <dimen name="width_time">180dp</dimen>
     <dimen name="margin_item">8dp</dimen>
     <dimen name="width_login">150dp</dimen>
     <dimen name="height_item">50dp</dimen>
-    <dimen name="height_equiment">140dp</dimen>
+    <dimen name="height_equiment">100dp</dimen>
+    <dimen name="width_equip">100dp</dimen>
 
 </resources>

@@ -52,16 +52,15 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
     class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.img_equip)
         ImageView mImageView;
-        @BindView(R.id.tv_equip)
-        TextView mName;
-
+        @BindView(R.id.tv_name)
+        TextView mTextView;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
         public void bind(final Equipment equipment) {
-            mName.setText(equipment.getName());
+            mTextView.setText(equipment.getName());
             if (equipment.getState() == 0) {
                 Picasso.with(itemView.getContext()).load(equipment.getIconOff()).resize(300,300).into
                         (mImageView);

@@ -58,7 +58,7 @@ public class FloorFragment extends Fragment implements FloorContract.View, OnCLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_floor, container, false);
         ButterKnife.bind(this, v);
-        idFloor = getArguments().getInt(EXTRA_POS);
+        idFloor = getArguments().getInt(EXTRA_POS,0);
         mRepository = new EquipmentDataRepository(new EquipmentRemoteDataResource(IOTServiceClient.getInstance()));
         mPresenter = new FloorPresenter(mRepository, FloorFragment.this);
         mPresenter.getAllEquipByFloor(idFloor);
@@ -68,6 +68,7 @@ public class FloorFragment extends Fragment implements FloorContract.View, OnCLi
     @Override
     public void getAllEquipByFloorSuccess(List<Equipment> equipments) {
         mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setHasFixedSize(true);
         GridLayoutManager manager = new GridLayoutManager(v.getContext(), 3);
         mRecyclerView.setLayoutManager(manager);
         EquipmentAdapter adapter = new EquipmentAdapter(equipments, FloorFragment.this, FloorFragment.this);
@@ -91,8 +92,7 @@ public class FloorFragment extends Fragment implements FloorContract.View, OnCLi
 
     @Override
     public void turnOffEquipSuccess(Response response) {
-
-        Toast.makeText(v.getContext(), "Đã tắt thiết bị", Toast.LENGTH_LONG).show();
+        Toast.makeText(v.getContext(), "Đã tắt thiết bị :", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -113,5 +113,11 @@ public class FloorFragment extends Fragment implements FloorContract.View, OnCLi
     public void onLongClick(Equipment equipment) {
         new DialogAlarm(v.getContext()).showDialodAlarmEquiment(equipment);
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.clear();
     }
 }

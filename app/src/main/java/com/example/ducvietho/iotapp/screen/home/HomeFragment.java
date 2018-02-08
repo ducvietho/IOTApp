@@ -1,5 +1,6 @@
 package com.example.ducvietho.iotapp.screen.home;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import com.example.ducvietho.iotapp.data.resource.remote.api.FloorRemoteDataReso
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.screen.floor.FloorFragment;
 import com.example.ducvietho.iotapp.screen.group.GroupFragment;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
 
 import java.util.List;
 
@@ -30,8 +32,8 @@ import butterknife.ButterKnife;
 public class HomeFragment extends Fragment implements HomeContract.View{
     @BindView(R.id.view_pager)
     ViewPager mViewPager;
-    @BindView(R.id.tab_floor)
-    TabLayout mTabLayout;
+    @BindView(R.id.viewpagertab)
+    SmartTabLayout mTabLayout;
 
     private View v;
     public HomeFragment() {
@@ -57,13 +59,13 @@ public class HomeFragment extends Fragment implements HomeContract.View{
 
     @Override
     public void getAllFloorSuccess(List<Floor> floors) {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
         for (int i=0;i<floors.size();i++){
             viewPagerAdapter.addFragment(FloorFragment.newInstance(floors.get(i).getIdFloor()),floors.get(i).getName());
         }
         viewPagerAdapter.addFragment(new GroupFragment(),"Groups");
         mViewPager.setAdapter(viewPagerAdapter);
-        mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setViewPager(mViewPager);
     }
 
     @Override

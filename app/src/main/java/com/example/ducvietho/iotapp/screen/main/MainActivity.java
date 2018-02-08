@@ -3,6 +3,7 @@ package com.example.ducvietho.iotapp.screen.main;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.screen.home.HomeFragment;
 import com.example.ducvietho.iotapp.util.UserManager;
@@ -40,9 +42,12 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.frame_layout)
     FrameLayout mLayout;
     private boolean doubleBackToExitPressedOnce = false;
+    private boolean isDrawerOpened;
+    private MaterialMenuDrawable materialMenu;
 
     public Intent getIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return intent;
     }
 
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        materialMenu = new MaterialMenuDrawable(this, Color.WHITE, MaterialMenuDrawable.Stroke.THIN);
         setUpToolbar();
         setUpNavDrawer();
         startFragment(new HomeFragment());
@@ -60,8 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }
-        else {
+        } else {
             if (doubleBackToExitPressedOnce) {
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
@@ -89,8 +94,9 @@ public class MainActivity extends AppCompatActivity {
     private void setUpToolbar() {
         if (mToolbar != null) {
             mToolbar.setTitle(getResources().getString(R.string.home));
+            mToolbar.setTitleTextColor(Color.WHITE);
             setSupportActionBar(mToolbar);
-           mToolbar.setNavigationIcon(R.drawable.icon_menu);
+            mToolbar.setNavigationIcon(materialMenu);
             mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -105,6 +111,36 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = header.findViewById(R.id.tv_name);
         UserManager userManager = new UserManager(MainActivity.this);
         textView.setText(userManager.getUserDetail().getName());
+        mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                materialMenu.setTransformationOffset(
+                        MaterialMenuDrawable.AnimationState.BURGER_ARROW,
+                        isDrawerOpened ? 2 - slideOffset : slideOffset
+                );
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                isDrawerOpened = true;
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                isDrawerOpened = false;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if(newState == DrawerLayout.STATE_IDLE) {
+                    if(isDrawerOpened) {
+                        materialMenu.setIconState(MaterialMenuDrawable.IconState.ARROW);
+                    } else {
+                        materialMenu.setIconState(MaterialMenuDrawable.IconState.BURGER);
+                    }
+                }
+            }
+        });
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -134,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
     private void startFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_layout, fragment);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:background="@drawable/background_header"
+                android:background="@color/colorPrimaryDark"
               android:layout_width="match_parent"
               android:layout_height="@dimen/height_header"
     android:gravity="center">
@@ -11,13 +11,14 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="@dimen/image"
         android:layout_height="@dimen/image"
-        android:src="@drawable/ic_user_placeholder"/>
+        android:src="@drawable/ic_user_placeholder"
+        android:layout_marginLeft="@dimen/_15dp"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:textSize="@dimen/text_size"
-        android:textColor="@android:color/black"
+        android:textColor="@android:color/white"
         android:paddingLeft="@dimen/padding"
         android:id="@+id/tv_name"/>
 </LinearLayout>

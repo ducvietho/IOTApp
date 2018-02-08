@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
@@ -29,6 +30,8 @@ import butterknife.ButterKnife;
 public class GroupFragment extends Fragment implements GroupContract.View,OnLongClickItem<Group> {
     @BindView(R.id.rec_group)
     RecyclerView mRecyclerView;
+    @BindView(R.id.pro_load)
+    ProgressBar mProgressBar;
     private View v;
     private GroupDataRepository mRepository;
     private GroupContract.Presenter presenter;
@@ -50,6 +53,7 @@ public class GroupFragment extends Fragment implements GroupContract.View,OnLong
 
     @Override
     public void getAllGroupSuccess(List<Group> groups) {
+        mProgressBar.setVisibility(View.GONE);
         GridLayoutManager manager = new GridLayoutManager(v.getContext(), 1);
         mRecyclerView.setLayoutManager(manager);
         GroupAdapter adapter = new GroupAdapter(groups,GroupFragment.this);

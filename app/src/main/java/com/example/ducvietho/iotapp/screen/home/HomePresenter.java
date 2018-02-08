@@ -27,7 +27,7 @@ public class HomePresenter implements HomeContract.Presenter {
 
     @Override
     public void getAllFloor() {
-        mDisposable.add(mRepository.getAllFloor().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers
+        mDisposable.add(mRepository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
             @Override
             public void onNext(List<Floor> value) {

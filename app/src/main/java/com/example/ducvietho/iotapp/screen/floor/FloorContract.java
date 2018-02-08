@@ -14,6 +14,7 @@ public interface FloorContract {
         void getAllEquipByFloor(int id);
         void turnOnEquip(int idEquip,int idFloor);
         void turnOffEquip(int idEquip,int idFloor);
+        void clear();
     }
     interface View{
         void getAllEquipByFloorSuccess(List<Equipment> equipments);

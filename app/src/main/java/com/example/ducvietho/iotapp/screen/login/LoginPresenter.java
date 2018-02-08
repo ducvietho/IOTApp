@@ -28,7 +28,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void loginUser(String username, String pass) {
-        mDisposable.add(mRepository.login(username,pass).observeOn(Schedulers.newThread()).observeOn
+        mDisposable.add(mRepository.login(username,pass).subscribeOn(Schedulers.newThread()).observeOn
                 (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<LoginResponse>() {
             @Override
             public void onNext(LoginResponse value) {
