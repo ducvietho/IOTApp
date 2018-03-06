@@ -2,6 +2,7 @@ package com.example.ducvietho.iotapp.data.resource.remote.api;
 
 import com.example.ducvietho.iotapp.data.model.Group;
 import com.example.ducvietho.iotapp.data.model.GroupResponse;
+import com.example.ducvietho.iotapp.data.model.Response;
 import com.example.ducvietho.iotapp.data.resource.remote.GroupDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTApi;
 
@@ -27,5 +28,15 @@ public class GroupRemoteDataResource extends BaseRemoteDataResource implements G
                 return groupResponse.getList();
             }
         });
+    }
+
+    @Override
+    public Observable<Response> turnOnGroup(int idGroup) {
+        return mIOTApi.turnOnGroup(idGroup);
+    }
+
+    @Override
+    public Observable<Response> turnOffGroup(int idGroup) {
+        return mIOTApi.turnOnGroup(idGroup);
     }
 }

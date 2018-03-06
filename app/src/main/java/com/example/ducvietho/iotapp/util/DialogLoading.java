@@ -14,16 +14,23 @@ import com.example.ducvietho.iotapp.R;
 
 public class DialogLoading {
     private Context mContext;
-
+    Dialog dialog;
     public DialogLoading(Context context) {
         mContext = context;
+
     }
     public void showDialog(){
-        Dialog dialog = new Dialog(mContext);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setContentView(R.layout.dialog_loading);
+        try {
+            dialog.show();
+        } catch (Exception e) {
 
-        dialog.show();
+        }
+    }
+    public void dismissDialog(){
+        dialog.dismiss();
     }
 }

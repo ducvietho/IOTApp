@@ -10,9 +10,9 @@ import com.example.ducvietho.iotapp.util.Constant;
 
 public class IOTServiceClient extends ServiceClient {
     private static IOTApi mIOTAPi;
-    public static IOTApi getInstance(){
+    public static IOTApi getInstance(String server){
         if(mIOTAPi==null){
-            mIOTAPi = ServiceClient.createService(Constant.IOT_API,IOTApi.class);
+            mIOTAPi = ServiceClient.createService(server,IOTApi.class);
         }
         return mIOTAPi;
     }

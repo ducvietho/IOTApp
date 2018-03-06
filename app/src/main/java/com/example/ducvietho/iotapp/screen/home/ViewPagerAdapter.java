@@ -1,5 +1,6 @@
 package com.example.ducvietho.iotapp.screen.home;
 
+import android.graphics.Typeface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -32,6 +33,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public void addFragment(Fragment fragment, String title) {
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
+
     }
 
     @Override

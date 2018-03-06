@@ -38,6 +38,7 @@ public class UserManager {
     public void checkUserLogin() {
         if (sharedPreferences.getBoolean(IS_USER_LOGIN, false)) {
             mContext.startActivity(new MainActivity().getIntent(mContext));
+
         }
 
     }

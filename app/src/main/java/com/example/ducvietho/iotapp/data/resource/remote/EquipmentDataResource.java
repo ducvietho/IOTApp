@@ -15,4 +15,5 @@ public interface EquipmentDataResource {
     Observable<List<Equipment>> getAllEquipmentByFloor(int idFloor);
     Observable<Response> turnOnEquiment(int idEquip, int idFloor);
     Observable<Response> turnOffEquiment(int idEquip,int idFloor);
+    Observable<Response> turnAlarmEquip(int idEquip,int idFloor, String time,int alarmState);
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class LoginResponse {
     @SerializedName("data")
     private Login mLogin;
-    @SerializedName("status_code")
+    @SerializedName("code")
     private int mStatus;
 
     public int getStatus() {

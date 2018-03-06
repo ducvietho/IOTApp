@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Response {
-    @SerializedName("status_code")
+    @SerializedName("code")
     private int mStatus;
 
     public int getStatus() {

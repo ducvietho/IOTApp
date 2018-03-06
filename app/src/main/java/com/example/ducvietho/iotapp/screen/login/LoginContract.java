@@ -1,6 +1,5 @@
 package com.example.ducvietho.iotapp.screen.login;
 
-import com.example.ducvietho.iotapp.data.model.Login;
 import com.example.ducvietho.iotapp.data.model.LoginResponse;
 
 /**

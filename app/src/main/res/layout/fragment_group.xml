@@ -1,16 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:background="@color/blueColor"
-             tools:context="com.example.ducvietho.iotapp.screen.group.GroupFragment">
-<ProgressBar
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_20dp"
-    android:id="@+id/pro_load"/>
-    <android.support.v7.widget.RecyclerView
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.ducvietho.iotapp.screen.group.GroupActivity">
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/rec_group"/>
+        app:cardCornerRadius="@dimen/_6dp"
+        app:cardBackgroundColor="@color/blueColor"
+        android:layout_marginRight="@dimen/_10dp"
+        android:layout_marginLeft="@dimen/_10dp"
+        android:layout_marginBottom="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_10dp">
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/height_progree"
+            android:id="@+id/pro_load"/>
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/rec_group"/>
+    </android.support.v7.widget.CardView>
 
-</FrameLayout>
+</LinearLayout>

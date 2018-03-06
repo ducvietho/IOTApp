@@ -19,14 +19,28 @@ public class Equipment {
     private String mIconOn;
     @SerializedName("icon_off")
     private String mIconOff;
+    @SerializedName("alarm_state")
+    private int mAlarmState;
+    @SerializedName("time_alarm")
+    private String mTimeAlarm;
 
-    public Equipment(int id, int idFloor, String name, int state, String iconOn, String iconOff) {
-        mId = id;
-        mIdFloor = idFloor;
-        mName = name;
-        mState = state;
-        mIconOn = iconOn;
-        mIconOff = iconOff;
+    public Equipment() {
+    }
+
+    public String getTimeAlarm() {
+        return mTimeAlarm;
+    }
+
+    public void setTimeAlarm(String timeAlarm) {
+        mTimeAlarm = timeAlarm;
+    }
+
+    public int getAlarmState() {
+        return mAlarmState;
+    }
+
+    public void setAlarmState(int alarmState) {
+        mAlarmState = alarmState;
     }
 
     public int getId() {

@@ -40,4 +40,9 @@ public class EquipmentRemoteDataResource extends BaseRemoteDataResource implemen
     public Observable<Response> turnOffEquiment(int idEquip, int idFloor) {
         return mIOTApi.turnOffEquipment(idEquip,idFloor);
     }
+
+    @Override
+    public Observable<Response> turnAlarmEquip(int idEquip, int idFloor, String time, int alarmState) {
+        return mIOTApi.turnOnAlarm(idEquip,idFloor,time,alarmState);
+    }
 }

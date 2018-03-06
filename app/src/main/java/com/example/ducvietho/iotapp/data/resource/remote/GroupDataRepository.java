@@ -1,6 +1,7 @@
 package com.example.ducvietho.iotapp.data.resource.remote;
 
 import com.example.ducvietho.iotapp.data.model.Group;
+import com.example.ducvietho.iotapp.data.model.Response;
 
 import java.util.List;
 
@@ -20,5 +21,15 @@ public class GroupDataRepository implements GroupDataResource {
     @Override
     public Observable<List<Group>> getAllGroup() {
         return mGroupDataResource.getAllGroup();
+    }
+
+    @Override
+    public Observable<Response> turnOnGroup(int idGroup) {
+        return mGroupDataResource.turnOnGroup(idGroup);
+    }
+
+    @Override
+    public Observable<Response> turnOffGroup(int idGroup) {
+        return mGroupDataResource.turnOffGroup(idGroup);
     }
 }

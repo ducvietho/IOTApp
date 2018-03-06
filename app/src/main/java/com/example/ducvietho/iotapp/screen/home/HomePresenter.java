@@ -26,7 +26,7 @@ public class HomePresenter implements HomeContract.Presenter {
     }
 
     @Override
-    public void getAllFloor() {
+    public void getAllFloorLAN() {
         mDisposable.add(mRepository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
             @Override
@@ -36,7 +36,49 @@ public class HomePresenter implements HomeContract.Presenter {
 
             @Override
             public void onError(Throwable e) {
-                mView.getAllFloorFailure(e.getMessage());
+                mView.getAllFloorFailureLAN();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    @Override
+    public void getAllFloorInternet() {
+        mDisposable.add(mRepository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
+            @Override
+            public void onNext(List<Floor> value) {
+                mView.getAllFloorSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.getAllFloorFailureInternet();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    @Override
+    public void getAllFloorDomain() {
+        mDisposable.add(mRepository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
+            @Override
+            public void onNext(List<Floor> value) {
+                mView.getAllFloorSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.getAllFloorFailureDomain(e.getMessage());
             }
 
             @Override

@@ -1,5 +1,8 @@
 package com.example.ducvietho.iotapp.screen.floor;
 
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.ducvietho.iotapp.data.model.Equipment;
 import com.example.ducvietho.iotapp.data.model.Response;
 import com.example.ducvietho.iotapp.data.resource.remote.EquipmentDataRepository;
@@ -28,8 +31,8 @@ public class FloorPresenter implements FloorContract.Presenter {
     }
 
     @Override
-    public void getAllEquipByFloor(int id) {
-        mDisposable.add(mRepository.getAllEquipmentByFloor(id).subscribeOn(Schedulers.newThread()).observeOn
+    public void getAllEquipByFloorLAN(int id) {
+        mDisposable.add(mRepository.getAllEquipmentByFloor(id).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
             public void onNext(List<Equipment> value) {
@@ -38,7 +41,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
             @Override
             public void onError(Throwable e) {
-                mView.getAllEquipByFloorFailure(e.getMessage());
+                mView.getAllEquipByFloorFailureLAN();
             }
 
             @Override
@@ -49,17 +52,17 @@ public class FloorPresenter implements FloorContract.Presenter {
     }
 
     @Override
-    public void turnOnEquip(int idEquip, int idFloor) {
-        mDisposable.add(mRepository.turnOnEquiment(idEquip,idFloor).subscribeOn(Schedulers.newThread()).observeOn
-                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+    public void getAllEquipByFloorInternet(int id) {
+        mDisposable.add(mRepository.getAllEquipmentByFloor(id).subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
-            public void onNext(Response value) {
-                mView.turnOnEquipSuccess(value);
+            public void onNext(List<Equipment> value) {
+                mView.getAllEquipByFloorSuccess(value);
             }
 
             @Override
             public void onError(Throwable e) {
-                mView.turnOnquipFailure(e.getMessage());
+                mView.getAllEquipByFloorFailureInternet();
             }
 
             @Override
@@ -70,17 +73,17 @@ public class FloorPresenter implements FloorContract.Presenter {
     }
 
     @Override
-    public void turnOffEquip(int idEquip, int idFloor) {
-        mDisposable.add(mRepository.turnOffEquiment(idEquip,idFloor).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+    public void getAllEquipByFloorDomain(int id) {
+        mDisposable.add(mRepository.getAllEquipmentByFloor(id).subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
-            public void onNext(Response value) {
-                mView.turnOffEquipSuccess(value);
+            public void onNext(List<Equipment> value) {
+                mView.getAllEquipByFloorSuccess(value);
             }
 
             @Override
             public void onError(Throwable e) {
-                mView.turnOffEquipFailure(e.getMessage());
+                mView.getAllEquipByFloorFailureDomain(e.getMessage());
             }
 
             @Override
@@ -88,6 +91,132 @@ public class FloorPresenter implements FloorContract.Presenter {
 
             }
         }));
+    }
+
+    @Override
+    public void turnOnEquipLAN(final Equipment equipment, final ImageView imageView, final TextView textView) {
+        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+            @Override
+            public void onNext(Response value) {
+                mView.turnOnEquipSuccess(equipment,value,imageView,textView);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.turnOnquipFailureLAN(equipment, imageView, textView);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    @Override
+    public void turnOnEquipInternet(final Equipment equipment, final ImageView imageView, final TextView textView) {
+        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+                    @Override
+                    public void onNext(Response value) {
+                        mView.turnOnEquipSuccess(equipment,value,imageView,textView);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.turnOnquipFailureInternet(equipment, imageView, textView);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+    }
+
+    @Override
+    public void turnOnEquipDomain(final Equipment equipment, final ImageView imageView, final TextView textView) {
+        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+                    @Override
+                    public void onNext(Response value) {
+                        mView.turnOnEquipSuccess(equipment,value,imageView,textView);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.turnOnquipFailureDomain(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+    }
+
+    @Override
+    public void turnOffEquipLAN(final Equipment equipment, final ImageView imageView, final TextView textView) {
+        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+            @Override
+            public void onNext(Response value) {
+                mView.turnOffEquipSuccess(equipment,value,imageView,textView);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.turnOffEquipFailureLAN(equipment, imageView, textView);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    @Override
+    public void turnOffEquipInternet(final Equipment equipment, final ImageView imageView, final TextView textView) {
+        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+                    @Override
+                    public void onNext(Response value) {
+                        mView.turnOffEquipSuccess(equipment,value,imageView,textView);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.turnOffEquipFailureInternet(equipment, imageView, textView);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
+    }
+
+    @Override
+    public void turnOffEquipDomain(final Equipment equipment, final ImageView imageView, final TextView textView) {
+        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
+                    @Override
+                    public void onNext(Response value) {
+                        mView.turnOffEquipSuccess(equipment,value,imageView,textView);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        mView.turnOffEquipFailureDomain(e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                }));
     }
 
     @Override

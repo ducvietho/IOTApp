@@ -10,10 +10,14 @@ import java.util.List;
 
 public interface HomeContract {
     interface Presenter{
-        void getAllFloor();
+        void getAllFloorLAN();
+        void getAllFloorInternet();
+        void getAllFloorDomain();
     }
     interface View{
         void getAllFloorSuccess(List<Floor> floors);
-        void getAllFloorFailure(String message);
+        void getAllFloorFailureLAN();
+        void getAllFloorFailureInternet();
+        void getAllFloorFailureDomain(String message);
     }
 }

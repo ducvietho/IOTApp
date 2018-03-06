@@ -1,7 +1,11 @@
 package com.example.ducvietho.iotapp.screen.floor;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -9,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
+import com.example.ducvietho.iotapp.util.DialogAlarm;
+import com.example.ducvietho.iotapp.util.DialogSettingAlarm;
 import com.example.ducvietho.iotapp.util.OnCLickItem;
 import com.example.ducvietho.iotapp.util.OnLongClickItem;
 import com.squareup.picasso.Picasso;
@@ -24,13 +30,11 @@ import butterknife.ButterKnife;
 
 public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.ViewHolder> {
     private List<Equipment> mList;
-    private OnCLickItem<Equipment> mOnCLick;
-    private OnLongClickItem<Equipment> mLongClick;
+    private OnCLickItem mOnCLick;
 
-    public EquipmentAdapter(List<Equipment> list, OnCLickItem<Equipment> onCLick, OnLongClickItem<Equipment> longClick) {
+    public EquipmentAdapter(List<Equipment> list, OnCLickItem onCLick) {
         mList = list;
         mOnCLick = onCLick;
-        mLongClick = longClick;
     }
 
     @Override
@@ -60,23 +64,28 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
         }
 
         public void bind(final Equipment equipment) {
+            Typeface tf = Typeface.createFromAsset(itemView.getContext().getAssets(),"fonts/UTM Penumbra.ttf");
             mTextView.setText(equipment.getName());
+            mTextView.setTypeface(tf);
             if (equipment.getState() == 0) {
-                Picasso.with(itemView.getContext()).load(equipment.getIconOff()).resize(300,300).into
-                        (mImageView);
+               //mImageView.setImageResource(R.drawable.ic_ac_off);
+
+               Picasso.with(itemView.getContext()).load(equipment.getIconOff()).into(mImageView);
             } else {
-                Picasso.with(itemView.getContext()).load(equipment.getIconOn()).resize(300,300).into(mImageView);
+                //mImageView.setImageResource(R.drawable.ic_ac);
+
+                Picasso.with(itemView.getContext()).load(equipment.getIconOn()).into(mImageView);
             }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    mOnCLick.onClick(equipment);
+                    mOnCLick.onClick(equipment,mImageView,mTextView);
                 }
             });
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    mLongClick.onLongClick(equipment);
+                   new DialogSettingAlarm(itemView.getContext()).showDialogAlarmSettingEquipment(equipment);
                     return true;
                 }
             });

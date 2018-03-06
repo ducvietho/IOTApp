@@ -17,19 +17,29 @@ import retrofit2.http.POST;
 
 public interface IOTApi {
     @FormUrlEncoded
-    @POST("volumn/api/login")
+    @POST("/volumn/api/login")
     Observable<LoginResponse> login(@Field("username") String username,@Field("pass")String pass);
-    @POST("volumn/api/floors")
+    @POST("/volumn/api/floors")
     Observable<FloorResponse> getAllFloor();
     @FormUrlEncoded
-    @POST("volumn/api/floor/equipment")
+    @POST("/volumn/api/floor/equipment")
     Observable<EquipmentResponse> getAllEquipmentByFloor(@Field("id_floor") int id);
     @FormUrlEncoded
-    @POST("volumn/api/turn_on")
+    @POST("/volumn/api/turn_on")
     Observable<Response> turnOnEquipment(@Field("id_equip")int idEquip,@Field("id_floor")int idFloor);
     @FormUrlEncoded
-    @POST("volumn/api/turn_off")
+    @POST("/volumn/api/turn_off")
     Observable<Response> turnOffEquipment(@Field("id_equip")int idEquip,@Field("id_floor")int idFloor);
-    @POST("volumn/api/groups")
+    @POST("/volumn/api/groups")
     Observable<GroupResponse> getAllGroup();
+    @FormUrlEncoded
+    @POST("/volumn/api/turn_on/group")
+    Observable<Response> turnOnGroup(@Field("id_group") int idGroup);
+    @FormUrlEncoded
+    @POST("/volumn/api/turn_off/group")
+    Observable<Response> turnOffGroup(@Field("id_group") int idGroup);
+    @FormUrlEncoded
+    @POST("/volumn/api/alarm/equip")
+    Observable<Response> turnOnAlarm(@Field("id_equip") int idEquip,@Field("id_floor") int idFloor,@Field("time")
+                                     String time,@Field("alarm_state") int alarmState);
 }

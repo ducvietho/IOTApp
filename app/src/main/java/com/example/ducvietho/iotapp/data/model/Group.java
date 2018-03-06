@@ -11,6 +11,16 @@ public class Group {
     private int mId;
     @SerializedName("name_group")
     private String mName;
+    @SerializedName("state")
+    private int mState;
+
+    public int getState() {
+        return mState;
+    }
+
+    public void setState(int state) {
+        mState = state;
+    }
 
     public int getId() {
         return mId;

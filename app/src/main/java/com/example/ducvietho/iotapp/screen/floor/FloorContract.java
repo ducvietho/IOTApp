@@ -1,5 +1,8 @@
 package com.example.ducvietho.iotapp.screen.floor;
 
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.example.ducvietho.iotapp.data.model.Equipment;
 import com.example.ducvietho.iotapp.data.model.Response;
 
@@ -11,17 +14,29 @@ import java.util.List;
 
 public interface FloorContract {
     interface Presenter{
-        void getAllEquipByFloor(int id);
-        void turnOnEquip(int idEquip,int idFloor);
-        void turnOffEquip(int idEquip,int idFloor);
+        void getAllEquipByFloorLAN(int id);
+        void getAllEquipByFloorInternet(int id);
+        void getAllEquipByFloorDomain(int id);
+        void turnOnEquipLAN(Equipment equipment, ImageView imageView, TextView textView);
+        void turnOnEquipInternet(Equipment equipment, ImageView imageView, TextView textView);
+        void turnOnEquipDomain(Equipment equipment, ImageView imageView, TextView textView);
+        void turnOffEquipLAN(Equipment equipment, ImageView imageView,TextView textView);
+        void turnOffEquipInternet(Equipment equipment, ImageView imageView,TextView textView);
+        void turnOffEquipDomain(Equipment equipment, ImageView imageView,TextView textView);
         void clear();
     }
     interface View{
         void getAllEquipByFloorSuccess(List<Equipment> equipments);
-        void getAllEquipByFloorFailure(String message);
-        void turnOnEquipSuccess(Response response);
-        void turnOnquipFailure(String message);
-        void turnOffEquipSuccess(Response response);
-        void turnOffEquipFailure(String message);
+        void getAllEquipByFloorFailureLAN();
+        void getAllEquipByFloorFailureInternet();
+        void getAllEquipByFloorFailureDomain(String message);
+        void turnOnEquipSuccess(Equipment equipment,Response response,ImageView imageView,TextView textView);
+        void turnOnquipFailureLAN(Equipment equipment, ImageView imageView, TextView textView);
+        void turnOnquipFailureInternet(Equipment equipment, ImageView imageView, TextView textView);
+        void turnOnquipFailureDomain(String message);
+        void turnOffEquipSuccess(Equipment equipment,Response response,ImageView imageView,TextView textView);
+        void turnOffEquipFailureLAN(Equipment equipment, ImageView imageView, TextView textView);
+        void turnOffEquipFailureInternet(Equipment equipment, ImageView imageView, TextView textView);
+        void turnOffEquipFailureDomain(String message);
     }
 }

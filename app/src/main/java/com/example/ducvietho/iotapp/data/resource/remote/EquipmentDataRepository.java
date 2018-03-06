@@ -32,4 +32,9 @@ public class EquipmentDataRepository implements EquipmentDataResource {
     public Observable<Response> turnOffEquiment(int idEquip,int idFloor) {
         return mDataResource.turnOffEquiment(idEquip,idFloor);
     }
+
+    @Override
+    public Observable<Response> turnAlarmEquip(int idEquip, int idFloor, String time, int alarmState) {
+        return mDataResource.turnAlarmEquip(idEquip,idFloor,time,alarmState);
+    }
 }

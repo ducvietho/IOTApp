@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'com.jakewharton.butterknife'
+
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.2"
@@ -29,6 +29,8 @@ dependencies {
         exclude group: 'org.json', module: 'json'
     }
     //noinspection GradleCompatible
+    //noinspection GradleCompatible
+    //noinspection GradleCompatible
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:26.0.0-alpha1'
@@ -44,10 +46,11 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     //noinspection GradleCompatible
     compile 'com.android.support:cardview-v7:22.0.0'
-    testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.github.BlackBoxVision:material-wheel-view:v0.0.1'
     compile 'com.tuyenmonkey:mkloader:1.4.0'
+    compile 'jp.wasabeef:blurry:2.1.1'
     compile 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     compile 'com.balysv.materialmenu:material-menu:2.0.0'
+    testCompile 'junit:junit:4.12'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 }
