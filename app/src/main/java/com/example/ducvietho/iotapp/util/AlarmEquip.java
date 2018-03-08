@@ -54,7 +54,6 @@ public class AlarmEquip {
                 manager.set(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pendingIntent);
 
 
-
     }
     public void alarmOffEquip(Equipment equipment, String time) {
         String[] times = time.split(":");

@@ -19,19 +19,208 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="10"
+                android:layout_weight="9"
                 android:id="@+id/tv_repeat"
                 android:gravity="center"
                 android:textSize="@dimen/text_size"
                 android:text="@string/repeat"
                 android:textColor="@android:color/white"/>
+            <TextView
+                android:id="@+id/tv_complete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:text="@string/complete"
+                android:textAllCaps="true"
+                android:textColor="@color/colorButton"
+                android:textSize="@dimen/text_size"
+                android:layout_marginRight="@dimen/_10dp"/>
         </LinearLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/white"/>
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_50dp">
+    <TextView
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:id="@+id/rec_repeat"/>
+        android:layout_weight="9"
+        android:id="@+id/tv_t2"
+        android:text="Thứ hai"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/_15dp"/>
+    <CheckBox
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:id="@+id/cb_t2"
+        android:buttonTint="@android:color/white"/>
+</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:id="@+id/tv_t3"
+            android:text="Thứ ba"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_15dp"/>
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/cb_t3"
+            android:buttonTint="@android:color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:id="@+id/tv_t4"
+            android:text="Thứ tư"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_15dp"/>
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/cb_t4"
+            android:buttonTint="@android:color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:id="@+id/tv_t5"
+            android:text="Thứ năm"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_15dp"/>
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/cb_t5"
+            android:buttonTint="@android:color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:id="@+id/tv_t6"
+            android:text="Thứ sáu"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_15dp"/>
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/cb_t6"
+            android:buttonTint="@android:color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:id="@+id/tv_t7"
+            android:text="Thứ bảy"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_15dp"/>
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/cb_t7"
+            android:buttonTint="@android:color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="9"
+            android:id="@+id/tv_cn"
+            android:text="Chủ nhật"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size"
+            android:gravity="center_vertical"
+            android:layout_marginLeft="@dimen/_15dp"/>
+        <CheckBox
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/cb_cn"
+            android:buttonTint="@android:color/white"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        />
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,7 @@ import com.example.ducvietho.iotapp.util.OnCLickItem;
 import com.example.ducvietho.iotapp.util.OnLongClickItem;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
@@ -119,7 +121,9 @@ public class FloorFragment extends Fragment implements FloorContract.View, OnCLi
     public void turnOnEquipSuccess(Equipment equipment, Response response, ImageView imageView, TextView textView) {
 
         if (response.getStatus() == 200) {
-            Picasso.with(v.getContext()).load(equipment.getIconOn()).into(imageView);
+            File file = new File(Environment.getExternalStorageDirectory().toString()+ "/iot/"+equipment
+                    .getIconOn().replaceAll("/","") );
+            Picasso.with(v.getContext()).load(file).into(imageView);
             //imageView.setImageResource(R.drawable.ic_ac);
             Toast.makeText(v.getContext(), "Đã bật thiết bị :" + equipment.getName(), Toast.LENGTH_LONG).show();
             equipment.setState(1);
@@ -137,7 +141,7 @@ public class FloorFragment extends Fragment implements FloorContract.View, OnCLi
         mRepository = new EquipmentDataRepository(new EquipmentRemoteDataResource(IOTServiceClient.getInstance
                 (internet)));
         mPresenter = new FloorPresenter(mRepository, FloorFragment.this);
-        mPresenter.turnOffEquipInternet(equipment, imageView, textView);
+        mPresenter.turnOnEquipInternet(equipment, imageView, textView);
     }
 
     @Override
@@ -160,7 +164,9 @@ public class FloorFragment extends Fragment implements FloorContract.View, OnCLi
     public void turnOffEquipSuccess(Equipment equipment, Response response, ImageView imageView, TextView textView) {
 
         if (response.getStatus() == 200) {
-            Picasso.with(v.getContext()).load(equipment.getIconOff()).into(imageView);
+            File file = new File(Environment.getExternalStorageDirectory().toString()+ "/iot/"+equipment
+                    .getIconOff().replaceAll("/","") );
+            Picasso.with(v.getContext()).load(file).into(imageView);
             //imageView.setImageResource(R.drawable.ic_ac_off);
             equipment.setState(0);
             Toast.makeText(v.getContext(), "Đã tắt thiết bị :" + equipment.getName(), Toast.LENGTH_LONG).show();

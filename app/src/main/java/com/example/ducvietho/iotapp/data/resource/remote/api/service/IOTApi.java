@@ -3,6 +3,7 @@ package com.example.ducvietho.iotapp.data.resource.remote.api.service;
 import com.example.ducvietho.iotapp.data.model.EquipmentResponse;
 import com.example.ducvietho.iotapp.data.model.FloorResponse;
 import com.example.ducvietho.iotapp.data.model.GroupResponse;
+import com.example.ducvietho.iotapp.data.model.ImageResponse;
 import com.example.ducvietho.iotapp.data.model.LoginResponse;
 import com.example.ducvietho.iotapp.data.model.Response;
 
@@ -42,4 +43,6 @@ public interface IOTApi {
     @POST("/volumn/api/alarm/equip")
     Observable<Response> turnOnAlarm(@Field("id_equip") int idEquip,@Field("id_floor") int idFloor,@Field("time")
                                      String time,@Field("alarm_state") int alarmState);
+    @POST("/volumn/api/all-images")
+    Observable<ImageResponse> getAllImage();
 }

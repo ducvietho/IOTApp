@@ -2,6 +2,7 @@ package com.example.ducvietho.iotapp.screen.floor;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Environment;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.example.ducvietho.iotapp.util.OnCLickItem;
 import com.example.ducvietho.iotapp.util.OnLongClickItem;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -69,12 +71,14 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             mTextView.setTypeface(tf);
             if (equipment.getState() == 0) {
                //mImageView.setImageResource(R.drawable.ic_ac_off);
-
-               Picasso.with(itemView.getContext()).load(equipment.getIconOff()).into(mImageView);
+                File file = new File(Environment.getExternalStorageDirectory().toString()+ "/iot/"+equipment
+                        .getIconOff().replaceAll("/","") );
+               Picasso.with(itemView.getContext()).load(file).into(mImageView);
             } else {
                 //mImageView.setImageResource(R.drawable.ic_ac);
-
-                Picasso.with(itemView.getContext()).load(equipment.getIconOn()).into(mImageView);
+                File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+equipment
+                        .getIconOn().replaceAll("/","") );
+                Picasso.with(itemView.getContext()).load(file).into(mImageView);
             }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

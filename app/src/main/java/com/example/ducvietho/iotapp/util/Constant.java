@@ -6,6 +6,8 @@ package com.example.ducvietho.iotapp.util;
 
 public class Constant {
     public static final String IOT_API = "http://118.70.223.182:50280/";
+    public static final String PRE_REPEAT_GROUP = "repeat_group_";
+    public static final String PRE_REPEAT_EQUIP = "repeat_equip_";
     public static final String PREFS_NAME_HOUSE = "house";
     public static final String PREFS_LAN = "lan";
     public static final String PREFS_INTERNET = "internet";
@@ -33,4 +35,6 @@ public class Constant {
     public static final String EXTRA_STATE = "state";
     public static final String EXTRA_STATE_GROUP = "state_group_";
     public static final String PRE_STATE_GROUP = "state_alarm_group_";
+    public static final String EXTRA_EQUIP_REPEAT = "day_repeat_equip_";
+    public static final String EXTRA_GROUP_REPEAT = "day_repeat_group_";
 }

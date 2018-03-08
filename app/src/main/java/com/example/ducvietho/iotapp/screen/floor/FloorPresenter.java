@@ -95,7 +95,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
     @Override
     public void turnOnEquipLAN(final Equipment equipment, final ImageView imageView, final TextView textView) {
-        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
             @Override
             public void onNext(Response value) {
@@ -116,7 +116,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
     @Override
     public void turnOnEquipInternet(final Equipment equipment, final ImageView imageView, final TextView textView) {
-        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
                     @Override
                     public void onNext(Response value) {
@@ -137,7 +137,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
     @Override
     public void turnOnEquipDomain(final Equipment equipment, final ImageView imageView, final TextView textView) {
-        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+        mDisposable.add(mRepository.turnOnEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
                     @Override
                     public void onNext(Response value) {
@@ -158,7 +158,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
     @Override
     public void turnOffEquipLAN(final Equipment equipment, final ImageView imageView, final TextView textView) {
-        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
             @Override
             public void onNext(Response value) {
@@ -179,7 +179,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
     @Override
     public void turnOffEquipInternet(final Equipment equipment, final ImageView imageView, final TextView textView) {
-        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
                     @Override
                     public void onNext(Response value) {
@@ -200,7 +200,7 @@ public class FloorPresenter implements FloorContract.Presenter {
 
     @Override
     public void turnOffEquipDomain(final Equipment equipment, final ImageView imageView, final TextView textView) {
-        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.newThread())
+        mDisposable.add(mRepository.turnOffEquiment(equipment.getId(),equipment.getIdFloor()).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<Response>() {
                     @Override
                     public void onNext(Response value) {

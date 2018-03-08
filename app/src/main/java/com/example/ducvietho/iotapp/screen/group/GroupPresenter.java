@@ -31,7 +31,7 @@ public class GroupPresenter implements GroupContract.Presenter {
 
     @Override
     public void getAllGroupLAN() {
-        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers
+        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
             public void onNext(List<Group> value) {
@@ -52,7 +52,7 @@ public class GroupPresenter implements GroupContract.Presenter {
 
     @Override
     public void getAllGroupInternet() {
-        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers
+        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
             public void onNext(List<Group> value) {
@@ -73,7 +73,7 @@ public class GroupPresenter implements GroupContract.Presenter {
 
     @Override
     public void getAllGroupDomain() {
-        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers
+        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
             public void onNext(List<Group> value) {

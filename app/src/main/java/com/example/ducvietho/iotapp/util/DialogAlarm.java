@@ -251,6 +251,7 @@ public class DialogAlarm {
         mDelete.setTypeface(tf1);
         mOnHour.setTypeface(tf);
         mOffHour.setTypeface(tf);
+        mRepeat.setTypeface(tf);
         mWheelHourOn.setItems(new ArrayList<String>(Arrays.asList(hours)));
         mWheelMinuteOn.setItems(new ArrayList<String>(Arrays.asList(minutes)));
         mWheelHourOff.setItems(new ArrayList<String>(Arrays.asList(hours)));
