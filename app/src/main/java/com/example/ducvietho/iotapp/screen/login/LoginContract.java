@@ -11,11 +11,15 @@ import java.util.List;
 
 public interface LoginContract {
     interface Presenter{
-        void loginUser(String username,String pass);
+        void loginUserLan(String username,String pass);
+        void loginUserInternet(String username,String pass);
+        void loginUserDomain(String username,String pass);
         void downloadImage();
     }
     interface View{
         void loginSuccess(LoginResponse login);
+        void loginFailureLan(String username,String pass);
+        void loginFailureInternet(String username,String pass);
         void loginFailure(String message);
         void downloadSuccess(List<Image> list);
     }

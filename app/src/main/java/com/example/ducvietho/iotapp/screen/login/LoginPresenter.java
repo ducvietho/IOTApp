@@ -30,7 +30,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void loginUser(String username, String pass) {
+    public void loginUserLan(final String username, final String pass) {
         mDisposable.add(mRepository.login(username, pass).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<LoginResponse>() {
             @Override
@@ -40,8 +40,49 @@ public class LoginPresenter implements LoginContract.Presenter {
 
             @Override
             public void onError(Throwable e) {
-                mView.loginFailure(e.getMessage());
+                mView.loginFailureLan(username,pass);
             }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    @Override
+    public void loginUserInternet(final String username, final String pass) {
+        mDisposable.add(mRepository.login(username, pass).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribeWith(new DisposableObserver<LoginResponse>() {
+            @Override
+            public void onNext(LoginResponse value) {
+                mView.loginSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.loginFailureInternet(username,pass);
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    @Override
+    public void loginUserDomain(String username, String pass) {
+        mDisposable.add(mRepository.login(username, pass).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribeWith(new DisposableObserver<LoginResponse>() {
+            @Override
+            public void onNext(LoginResponse value) {
+                mView.loginSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.loginFailure(e.getMessage());           }
 
             @Override
             public void onComplete() {

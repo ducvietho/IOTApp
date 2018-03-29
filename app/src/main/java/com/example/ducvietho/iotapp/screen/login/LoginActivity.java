@@ -62,7 +62,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @BindView(R.id.cb_remember)
     CheckBox mCheckBox;
     private DialogLoading mLoading;
-
+    ImageRemoteDataResource imageDataRepository;
+    LoginDataRepository repository;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,12 +98,18 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             }
         });
         mLoading = new DialogLoading(LoginActivity.this);
+        SharedPreferences.Editor editorLan = getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE).edit();
+        editorLan.putString(Constant.EXTRA_LAN, "http://118.70.223.182:50280");
+        editorLan.commit();
         SharedPreferences.Editor editorInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE).edit();
         editorInternet.putString(Constant.EXTRA_INTERNET, "http://34.229.9.67:2021");
         editorInternet.commit();
-        ImageRemoteDataResource imageDataRepository = (new ImageRemoteDataResource
-                (IOTServiceClient.getInstance()));
-        LoginDataRepository repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance()));
+        SharedPreferences sharedPreferencesLan = getSharedPreferences(Constant.PREFS_LAN,MODE_PRIVATE);
+        String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN,"");
+
+        imageDataRepository = (new ImageRemoteDataResource
+                (IOTServiceClient.getInstance(Constant.IOT_API)));
+        repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(lan)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
                 .this);
         new UserManager(LoginActivity.this).checkUserLogin();
@@ -115,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                     mLoading.dismissDialog();
                     Toast.makeText(LoginActivity.this, "Nhập Username và Pass", Toast.LENGTH_LONG).show();
                 } else {
-                    presenter.loginUser(mUserName.getText().toString(), mPass.getText().toString());
+                    presenter.loginUserLan(mUserName.getText().toString(), mPass.getText().toString());
                 }
 
             }
@@ -138,6 +145,26 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             Toast.makeText(LoginActivity.this, "Mật khẩu hoặc tài khoản không đúng !", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    @Override
+    public void loginFailureLan(String username,String pass) {
+        SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET,MODE_PRIVATE);
+        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"");
+        repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
+        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
+                .this);
+        presenter.loginUserInternet(username,pass);
+    }
+
+    @Override
+    public void loginFailureInternet(String username,String pass) {
+        SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN,MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,"");
+        repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
+        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
+                .this);
+        presenter.loginUserDomain(username,pass);
     }
 
     @Override

@@ -92,7 +92,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
             mSocket.connect();
         }
         mDisposable = new CompositeDisposable();
-        mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance()));
+        mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance(lan)));
         mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
             public void onNext(List<Group> value) {
@@ -101,7 +101,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
             @Override
             public void onError(Throwable e) {
-                getAllGroupFailure(e.getMessage());
+                getAllGroupFailureLan();
             }
 
             @Override
@@ -120,15 +120,11 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     @Override
     public void onClick(final Group group, final ImageView imageView, TextView textView) {
         if (group.getState() == 0) {
-            SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
-                    MODE_PRIVATE);
-            String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
+
 
 
         } else {
-            SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
-                    MODE_PRIVATE);
-            String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
+
 
         }
 
@@ -143,9 +139,49 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     }
 
 
+    public void getAllGroupFailureLan() {
+        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
+        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance(internet)));
+        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
+            @Override
+            public void onNext(List<Group> value) {
+                getAllGroupSuccess(value);
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                getAllGroupFailureInternet();
+            }
 
+            @Override
+            public void onComplete() {
 
+            }
+        }));
+    }
+    public void getAllGroupFailureInternet() {
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
+                MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET, null);
+        mRepository = new GroupRemoteDataResource(IOTServiceClient.getInstance(domain));
+        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
+            @Override
+            public void onNext(List<Group> value) {
+                getAllGroupSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getAllGroupFailure(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
 
 
     public void getAllGroupFailure(String message) {

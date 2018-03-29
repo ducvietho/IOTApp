@@ -113,7 +113,8 @@ public class FloorFragment extends Fragment implements OnCLickItem {
 
 
         idFloor = getArguments().getInt(EXTRA_POS, 0);
-        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance());
+
+        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan));
         mDisposable = new CompositeDisposable();
         mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
@@ -124,7 +125,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
 
             @Override
             public void onError(Throwable e) {
-                getAllEquipByFloorFailure(e.getMessage());
+                getAllEquipByFloorFailureLan();
             }
 
             @Override
@@ -191,7 +192,51 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         String message = object.toString().substring(1, object.toString().length() - 1);
         mSocket.emit("request", message);
     }
+    public void getAllEquipByFloorFailureLan() {
+        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
+        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(internet));
+        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+            @Override
+            public void onNext(List<Equipment> value) {
+                getAllEquipByFloorSuccess(value);
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                getAllEquipByFloorFailureInternet();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+    public void getAllEquipByFloorFailureInternet() {
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
+                MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET, null);
+        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(domain));
+        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+            @Override
+            public void onNext(List<Equipment> value) {
+                getAllEquipByFloorSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getAllEquipByFloorFailure(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
 
     public void getAllEquipByFloorFailure(String message) {
         Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();

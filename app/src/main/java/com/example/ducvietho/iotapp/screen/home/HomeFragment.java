@@ -1,5 +1,6 @@
 package com.example.ducvietho.iotapp.screen.home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -14,6 +15,7 @@ import com.example.ducvietho.iotapp.data.model.Floor;
 import com.example.ducvietho.iotapp.data.resource.remote.api.FloorRemoteDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.screen.floor.FloorFragment;
+import com.example.ducvietho.iotapp.util.Constant;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.List;
@@ -24,6 +26,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -53,8 +57,10 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this,v);
+        SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,MODE_PRIVATE);
+        String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN,"");
         FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
-                .getInstance()));
+                .getInstance(lan)));
         mDisposable = new CompositeDisposable();
         mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
@@ -65,7 +71,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-                getAllFloorFailure(e.getMessage());
+                getAllFloorFailureLan();
             }
 
             @Override
@@ -96,7 +102,54 @@ public class HomeFragment extends Fragment {
 
 
     }
+    public void getAllFloorFailureLan(){
+        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
+                MODE_PRIVATE);
+        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"");
+        FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
+                .getInstance(internet)));
+        mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
+            @Override
+            public void onNext(List<Floor> value) {
+                getAllFloorSuccess(value);
+            }
 
+            @Override
+            public void onError(Throwable e) {
+                getAllFloorFailureInternet();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+    public void getAllFloorFailureInternet(){
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
+                MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET,"");
+        FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
+                .getInstance(domain)));
+        mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
+            @Override
+            public void onNext(List<Floor> value) {
+                getAllFloorSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                getAllFloorFailure(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
     public void getAllFloorFailure(String message) {
         Toast.makeText(v.getContext(),"Error:"+message,Toast.LENGTH_LONG).show();
     }
