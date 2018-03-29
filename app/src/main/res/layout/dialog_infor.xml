@@ -9,13 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_80dp"
         android:orientation="horizontal">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" 
-            android:background="@drawable/ic_back_icon"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_10dp"
-            android:id="@+id/img_back"/>
+        <RelativeLayout
+            android:layout_width="@dimen/_40dp"
+            android:layout_height="@dimen/_40dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:id="@+id/layout_back">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_back_icon"
+                android:layout_marginLeft="@dimen/_10dp"
+                android:id="@+id/img_back"
+                />
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/tv_info"
             android:layout_width="match_parent"

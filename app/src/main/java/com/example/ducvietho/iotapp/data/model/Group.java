@@ -13,6 +13,26 @@ public class Group {
     private String mName;
     @SerializedName("state")
     private int mState;
+    @SerializedName("icon_on")
+    private String mIconOn;
+    @SerializedName("icon_off")
+    private String mIconOff;
+
+    public String getIconOn() {
+        return mIconOn;
+    }
+
+    public void setIconOn(String iconOn) {
+        mIconOn = iconOn;
+    }
+
+    public String getIconOff() {
+        return mIconOff;
+    }
+
+    public void setIconOff(String iconOff) {
+        mIconOff = iconOff;
+    }
 
     public int getState() {
         return mState;

@@ -67,10 +67,12 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-                <Switch
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_on"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    style="@style/SwitchCompatStyle"
+                    app:trackTint="@color/color_switch"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -131,24 +133,86 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50dp"
-                >
+                android:id="@+id/layout_repeat">
                 <TextView
                     android:layout_width="0dp"
                     android:id="@+id/tv_repeat"
                     android:layout_height="match_parent"
-                    android:layout_weight="8"
+                    android:layout_weight="3"
                     android:text="@string/repeat"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/text_size"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="@dimen/_10dp"/>
-                <ImageView
+                <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:id="@+id/img_next"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_next"/>
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T2"
+                        android:id="@+id/tv_t2"
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorBlur"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T3"
+                        android:id="@+id/tv_t3"
+                        android:visibility="gone"
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorBlur"
+                        android:layout_marginLeft="@dimen/_3dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T4"
+                        android:id="@+id/tv_t4"
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorBlur"
+                        android:visibility="gone"
+                        android:layout_marginLeft="@dimen/_3dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T5"
+                        android:id="@+id/tv_t5"
+                        android:visibility="gone"
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorBlur"
+                        android:layout_marginLeft="@dimen/_3dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T6"
+                        android:id="@+id/tv_t6"
+                        android:visibility="gone"
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorBlur"
+                        android:layout_marginLeft="@dimen/_3dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="T7"
+                        android:id="@+id/tv_t7"
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorBlur"
+                        android:layout_marginLeft="@dimen/_3dp"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CN"
+                        android:id="@+id/tv_cn"
+                        android:textSize="@dimen/text_size"
+                        android:textColor="@color/colorBlur"
+                        android:layout_marginLeft="@dimen/_3dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
 
             </LinearLayout>
         </RelativeLayout>
@@ -163,10 +227,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-                <Switch
+                <android.support.v7.widget.SwitchCompat
                     android:id="@+id/switch_off"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:trackTint="@color/color_switch"
+                    style="@style/SwitchCompatStyle"
+
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

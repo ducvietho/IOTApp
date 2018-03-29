@@ -30,13 +30,15 @@
                 android:text="@string/alarm_on"
                 android:textColor="@android:color/white" />
 
-            <Switch
+            <android.support.v7.widget.SwitchCompat
                 android:id="@+id/switch_state"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="@dimen/_15dp"
                 android:layout_weight="1"
-                android:shadowColor="@android:color/white" />
+                style="@style/SwitchCompatStyle"
+                app:trackTint="@color/color_switch"
+                />
         </LinearLayout>
 
         <TextView

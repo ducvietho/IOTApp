@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#4e4376</color>
     <color name="colorAccent">#FF7043</color>
     <color name="colorPink">#F50057</color>
-
+    <color name="switch_color">#FFFFFF</color>
     <color name="blueColor">#04223e</color>
     <color name="colorOrange">#e69c00</color>
    <color name="colorBackgroung">#000d1e</color>
@@ -12,5 +12,7 @@
     <color name="colorBlur">#90A4AE</color>
     <color name="colorRed">#ff2a36</color>
     <color name="colorEditText">#4a668e</color>
-
+ <color name="colorGreen">#11935a</color>
+    <color name="primary">#607D8B</color>
+    <color name="primary_light_alpha50">#7FCFD8DC</color>
 </resources>

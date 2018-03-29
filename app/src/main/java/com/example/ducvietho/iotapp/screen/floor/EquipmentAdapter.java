@@ -1,5 +1,7 @@
 package com.example.ducvietho.iotapp.screen.floor;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Environment;
@@ -14,6 +16,10 @@ import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
+import com.example.ducvietho.iotapp.data.model.Image;
+import com.example.ducvietho.iotapp.util.AlarmEquip;
+import com.example.ducvietho.iotapp.util.CacheImage;
+import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.DialogAlarm;
 import com.example.ducvietho.iotapp.util.DialogSettingAlarm;
 import com.example.ducvietho.iotapp.util.OnCLickItem;
@@ -22,9 +28,15 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.ducvietho.iotapp.util.Constant.EXTRA_STATE;
+import static com.example.ducvietho.iotapp.util.Constant.PRE_OFF;
+import static com.example.ducvietho.iotapp.util.Constant.PRE_ON;
+import static com.example.ducvietho.iotapp.util.Constant.PRE_STATE;
 
 /**
  * Created by ducvietho on 2/3/2018.
@@ -33,8 +45,9 @@ import butterknife.ButterKnife;
 public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.ViewHolder> {
     private List<Equipment> mList;
     private OnCLickItem mOnCLick;
-
-    public EquipmentAdapter(List<Equipment> list, OnCLickItem onCLick) {
+    private Context mContext;
+    public EquipmentAdapter(Context context,List<Equipment> list, OnCLickItem onCLick) {
+        mContext = context;
         mList = list;
         mOnCLick = onCLick;
     }
@@ -60,6 +73,10 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
         ImageView mImageView;
         @BindView(R.id.tv_name)
         TextView mTextView;
+        @BindView(R.id.img_alarm_off)
+        ImageView mAlarmOff;
+        @BindView(R.id.img_alarm_on)
+        ImageView mAlarmOn;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -70,15 +87,62 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             mTextView.setText(equipment.getName());
             mTextView.setTypeface(tf);
             if (equipment.getState() == 0) {
-               //mImageView.setImageResource(R.drawable.ic_ac_off);
+
                 File file = new File(Environment.getExternalStorageDirectory().toString()+ "/iot/"+equipment
                         .getIconOff().replaceAll("/","") );
-               Picasso.with(itemView.getContext()).load(file).into(mImageView);
+                if(file.exists()){
+                    Picasso.with(itemView.getContext()).load(file).into(mImageView);
+                }else{
+                    Picasso.with(itemView.getContext()).load(equipment.getIconOff()).into(mImageView);
+                    new CacheImage(mContext).imageDownload(equipment.getIconOff());
+                }
+
             } else {
-                //mImageView.setImageResource(R.drawable.ic_ac);
                 File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+equipment
                         .getIconOn().replaceAll("/","") );
-                Picasso.with(itemView.getContext()).load(file).into(mImageView);
+                if(file.exists()){
+                    Picasso.with(itemView.getContext()).load(file).into(mImageView);
+                }else {
+                    Picasso.with(itemView.getContext()).load(equipment.getIconOn()).into(mImageView);
+                    new CacheImage(mContext).imageDownload(equipment.getIconOn());
+                }
+
+            }
+            String preSetting = PRE_STATE + String.valueOf(equipment.getId());
+            final SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(preSetting, Context
+                    .MODE_PRIVATE);
+            boolean state = sharedPreferences.getBoolean(EXTRA_STATE, false);
+            if(state){
+                final String pre = Constant.PRE_ALARM + String.valueOf(equipment.getId());
+                SharedPreferences preferences = itemView.getContext().getSharedPreferences(pre, Context.MODE_PRIVATE);
+                String alarmOnTime = preferences.getString(PRE_ON, null);
+                String alarmOffTime = preferences.getString(PRE_OFF, null);
+                String preEquip = Constant.PRE_REPEAT_EQUIP+String.valueOf(equipment.getId());
+                final String extraEquip = Constant.EXTRA_EQUIP_REPEAT+String.valueOf(equipment.getId());
+                SharedPreferences sharedPreferencesRepeat = mContext.getSharedPreferences(preEquip,Context.MODE_PRIVATE);
+                Set<String> setDay = sharedPreferencesRepeat.getStringSet(extraEquip,null);
+                if (alarmOnTime!=null){
+                    mAlarmOn.setVisibility(View.VISIBLE);
+//                if(setDay!=null) {
+//                    List<String> strings = new ArrayList<>(setDay);
+//                    for (int i = 0; i < strings.size(); i++) {
+//                        int day = Integer.parseInt(strings.get(i));
+//                        new AlarmEquip(mContext).alarmRepeatOn(equipment,alarmOnTime,day);
+//                    }
+//                }
+                    new AlarmEquip(mContext).alarmOnEquip(equipment,alarmOnTime);
+                }
+                if(alarmOffTime!=null){
+                    mAlarmOff.setVisibility(View.VISIBLE);
+//                if(setDay!=null) {
+//                    List<String> strings = new ArrayList<>(setDay);
+//                    for (int i = 0; i < strings.size(); i++) {
+//                        int day = Integer.parseInt(strings.get(i));
+//                        new AlarmEquip(mContext).alarmRepeatOn(equipment,alarmOnTime,day);
+//                    }
+//                }
+                    new AlarmEquip(mContext).alarmOffEquip(equipment,alarmOffTime);
+                }
             }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

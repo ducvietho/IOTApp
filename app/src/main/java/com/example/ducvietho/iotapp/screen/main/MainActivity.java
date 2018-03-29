@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.example.ducvietho.iotapp.R;
+import com.example.ducvietho.iotapp.screen.group.GroupFragment;
 import com.example.ducvietho.iotapp.screen.home.HomeFragment;
 import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.CustomTypefaceSpan;
@@ -38,6 +40,8 @@ import com.example.ducvietho.iotapp.util.UserManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
+import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
@@ -100,6 +104,18 @@ public class MainActivity extends AppCompatActivity {
 
             applyFontToMenuItem(mi);
         }
+        mScene.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               startFragment(new GroupFragment());
+            }
+        });
+        mHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFragment(new HomeFragment());
+            }
+        });
     }
 
     @Override
@@ -192,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case R.id.nav_logout:
                         new UserManager(MainActivity.this).logoutUser();
+
                         return true;
                     case R.id.nav_infor:
                         new DialogInfor(MainActivity.this).showDialog();
@@ -212,9 +229,12 @@ public class MainActivity extends AppCompatActivity {
         mi.setTitle(mNewTitle);
     }
     private void startFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if(fragment!=null){
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.frame_layout, fragment,"nextFragment");
+            transaction.addToBackStack(null);
+            transaction.commit();
+        }
+
     }
 }

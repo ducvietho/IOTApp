@@ -9,8 +9,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -22,7 +24,6 @@ import android.widget.Toast;
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Image;
 import com.example.ducvietho.iotapp.data.model.LoginResponse;
-import com.example.ducvietho.iotapp.data.resource.remote.ImageDataRepository;
 import com.example.ducvietho.iotapp.data.resource.remote.LoginDataRepository;
 import com.example.ducvietho.iotapp.data.resource.remote.api.ImageRemoteDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.LoginRemoteDataResource;
@@ -56,6 +57,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     TextView mTextViewForget;
     @BindView(R.id.img_show)
     ImageView mImageView;
+    @BindView(R.id.img_not)
+    ImageView mImageViewNo;
     @BindView(R.id.cb_remember)
     CheckBox mCheckBox;
     private DialogLoading mLoading;
@@ -77,26 +80,33 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         String pass = preferences.getString(Constant.EXTRA_PASS, null);
         mUserName.setText(user);
         mPass.setText(pass);
+        mImageViewNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPass.setTransformationMethod(null);
+                mImageViewNo.setVisibility(View.GONE);
+                mImageView.setVisibility(View.VISIBLE);
+            }
+        });
         mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPass.setInputType(InputType.TYPE_CLASS_TEXT);
+                mPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                mImageView.setVisibility(View.GONE);
+                mImageViewNo.setVisibility(View.VISIBLE);
             }
         });
         mLoading = new DialogLoading(LoginActivity.this);
-
         SharedPreferences.Editor editorInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE).edit();
-        editorInternet.putString(Constant.EXTRA_INTERNET, "http://118.70.223.182:50280");
+        editorInternet.putString(Constant.EXTRA_INTERNET, "http://34.229.9.67:2021");
         editorInternet.commit();
-        SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
-        ImageDataRepository imageDataRepository = new ImageDataRepository(new ImageRemoteDataResource
-                (IOTServiceClient.getInstance(internet)));
-        LoginDataRepository repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
+        ImageRemoteDataResource imageDataRepository = (new ImageRemoteDataResource
+                (IOTServiceClient.getInstance()));
+        LoginDataRepository repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance()));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
                 .this);
-        presenter.downloadImage();
         new UserManager(LoginActivity.this).checkUserLogin();
+        presenter.downloadImage();
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

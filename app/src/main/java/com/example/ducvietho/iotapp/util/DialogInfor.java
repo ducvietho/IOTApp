@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
@@ -52,6 +53,8 @@ public class DialogInfor {
     TextView mGmail;
     @BindView(R.id.img_back)
     ImageView mView;
+    @BindView(R.id.layout_back)
+    RelativeLayout mLayout;
     private Context mContext;
 
     public DialogInfor(Context context) {
@@ -81,7 +84,7 @@ public class DialogInfor {
         SharedPreferences prefHouse = mContext.getSharedPreferences(Constant.PREFS_NAME_HOUSE, MODE_PRIVATE);
         String nameHouse = prefHouse.getString(Constant.EXTRA_NAME_HOUSE, null);
         mNameHouse.setText(nameHouse);
-        mView.setOnClickListener(new View.OnClickListener() {
+        mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

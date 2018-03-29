@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 
               android:layout_width="match_parent"
               android:layout_height="@dimen/height_header"
-    android:gravity="center">
+           >
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="@dimen/height_tab"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/_40dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="@dimen/image"
         android:layout_height="@dimen/image"
+        android:id="@+id/img_avatar"
         android:src="@drawable/ic_user_placeholder"
         android:layout_marginLeft="@dimen/_15dp"/>
     <TextView
@@ -22,4 +24,9 @@
         android:paddingLeft="@dimen/padding"
         android:id="@+id/tv_name"/>
 </LinearLayout>
-</LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@android:color/white"
+        android:layout_alignParentBottom="true"/>
+</RelativeLayout>

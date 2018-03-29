@@ -6,17 +6,15 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
-import com.example.ducvietho.iotapp.data.model.DayRepeat;
 import com.example.ducvietho.iotapp.data.model.Group;
 
 import java.util.ArrayList;
@@ -54,29 +52,30 @@ public class DialogRepeatGroup  {
     @BindView(R.id.tv_cn)
     TextView mCN;
     @BindView(R.id.cb_t2)
-    CheckBox mCBT2;
+    ImageView mCBT2;
     @BindView(R.id.cb_t3)
-    CheckBox mCBT3;
+    ImageView mCBT3;
     @BindView(R.id.cb_t4)
-    CheckBox mCBT4;
+    ImageView mCBT4;
     @BindView(R.id.cb_t5)
-    CheckBox mCBT5;
+    ImageView mCBT5;
     @BindView(R.id.cb_t6)
-    CheckBox mCBT6;
+    ImageView mCBT6;
     @BindView(R.id.cb_t7)
-    CheckBox mCBT7;
+    ImageView mCBT7;
     @BindView(R.id.cb_cn)
-    CheckBox mCBCN;
+    ImageView mCBCN;
+    @BindView(R.id.layout_back)
+    RelativeLayout mLayout;
     private Context mContext;
-
     public DialogRepeatGroup(Context context) {
         mContext = context;
     }
-
     public void showDialog(final Group group) {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_repeat);
+        dialog.setCancelable(false);
         ButterKnife.bind(this, dialog);
         String preEquip = Constant.PRE_REPEAT_GROUP+String.valueOf(group.getId());
         final String extraEquip = Constant.EXTRA_GROUP_REPEAT+String.valueOf(group.getId());
@@ -89,25 +88,25 @@ public class DialogRepeatGroup  {
                 int day = Integer.parseInt(strings.get(i));
                 switch (day){
                     case 1:
-                        mCBCN.setChecked(true);
+                        mCBCN.setVisibility(View.VISIBLE);
                         break;
                     case 2:
-                        mCBT2.setChecked(true);
+                        mCBT2.setVisibility(View.VISIBLE);
                         break;
                     case 3:
-                        mCBT3.setChecked(true);
+                        mCBT3.setVisibility(View.VISIBLE);
                         break;
                     case 4:
-                        mCBT4.setChecked(true);
+                        mCBT4.setVisibility(View.VISIBLE);
                         break;
                     case 5:
-                        mCBT5.setChecked(true);
+                        mCBT5.setVisibility(View.VISIBLE);
                         break;
                     case 6:
-                        mCBT6.setChecked(true);
+                        mCBT6.setVisibility(View.VISIBLE);
                         break;
                     case 7:
-                        mCBT7.setChecked(true);
+                        mCBT7.setVisibility(View.VISIBLE);
                         break;
                 }
             }
@@ -122,7 +121,7 @@ public class DialogRepeatGroup  {
         mT6.setTypeface(tf);
         mT7.setTypeface(tf);
         mCN.setTypeface(tf);
-        mView.setOnClickListener(new View.OnClickListener() {
+        mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new DialogAlarm(mContext).showDialodAlarmGroup(group);
@@ -134,25 +133,25 @@ public class DialogRepeatGroup  {
             public void onClick(View v) {
                 new DialogAlarm(mContext).showDialodAlarmGroup(group);
                 List<String> list = new ArrayList<String>();
-                if(mCBT2.isChecked()==true){
+                if(mCBT2.getVisibility()==View.VISIBLE){
                     list.add("2");
                 }
-                if(mCBT3.isChecked()==true){
+                if(mCBT3.getVisibility()==View.VISIBLE){
                     list.add("3");
                 }
-                if(mCBT4.isChecked()==true){
+                if(mCBT4.getVisibility()==View.VISIBLE){
                     list.add("4");
                 }
-                if(mCBT5.isChecked()==true){
+                if(mCBT5.getVisibility()==View.VISIBLE){
                     list.add("5");
                 }
-                if(mCBT6.isChecked()==true){
+                if(mCBT6.getVisibility()==View.VISIBLE){
                     list.add("6");
                 }
-                if(mCBT7.isChecked()==true){
+                if(mCBT7.getVisibility()==View.VISIBLE){
                     list.add("7");
                 }
-                if(mCBCN.isChecked()==true){
+                if(mCBCN.getVisibility()==View.VISIBLE){
                     list.add("1");
                 }
                 Set<String> hashSet = new HashSet<String>();
@@ -160,6 +159,76 @@ public class DialogRepeatGroup  {
                 editor.putStringSet(extraEquip,hashSet);
                 editor.commit();
                 dialog.dismiss();
+            }
+        });
+        mT2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCBT2.getVisibility()==View.VISIBLE){
+                    mCBT2.setVisibility(View.GONE);
+                }else {
+                    mCBT2.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mT3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCBT3.getVisibility()==View.VISIBLE){
+                    mCBT3.setVisibility(View.GONE);
+                }else {
+                    mCBT3.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mT4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCBT4.getVisibility()==View.VISIBLE){
+                    mCBT4.setVisibility(View.GONE);
+                }else {
+                    mCBT4.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mT5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCBT5.getVisibility()==View.VISIBLE){
+                    mCBT5.setVisibility(View.GONE);
+                }else {
+                    mCBT5.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mT6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCBT6.getVisibility()==View.VISIBLE){
+                    mCBT6.setVisibility(View.GONE);
+                }else {
+                    mCBT6.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mT7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCBT7.getVisibility()==View.VISIBLE){
+                    mCBT7.setVisibility(View.GONE);
+                }else {
+                    mCBT7.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+        mCN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mCBCN.getVisibility()==View.VISIBLE){
+                    mCBCN.setVisibility(View.GONE);
+                }else {
+                    mCBCN.setVisibility(View.VISIBLE);
+                }
             }
         });
         final Window window = dialog.getWindow();

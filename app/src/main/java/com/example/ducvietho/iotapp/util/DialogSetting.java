@@ -12,6 +12,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
@@ -48,6 +49,8 @@ public class DialogSetting {
     TextView mComplete;
     @BindView(R.id.img_back)
     ImageView mView;
+    @BindView(R.id.layout_back)
+    RelativeLayout mLayout;
     private Context mContext;
 
     public DialogSetting(Context context) {
@@ -83,7 +86,7 @@ public class DialogSetting {
         SharedPreferences prefDomain = mContext.getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
         String domain = prefDomain.getString(Constant.EXTRA_DOMAIN, null);
         mEdDomain.setText(domain);
-        mView.setOnClickListener(new View.OnClickListener() {
+        mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

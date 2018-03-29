@@ -22,6 +22,7 @@ public class Constant {
     public static final String BUNDLE_STATE = "state";
     public static final String EXTRA_ID_FLOOR = "idFloor";
     public static final String EXTRA_ID_EQUIP = "idEquip";
+    public static final String EXTRA_ID_GROUP = "idGroup";
     public static final String EXTRA_TIME = "time";
     public static final String BUNDLE_ID_FLOOR = "idFloor";
     public static final String BUNDLE_ID_EQUIP = "idEquip";

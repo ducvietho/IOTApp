@@ -6,16 +6,16 @@
         >
         <item
             android:id="@+id/nav_config"
-            android:icon="@drawable/ic_config"
+            android:icon="@drawable/setting_icon"
             android:title="@string/config"
             />
         <item
             android:id="@+id/nav_infor"
-            android:icon="@drawable/ic_information"
+            android:icon="@drawable/info_icon"
             android:title="@string/infor" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_logout"
+            android:icon="@drawable/logout_icon"
             android:title="@string/logout" />
     </group>
 </menu>

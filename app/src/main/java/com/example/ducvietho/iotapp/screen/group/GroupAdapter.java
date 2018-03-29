@@ -1,6 +1,9 @@
 package com.example.ducvietho.iotapp.screen.group;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,14 +13,24 @@ import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Group;
+import com.example.ducvietho.iotapp.util.AlarmGroup;
+import com.example.ducvietho.iotapp.util.CacheImage;
+import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.OnClickItemGroup;
 import com.example.ducvietho.iotapp.util.OnLongClickItem;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.ducvietho.iotapp.util.Constant.EXTRA_STATE_GROUP;
+import static com.example.ducvietho.iotapp.util.Constant.PRE_OFF_GROUP;
+import static com.example.ducvietho.iotapp.util.Constant.PRE_ON_GROUP;
+import static com.example.ducvietho.iotapp.util.Constant.PRE_STATE_GROUP;
 
 /**
  * Created by ducvietho on 2/3/2018.
@@ -27,8 +40,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
     private List<Group> mList;
     private OnLongClickItem<Group> mLongClickItem;
     private OnClickItemGroup mOnClickItemGroup;
-
-    public GroupAdapter(List<Group> list, OnLongClickItem<Group> longClickItem, OnClickItemGroup onClickItemGroup) {
+    private Context mContext;
+    public GroupAdapter(Context context,List<Group> list, OnLongClickItem<Group> longClickItem, OnClickItemGroup
+            onClickItemGroup) {
+        mContext = context;
         mList = list;
         mLongClickItem = longClickItem;
         mOnClickItemGroup = onClickItemGroup;
@@ -55,7 +70,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
         ImageView mImageView;
         @BindView(R.id.tv_name)
         TextView mTextView;
-
+        @BindView(R.id.img_alarm_off)
+        ImageView mAlarmOff;
+        @BindView(R.id.img_alarm_on)
+        ImageView mAlarmOn;
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -65,14 +83,54 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             Typeface font = Typeface.createFromAsset(itemView.getContext().getAssets(),"fonts/UTM Avo.ttf");
             mTextView.setText(group.getName());
             mTextView.setTypeface(font);
-            if(group.getState()==0){
-                mImageView.setImageResource(R.drawable.ic_ac_off);
-                //Picasso.with(itemView.getContext()).load(R.drawable.ic_ac_off).resize(100,100).into(mImageView);
+            final String preStringAlarm =  Constant.PRE_ALARM_GROUP + String.valueOf(group.getId());
+            SharedPreferences sharedPreferencesAlarm = mContext.getSharedPreferences(preStringAlarm, Context.MODE_PRIVATE);
+            String alarmOnTime = sharedPreferencesAlarm.getString(PRE_ON_GROUP, null);
+            String alarmOffTime = sharedPreferencesAlarm.getString(PRE_OFF_GROUP, null);
+            String preSetting = PRE_STATE_GROUP + String.valueOf(group.getId());
+            final SharedPreferences sharedPreferences = mContext.getSharedPreferences(preSetting, Context.MODE_PRIVATE);
+            final SharedPreferences.Editor editor = sharedPreferences.edit();
+            boolean state = sharedPreferences.getBoolean(EXTRA_STATE_GROUP, false);
+            String preGroupRepeat = Constant.PRE_REPEAT_GROUP+String.valueOf(group.getId());
+            final String extraEquip = Constant.EXTRA_GROUP_REPEAT+String.valueOf(group.getId());
+            SharedPreferences sharedPreferencesRepeat = mContext.getSharedPreferences(preGroupRepeat,Context
+                    .MODE_PRIVATE);
+            Set<String> setDay = sharedPreferencesRepeat.getStringSet(extraEquip,null);
+            if(state){
+                if (alarmOnTime!=null){
+                    mAlarmOn.setVisibility(View.VISIBLE);
+                    new AlarmGroup(mContext).alarmOnGroup(group,alarmOnTime);
+                }
+                if(alarmOffTime!=null){
+                    mAlarmOff.setVisibility(View.VISIBLE);
+                    new AlarmGroup(mContext).alarmOffGroup(group,alarmOffTime);
+                }
             }
-            else {
-                mImageView.setImageResource(R.drawable.ic_ac);
-                //Picasso.with(itemView.getContext()).load(R.drawable.ic_ac).resize(100,100).into(mImageView);
+
+            if(group.getIconOff()!=null&&group.getIconOn()!=null){
+                if(group.getState()==0){
+                    File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+group
+                            .getIconOff().replaceAll("/","") );
+                    if(file.exists()){
+                        Picasso.with(itemView.getContext()).load(file).placeholder(R.drawable.ic_ac_off).into(mImageView);
+                    }else {
+                        Picasso.with(itemView.getContext()).load(group.getIconOff()).placeholder(R.drawable.ic_ac_off).into
+                                (mImageView);
+                        new CacheImage(mContext).imageDownload(group.getIconOff());
+                    }
+                }
+                else {
+                    File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+group
+                            .getIconOn().replaceAll("/","") );
+                    if(file.exists()){
+                        Picasso.with(itemView.getContext()).load(file).placeholder(R.drawable.ic_ac).into(mImageView);
+                    }else {
+                        Picasso.with(itemView.getContext()).load(group.getIconOn()).placeholder(R.drawable.ic_ac).into(mImageView);
+                        new CacheImage(mContext).imageDownload(group.getIconOn());
+                    }
+                }
             }
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

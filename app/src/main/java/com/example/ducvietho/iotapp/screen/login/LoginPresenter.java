@@ -1,12 +1,9 @@
 package com.example.ducvietho.iotapp.screen.login;
 
-import android.support.annotation.MainThread;
-
 import com.example.ducvietho.iotapp.data.model.Image;
-import com.example.ducvietho.iotapp.data.model.Login;
 import com.example.ducvietho.iotapp.data.model.LoginResponse;
-import com.example.ducvietho.iotapp.data.resource.remote.ImageDataRepository;
 import com.example.ducvietho.iotapp.data.resource.remote.LoginDataRepository;
+import com.example.ducvietho.iotapp.data.resource.remote.api.ImageRemoteDataResource;
 
 import java.util.List;
 
@@ -23,9 +20,9 @@ public class LoginPresenter implements LoginContract.Presenter {
     private LoginDataRepository mRepository;
     private LoginContract.View mView;
     private CompositeDisposable mDisposable;
-    private ImageDataRepository mImageDataRepository;
+    private ImageRemoteDataResource mImageDataRepository;
 
-    public LoginPresenter(ImageDataRepository imageDataRepository, LoginDataRepository repository, LoginContract.View view) {
+    public LoginPresenter(ImageRemoteDataResource imageDataRepository, LoginDataRepository repository, LoginContract.View view) {
         mImageDataRepository = imageDataRepository;
         mRepository = repository;
         mView = view;
@@ -34,7 +31,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void loginUser(String username, String pass) {
-        mDisposable.add(mRepository.login(username, pass).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<LoginResponse>() {
+        mDisposable.add(mRepository.login(username, pass).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribeWith(new DisposableObserver<LoginResponse>() {
             @Override
             public void onNext(LoginResponse value) {
                 mView.loginSuccess(value);
@@ -54,7 +52,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     @Override
     public void downloadImage() {
-        mDisposable.add(mImageDataRepository.getAllImage().subscribeOn(Schedulers.newThread()).observeOn
+        mDisposable.add(mImageDataRepository.getAllImage().subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Image>>() {
             @Override
             public void onNext(List<Image> value) {

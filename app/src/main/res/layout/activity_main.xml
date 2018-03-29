@@ -7,7 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:id="@+id/drawer"
-    android:background="@drawable/background"
+    android:background="@drawable/icon_background"
     tools:context="com.example.ducvietho.iotapp.screen.main.MainActivity">
 
    <LinearLayout
