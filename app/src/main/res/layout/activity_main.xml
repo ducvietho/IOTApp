@@ -24,21 +24,48 @@
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
                    android:orientation="horizontal">
-
-                   <TextView
-                       android:layout_width="0dp"
-                       android:layout_height="match_parent"
-                       android:layout_weight="1"
-                       android:gravity="center"
-                       android:text="@string/home"
-                       android:textColor="@android:color/white"
-                       android:id="@+id/tv_home"
-                       android:textSize="@dimen/text_size"/>
                    <RelativeLayout
                        android:layout_width="0dp"
                        android:layout_height="match_parent"
                        android:layout_weight="1">
-                       <LinearLayout
+                       <RelativeLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:orientation="vertical"
+                           android:gravity="center"
+                           android:id="@+id/bt_floor"
+                           >
+                           <TextView
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:text="@string/home"
+                               android:id="@+id/tv_home"
+
+                               android:textSize="@dimen/text_size"
+                               android:textColor="@android:color/white"
+                               />
+
+                       </RelativeLayout>
+                       <RelativeLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:gravity="center"
+                           android:layout_marginTop="@dimen/_20dp">
+                           <ImageView
+                               android:id="@+id/img_floor"
+
+                               android:layout_width="@dimen/_80dp"
+                               android:layout_height="@dimen/_10dp"
+                               android:background="@drawable/ic_line"/>
+                       </RelativeLayout>
+
+                   </RelativeLayout>
+
+                   <RelativeLayout
+                       android:layout_width="0dp"
+                       android:layout_height="match_parent"
+                       android:layout_weight="1">
+                       <RelativeLayout
                            android:layout_width="match_parent"
                            android:layout_height="match_parent"
                            android:orientation="vertical"
@@ -49,15 +76,23 @@
                                android:layout_height="wrap_content"
                                android:text="Cảnh"
                                android:id="@+id/tv_scene"
-                               android:layout_marginTop="@dimen/_10dp"
                                android:textSize="@dimen/text_size"
                                android:textColor="@android:color/white"
                                />
+
+                       </RelativeLayout>
+                       <RelativeLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:gravity="center"
+                           android:layout_marginTop="@dimen/_20dp">
                            <ImageView
+                               android:id="@+id/img_scene"
                                android:layout_width="@dimen/_45dp"
                                android:layout_height="@dimen/_10dp"
+                               android:visibility="gone"
                                android:background="@drawable/ic_line"/>
-                       </LinearLayout>
+                       </RelativeLayout>
                    </RelativeLayout>
                </LinearLayout>
 
@@ -77,9 +112,10 @@
        android:layout_width="wrap_content"
        android:layout_height="match_parent"
        android:layout_gravity="start"
-       android:background="@color/blueColor"
+       android:background="@color/blueBlur_85"
        app:itemIconTint="@android:color/white"
        app:menu="@menu/item_menu"
+       android:alpha="0.9"
        app:itemTextColor="@android:color/white"
       />
 </android.support.v4.widget.DrawerLayout>

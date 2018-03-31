@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -45,7 +44,7 @@ public class DialogSettingAlarm {
     @BindView(R.id.tv_alarm_setting)
     TextView mSetting;
     @BindView(R.id.switch_state)
-    SwitchCompat mSwitch;
+    Switch mSwitch;
     private Context mContext;
 
     public DialogSettingAlarm(Context context) {

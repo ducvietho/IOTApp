@@ -20,13 +20,14 @@
 
         <ImageView
             android:id="@+id/img_group"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_60dp"
-            android:layout_gravity="center"/>
+            android:layout_width="@dimen/_40dp"
+            android:layout_height="@dimen/_40dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_6dp"/>
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="@dimen/width_equip"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/_30dp"
             android:gravity="center"
             android:textColor="@android:color/white"
@@ -35,7 +36,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_15dp"
-        android:layout_marginLeft="@dimen/_70dp"
+        android:layout_marginLeft="@dimen/_64dp"
         >
         <ImageView
             android:layout_width="@dimen/_15dp"

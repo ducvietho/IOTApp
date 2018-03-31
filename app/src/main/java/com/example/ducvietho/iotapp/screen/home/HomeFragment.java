@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment {
 
     public void getAllFloorSuccess(List<Floor> floors) {
         mProgressBar.setVisibility(View.GONE);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager());
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager());
         for (int i=0;i<floors.size();i++){
             viewPagerAdapter.addFragment(FloorFragment.newInstance(floors.get(i).getIdFloor()),floors.get(i).getName());
         }

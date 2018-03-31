@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:alpha="0.9"
-    android:background="@color/blueColor">
+              android:alpha="0.85"
+              android:background="@color/colorBackgroung"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,205 +53,233 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@android:color/white"/>
+        android:background="@android:color/white" />
+
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/_50dp">
-    <TextView
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="12"
-        android:id="@+id/tv_t2"
-        android:text="Thứ hai"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/text_size"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/_15dp"/>
-    <ImageView
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_20dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
-        android:id="@+id/cb_t2"
-        android:visibility="gone"
-        android:layout_marginRight="@dimen/_10dp"
-        android:background="@drawable/icon_choose"
-        android:buttonTint="@android:color/white"/>
-</LinearLayout>
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50dp">
+
+        <TextView
+            android:id="@+id/tv_t2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_15dp"
+            android:layout_weight="12"
+            android:gravity="center_vertical"
+            android:text="Thứ hai"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/text_size" />
+
+        <ImageView
+            android:id="@+id/cb_t2"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_20dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="@dimen/_10dp"
+            android:layout_weight="1"
+            android:background="@drawable/icon_choose"
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/white"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp">
+
         <TextView
+            android:id="@+id/tv_t3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_15dp"
             android:layout_weight="12"
-            android:id="@+id/tv_t3"
+            android:gravity="center_vertical"
             android:text="Thứ ba"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_15dp"/>
+            android:textSize="@dimen/text_size" />
+
         <ImageView
+            android:id="@+id/cb_t3"
             android:layout_width="0dp"
             android:layout_height="@dimen/_20dp"
             android:layout_gravity="center"
-            android:layout_weight="1"
-            android:id="@+id/cb_t3"
-            android:visibility="gone"
             android:layout_marginRight="@dimen/_10dp"
+            android:layout_weight="1"
             android:background="@drawable/icon_choose"
-            android:buttonTint="@android:color/white"/>
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/white"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp">
+
         <TextView
+            android:id="@+id/tv_t4"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_15dp"
             android:layout_weight="12"
-            android:id="@+id/tv_t4"
+            android:gravity="center_vertical"
             android:text="Thứ tư"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_15dp"/>
+            android:textSize="@dimen/text_size" />
+
         <ImageView
+            android:id="@+id/cb_t4"
             android:layout_width="0dp"
             android:layout_height="@dimen/_20dp"
             android:layout_gravity="center"
-            android:background="@drawable/icon_choose"
-            android:layout_weight="1"
-            android:id="@+id/cb_t4"
             android:layout_marginRight="@dimen/_10dp"
-            android:visibility="gone"
-            android:buttonTint="@android:color/white"/>
+            android:layout_weight="1"
+            android:background="@drawable/icon_choose"
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/white"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp">
+
         <TextView
+            android:id="@+id/tv_t5"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_15dp"
             android:layout_weight="12"
-            android:id="@+id/tv_t5"
+            android:gravity="center_vertical"
             android:text="Thứ năm"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_15dp"/>
+            android:textSize="@dimen/text_size" />
+
         <ImageView
+            android:id="@+id/cb_t5"
             android:layout_width="0dp"
             android:layout_height="@dimen/_20dp"
             android:layout_gravity="center"
-            android:layout_weight="1"
-            android:visibility="gone"
-            android:id="@+id/cb_t5"
             android:layout_marginRight="@dimen/_10dp"
+            android:layout_weight="1"
             android:background="@drawable/icon_choose"
-            android:buttonTint="@android:color/white"/>
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/white"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp">
+
         <TextView
+            android:id="@+id/tv_t6"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_15dp"
             android:layout_weight="12"
-            android:id="@+id/tv_t6"
+            android:gravity="center_vertical"
             android:text="Thứ sáu"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_15dp"/>
+            android:textSize="@dimen/text_size" />
+
         <ImageView
+            android:id="@+id/cb_t6"
             android:layout_width="0dp"
             android:layout_height="@dimen/_20dp"
             android:layout_gravity="center"
+            android:layout_marginRight="@dimen/_10dp"
             android:layout_weight="1"
             android:background="@drawable/icon_choose"
-            android:id="@+id/cb_t6"
-            android:visibility="gone"
-            android:layout_marginRight="@dimen/_10dp"
-            android:buttonTint="@android:color/white"/>
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/white"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp">
+
         <TextView
+            android:id="@+id/tv_t7"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_15dp"
             android:layout_weight="12"
-            android:id="@+id/tv_t7"
+            android:gravity="center_vertical"
             android:text="Thứ bảy"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_15dp"/>
+            android:textSize="@dimen/text_size" />
+
         <ImageView
+            android:id="@+id/cb_t7"
             android:layout_width="0dp"
             android:layout_height="@dimen/_20dp"
             android:layout_gravity="center"
-            android:background="@drawable/icon_choose"
-            android:layout_weight="1"
-            android:visibility="gone"
             android:layout_marginRight="@dimen/_10dp"
-            android:id="@+id/cb_t7"
-            android:buttonTint="@android:color/white"/>
+            android:layout_weight="1"
+            android:background="@drawable/icon_choose"
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@android:color/white"
         />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50dp">
+
         <TextView
+            android:id="@+id/tv_cn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/_15dp"
             android:layout_weight="12"
-            android:id="@+id/tv_cn"
+            android:gravity="center_vertical"
             android:text="Chủ nhật"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/text_size"
-            android:gravity="center_vertical"
-            android:layout_marginLeft="@dimen/_15dp"/>
+            android:textSize="@dimen/text_size" />
+
         <ImageView
+            android:id="@+id/cb_cn"
             android:layout_width="0dp"
             android:layout_height="@dimen/_20dp"
             android:layout_gravity="center"
-            android:background="@drawable/icon_choose"
-            android:layout_weight="1"
-            android:id="@+id/cb_cn"
             android:layout_marginRight="@dimen/_10dp"
-            android:visibility="gone"
-            android:buttonTint="@android:color/white"/>
+            android:layout_weight="1"
+            android:background="@drawable/icon_choose"
+            android:buttonTint="@android:color/white"
+            android:visibility="gone" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"

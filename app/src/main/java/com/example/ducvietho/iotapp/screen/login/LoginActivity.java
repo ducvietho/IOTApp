@@ -61,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     ImageView mImageViewNo;
     @BindView(R.id.cb_remember)
     CheckBox mCheckBox;
+    @BindView(R.id.tv_copy)
+    TextView mCopy;
     private DialogLoading mLoading;
     ImageRemoteDataResource imageDataRepository;
     LoginDataRepository repository;
@@ -71,6 +73,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         ButterKnife.bind(LoginActivity.this);
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/UTM Avo.ttf");
         mTextViewForget.setTypeface(tf);
+        mCopy.setTypeface(tf);
         mTextViewMember.setTypeface(tf);
         mUserName.setTypeface(tf);
         mPass.setTypeface(tf);

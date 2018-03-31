@@ -113,37 +113,11 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
                     .MODE_PRIVATE);
             boolean state = sharedPreferences.getBoolean(EXTRA_STATE, false);
             if(state){
-                final String pre = Constant.PRE_ALARM + String.valueOf(equipment.getId());
-                SharedPreferences preferences = itemView.getContext().getSharedPreferences(pre, Context.MODE_PRIVATE);
-                String alarmOnTime = preferences.getString(PRE_ON, null);
-                String alarmOffTime = preferences.getString(PRE_OFF, null);
-                String preEquip = Constant.PRE_REPEAT_EQUIP+String.valueOf(equipment.getId());
-                final String extraEquip = Constant.EXTRA_EQUIP_REPEAT+String.valueOf(equipment.getId());
-                SharedPreferences sharedPreferencesRepeat = mContext.getSharedPreferences(preEquip,Context.MODE_PRIVATE);
-                Set<String> setDay = sharedPreferencesRepeat.getStringSet(extraEquip,null);
-                if (alarmOnTime!=null){
-                    mAlarmOn.setVisibility(View.VISIBLE);
-//                if(setDay!=null) {
-//                    List<String> strings = new ArrayList<>(setDay);
-//                    for (int i = 0; i < strings.size(); i++) {
-//                        int day = Integer.parseInt(strings.get(i));
-//                        new AlarmEquip(mContext).alarmRepeatOn(equipment,alarmOnTime,day);
-//                    }
-//                }
-                    new AlarmEquip(mContext).alarmOnEquip(equipment,alarmOnTime);
-                }
-                if(alarmOffTime!=null){
-                    mAlarmOff.setVisibility(View.VISIBLE);
-//                if(setDay!=null) {
-//                    List<String> strings = new ArrayList<>(setDay);
-//                    for (int i = 0; i < strings.size(); i++) {
-//                        int day = Integer.parseInt(strings.get(i));
-//                        new AlarmEquip(mContext).alarmRepeatOn(equipment,alarmOnTime,day);
-//                    }
-//                }
-                    new AlarmEquip(mContext).alarmOffEquip(equipment,alarmOffTime);
-                }
+                mAlarmOn.setVisibility(View.VISIBLE);
+            }else {
+                mAlarmOff.setVisibility(View.VISIBLE);
             }
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

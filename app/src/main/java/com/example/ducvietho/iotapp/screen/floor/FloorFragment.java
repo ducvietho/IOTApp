@@ -228,7 +228,8 @@ public class FloorFragment extends Fragment implements OnCLickItem {
 
             @Override
             public void onError(Throwable e) {
-                getAllEquipByFloorFailure(e.getMessage());
+
+//                getAllEquipByFloorFailure(e.getMessage());
             }
 
             @Override

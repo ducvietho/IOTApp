@@ -6,13 +6,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -68,9 +64,9 @@ public class DialogAlarm {
     @BindView(R.id.tv_off_hour)
     TextView mOffHour;
     @BindView(R.id.switch_on)
-    SwitchCompat mSwitchON;
+    Switch mSwitchON;
     @BindView(R.id.switch_off)
-    SwitchCompat mSwitchOff;
+    Switch mSwitchOff;
     @BindView(R.id.tv_repeat)
     TextView mRepeat;
     @BindView(R.id.layout_repeat)
@@ -131,6 +127,7 @@ public class DialogAlarm {
         String preEquip = Constant.PRE_REPEAT_EQUIP+String.valueOf(equipment.getId());
         final String extraEquip = Constant.EXTRA_EQUIP_REPEAT+String.valueOf(equipment.getId());
         SharedPreferences sharedPreferencesRepeat = mContext.getSharedPreferences(preEquip,Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editorRepeat = sharedPreferencesRepeat.edit();
         Set<String> setDay = sharedPreferencesRepeat.getStringSet(extraEquip,null);
         if(setDay!=null){
             List<String> strings = new ArrayList<>(setDay);
@@ -310,8 +307,11 @@ public class DialogAlarm {
             public void onClick(View v) {
 
                 SharedPreferences.Editor edit = mContext.getSharedPreferences(preString,Context.MODE_PRIVATE).edit();
+
                 edit.clear();
                 edit.commit();
+                editorRepeat.clear();
+                editorRepeat.commit();
                 Toast.makeText(mContext, "Đã xóa hẹn giờ !", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }
@@ -358,6 +358,7 @@ public class DialogAlarm {
         String preEquip = Constant.PRE_REPEAT_GROUP+String.valueOf(group.getId());
         final String extraEquip = Constant.EXTRA_GROUP_REPEAT+String.valueOf(group.getId());
         SharedPreferences sharedPreferencesRepeat = mContext.getSharedPreferences(preEquip,Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editorRepeat = sharedPreferencesRepeat.edit();
         Set<String> setDay = sharedPreferencesRepeat.getStringSet(extraEquip,null);
         if(setDay!=null){
             List<String> strings = new ArrayList<>(setDay);
@@ -537,6 +538,8 @@ public class DialogAlarm {
                 SharedPreferences.Editor edit = mContext.getSharedPreferences(preString,Context.MODE_PRIVATE).edit();
                 edit.clear();
                 edit.commit();
+                editorRepeat.clear();
+                editorRepeat.commit();
                 Toast.makeText(mContext, "Đã xóa hẹn giờ !", Toast.LENGTH_SHORT).show();
                 dialog.dismiss();
             }

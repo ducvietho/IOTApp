@@ -13,6 +13,9 @@
     <color name="colorRed">#ff2a36</color>
     <color name="colorEditText">#4a668e</color>
  <color name="colorGreen">#11935a</color>
+    <color name="blueBlur_33">#3F04223e</color>
+    <color name="blueBlur_50">#7F04223e</color>
+    <color name="blueBlur_85">#CF04223e</color>
     <color name="primary">#607D8B</color>
     <color name="primary_light_alpha50">#7FCFD8DC</color>
 </resources>

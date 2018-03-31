@@ -97,14 +97,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     .MODE_PRIVATE);
             Set<String> setDay = sharedPreferencesRepeat.getStringSet(extraEquip,null);
             if(state){
-                if (alarmOnTime!=null){
                     mAlarmOn.setVisibility(View.VISIBLE);
-                    new AlarmGroup(mContext).alarmOnGroup(group,alarmOnTime);
-                }
-                if(alarmOffTime!=null){
-                    mAlarmOff.setVisibility(View.VISIBLE);
-                    new AlarmGroup(mContext).alarmOffGroup(group,alarmOffTime);
-                }
+            }else {
+                mAlarmOff.setVisibility(View.VISIBLE);
             }
 
             if(group.getIconOff()!=null&&group.getIconOn()!=null){

@@ -23,7 +23,9 @@ import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,15 +61,20 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tv_scene)
     TextView mScene;
     @BindView(R.id.bt_group)
-    LinearLayout mGroup;
+    RelativeLayout mGroup;
+    @BindView(R.id.img_scene)
+    ImageView mImgScene;
+    @BindView(R.id.img_floor)
+    ImageView mImgFloor;
+
     private boolean doubleBackToExitPressedOnce = false;
     private boolean isDrawerOpened;
     private MaterialMenuDrawable materialMenu;
 
     public Intent getIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
@@ -107,12 +114,16 @@ public class MainActivity extends AppCompatActivity {
         mScene.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               startFragment(new GroupFragment());
+                mImgScene.setVisibility(View.VISIBLE);
+                mImgFloor.setVisibility(View.GONE);
+                startFragment(new GroupFragment());
             }
         });
         mHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mImgFloor.setVisibility(View.VISIBLE);
+                mImgScene.setVisibility(View.GONE);
                 startFragment(new HomeFragment());
             }
         });

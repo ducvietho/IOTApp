@@ -37,6 +37,7 @@
         <string name="ip_internet">IP Internet</string>
         <string name="domain">Tên miền</string>
         <string name="complete">Xong</string>
+        <string name="copy_right">Copyright @ 2018 Oritek</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -112,7 +112,8 @@ public class DialogRepeatGroup  {
             }
         }
         Typeface tf = Typeface.createFromAsset(mContext.getAssets(), "fonts/UTM Penumbra.ttf");
-        mTextView.setTypeface(tf);
+        Typeface tf1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/UTM PenumbraBold.ttf");
+        mTextView.setTypeface(tf1);
         mComplete.setTypeface(tf);
         mT2.setTypeface(tf);
         mT3.setTypeface(tf);

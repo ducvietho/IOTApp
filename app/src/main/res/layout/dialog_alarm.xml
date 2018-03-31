@@ -4,7 +4,7 @@
                 android:layout_height="match_parent"
                 android:background="@color/colorBackgroung"
                 android:orientation="vertical"
-                android:alpha="0.9"
+                android:alpha="0.85"
                 xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
@@ -67,12 +67,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-                <android.support.v7.widget.SwitchCompat
+
+                <Switch
                     android:id="@+id/switch_on"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/SwitchCompatStyle"
-                    app:trackTint="@color/color_switch"/>
+                    android:thumb="@drawable/customselector"
+                    android:track="@drawable/custom_track"
+                    />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -108,10 +110,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:scrollbarAlwaysDrawVerticalTrack="false"
                 app:drawItemCount="5"
                 app:canLoop="true"
-                app:textSize="@dimen/text_size_wheel"
+                app:textSize="@dimen/_ts21"
                 app:centerTextColor="@android:color/white"
                 app:topBottomTextColor="#ffafafaf"
                 />
@@ -227,14 +228,15 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-                <android.support.v7.widget.SwitchCompat
+
+                <Switch
                     android:id="@+id/switch_off"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:trackTint="@color/color_switch"
-                    style="@style/SwitchCompatStyle"
-
+                    android:thumb="@drawable/customselector"
+                    android:track="@drawable/custom_track"
                     />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -271,7 +273,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:drawItemCount="5"
-                app:textSize="@dimen/text_size_wheel"
+                app:textSize="@dimen/_ts21"
                 app:centerTextColor="@android:color/white"
                 app:canLoop="true"
                 app:topBottomTextColor="#ffafafaf"

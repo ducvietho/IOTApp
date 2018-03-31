@@ -6,7 +6,8 @@
     android:layout_marginLeft="@dimen/_30dp"
     android:layout_marginRight="@dimen/_30dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/blueColor"
+    app:cardBackgroundColor="@color/colorBackgroung"
+    android:alpha="0.85"
     app:cardCornerRadius="6dp">
 
     <LinearLayout
@@ -30,14 +31,13 @@
                 android:text="@string/alarm_on"
                 android:textColor="@android:color/white" />
 
-            <android.support.v7.widget.SwitchCompat
+            <Switch
                 android:id="@+id/switch_state"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="@dimen/_15dp"
-                android:layout_weight="1"
-                style="@style/SwitchCompatStyle"
-                app:trackTint="@color/color_switch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:thumb="@drawable/customselector"
+                android:track="@drawable/custom_track"
+                android:layout_marginRight="@dimen/_10dp"
                 />
         </LinearLayout>
 
