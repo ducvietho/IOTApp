@@ -54,6 +54,10 @@ public class DialogSetting {
     RelativeLayout mLayout;
     @BindView(R.id.tv_name)
     TextView mName;
+    @BindView(R.id.tv_edit)
+    TextView mEdit;
+    @BindView(R.id.layput_edit)
+    RelativeLayout mLayoutEdit;
     private Context mContext;
 
     public DialogSetting(Context context) {
@@ -78,6 +82,7 @@ public class DialogSetting {
         mEdInternet.setTypeface(tf);
         mEdLan.setTypeface(tf);
         mName.setTypeface(tf);
+        mEdit.setTypeface(tf);
         SharedPreferences prefHouse = mContext.getSharedPreferences(Constant.PREFS_NAME_HOUSE, MODE_PRIVATE);
         String nameHouse = prefHouse.getString(Constant.EXTRA_NAME_HOUSE, null);
         mEdHouse.setText(nameHouse);

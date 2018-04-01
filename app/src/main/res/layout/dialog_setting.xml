@@ -5,7 +5,9 @@
                 android:alpha="0.85"
                 android:background="@color/colorBackgroung"
                 android:orientation="vertical">
-
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -258,17 +260,46 @@
             android:layout_marginTop="@dimen/_5dp"
             android:background="@android:color/white" />
     </LinearLayout>
+</ScrollView>
+
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_alignParentBottom="true">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="@dimen/_64dp"
-        android:layout_height="@dimen/_64dp"
-        android:id="@+id/img_avatar"
-        android:src="@drawable/ic_user_placeholder"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_70dp"
+        android:gravity="center">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/_70dp"
+            android:layout_height="@dimen/_70dp"
+            android:id="@+id/img_avatar"
+            android:src="@drawable/ic_user_placeholder"/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:id="@+id/layput_edit">
+            <ImageView
+                android:layout_width="@dimen/_70dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_edit"
+                android:layout_alignParentBottom="true"
+                />
+            <TextView
+                android:id="@+id/tv_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EDIT"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="@dimen/_20dp"
+                android:layout_marginBottom="@dimen/_40dp"/>
+        </RelativeLayout>
+    </RelativeLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40dp"
