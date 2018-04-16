@@ -107,10 +107,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+group
                             .getIconOff().replaceAll("/","") );
                     if(file.exists()){
-                        Picasso.with(itemView.getContext()).load(file).placeholder(R.drawable.ic_ac_off).into(mImageView);
+                        Picasso.with(itemView.getContext()).load(file).into(mImageView);
                     }else {
-                        Picasso.with(itemView.getContext()).load(group.getIconOff()).placeholder(R.drawable.ic_ac_off).into
-                                (mImageView);
+                        Picasso.with(itemView.getContext()).load(group.getIconOff()).into(mImageView);
                         new CacheImage(mContext).imageDownload(group.getIconOff());
                     }
                 }
@@ -118,9 +117,9 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+group
                             .getIconOn().replaceAll("/","") );
                     if(file.exists()){
-                        Picasso.with(itemView.getContext()).load(file).placeholder(R.drawable.ic_ac).into(mImageView);
+                        Picasso.with(itemView.getContext()).load(file).into(mImageView);
                     }else {
-                        Picasso.with(itemView.getContext()).load(group.getIconOn()).placeholder(R.drawable.ic_ac).into(mImageView);
+                        Picasso.with(itemView.getContext()).load(group.getIconOn()).into(mImageView);
                         new CacheImage(mContext).imageDownload(group.getIconOn());
                     }
                 }

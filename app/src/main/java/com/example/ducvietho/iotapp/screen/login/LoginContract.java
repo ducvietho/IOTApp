@@ -14,7 +14,8 @@ public interface LoginContract {
         void loginUserLan(String username,String pass);
         void loginUserInternet(String username,String pass);
         void loginUserDomain(String username,String pass);
-        void downloadImage();
+        void downloadImageLan();
+        void downloadImageInternet();
     }
     interface View{
         void loginSuccess(LoginResponse login);
@@ -22,5 +23,6 @@ public interface LoginContract {
         void loginFailureInternet(String username,String pass);
         void loginFailure(String message);
         void downloadSuccess(List<Image> list);
+        void downloadFailLan();
     }
 }

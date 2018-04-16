@@ -17,6 +17,15 @@ public class Group {
     private String mIconOn;
     @SerializedName("icon_off")
     private String mIconOff;
+    private int mType;
+
+    public int getType() {
+        return mType;
+    }
+
+    public void setType(int type) {
+        mType = type;
+    }
 
     public String getIconOn() {
         return mIconOn;

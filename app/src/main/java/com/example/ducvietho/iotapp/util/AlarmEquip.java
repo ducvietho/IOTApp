@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import com.example.ducvietho.iotapp.data.model.Equipment;
 import com.example.ducvietho.iotapp.receiver.AlarmEquipOffReceiver;
 import com.example.ducvietho.iotapp.receiver.AlarmEquipOnReceiver;
+import com.google.gson.Gson;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -43,7 +44,7 @@ public class AlarmEquip {
             cal_alarm.add(Calendar.DATE,1);
         }
         Intent myIntent = new Intent(mContext, AlarmEquipOnReceiver.class);
-        myIntent.putExtra(Constant.EXTRA_ID_EQUIP, equipment.getId());
+        myIntent.putExtra(Constant.EXTRA_ID_EQUIP, new Gson().toJson(equipment));
         myIntent.putExtra(Constant.EXTRA_ID_FLOOR, equipment.getIdFloor());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, 0);
         manager.set(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pendingIntent);
@@ -70,7 +71,7 @@ public class AlarmEquip {
             cal_alarm.add(Calendar.DATE,1);
         }
         Intent myIntent = new Intent(mContext, AlarmEquipOffReceiver.class);
-        myIntent.putExtra(Constant.EXTRA_ID_EQUIP, equipment.getId());
+        myIntent.putExtra(Constant.EXTRA_ID_EQUIP, new Gson().toJson(equipment));
         myIntent.putExtra(Constant.EXTRA_ID_FLOOR, equipment.getIdFloor());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, 0);
         manager.set(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pendingIntent);

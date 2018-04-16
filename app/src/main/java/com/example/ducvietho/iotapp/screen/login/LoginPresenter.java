@@ -92,7 +92,28 @@ public class LoginPresenter implements LoginContract.Presenter {
     }
 
     @Override
-    public void downloadImage() {
+    public void downloadImageLan() {
+        mDisposable.add(mImageDataRepository.getAllImage().subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Image>>() {
+            @Override
+            public void onNext(List<Image> value) {
+                mView.downloadSuccess(value);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                mView.downloadFailLan();
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        }));
+    }
+
+    @Override
+    public void downloadImageInternet() {
         mDisposable.add(mImageDataRepository.getAllImage().subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Image>>() {
             @Override

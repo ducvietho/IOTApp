@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         mHome.setTypeface(tf1);
         SharedPreferences prefHouse = getSharedPreferences(Constant.PREFS_NAME_HOUSE, MODE_PRIVATE);
         String nameHouse = prefHouse.getString(Constant.EXTRA_NAME_HOUSE, null);
-        if(nameHouse!=null){
+        if(nameHouse!=null && !nameHouse.matches("")){
             mHome.setText(nameHouse);
         }
         else {

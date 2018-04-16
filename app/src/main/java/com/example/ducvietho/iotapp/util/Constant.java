@@ -5,7 +5,7 @@ package com.example.ducvietho.iotapp.util;
  */
 
 public class Constant {
-    public static final String IOT_API = "http://118.70.223.182:50280/";
+    public static final String IOT_API = "http://159.65.113.146";
     public static final String PRE_REPEAT_GROUP = "repeat_group_";
     public static final String PRE_REPEAT_EQUIP = "repeat_equip_";
     public static final String PREFS_NAME_HOUSE = "house";

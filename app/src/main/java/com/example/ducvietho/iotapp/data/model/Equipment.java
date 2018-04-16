@@ -23,8 +23,36 @@ public class Equipment {
     private int mAlarmState;
     @SerializedName("time_alarm")
     private String mTimeAlarm;
-
+    @SerializedName("iotdevice_id")
+    private String mIOTDeviceId;
+    @SerializedName("stt")
+    private int mSTT;
+    private int mType;
     public Equipment() {
+    }
+
+    public int getType() {
+        return mType;
+    }
+
+    public void setType(int type) {
+        mType = type;
+    }
+
+    public String getIOTDeviceId() {
+        return mIOTDeviceId;
+    }
+
+    public void setIOTDeviceId(String IOTDeviceId) {
+        mIOTDeviceId = IOTDeviceId;
+    }
+
+    public int getSTT() {
+        return mSTT;
+    }
+
+    public void setSTT(int STT) {
+        mSTT = STT;
     }
 
     public String getTimeAlarm() {

@@ -22,6 +22,9 @@ import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.DialogSettingAlarm;
 import com.example.ducvietho.iotapp.util.OnClickItemGroup;
 import com.example.ducvietho.iotapp.util.OnLongClickItem;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
 
 import java.net.URISyntaxException;
 import java.util.List;
@@ -34,6 +37,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -58,6 +62,8 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
         String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
         if(lan!=null){
             {
                 try {
@@ -79,6 +85,17 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
                 }
             }
             mSocket.connect();
+            if (!mSocket.connected()) {
+                {
+                    try {
+                        mSocket = IO.socket(domain);
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            mSocket.connect();
         }
         else {
             {
@@ -87,6 +104,17 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
+                }
+            }
+            mSocket.connect();
+            if (!mSocket.connected()) {
+                {
+                    try {
+                        mSocket = IO.socket(domain);
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             mSocket.connect();
@@ -109,9 +137,20 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
             }
         }));
+        mSocket.on("response",onTurnGroup);
         return v;
     }
-
+    private Emitter.Listener onTurnGroup = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(v.getContext(),"Turn Success",Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    };
     @Override
     public void onLongClick(Group object) {
         new DialogSettingAlarm(v.getContext()).showDialogAlarmSettingGroup(object);
@@ -119,17 +158,23 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
     @Override
     public void onClick(final Group group, final ImageView imageView, TextView textView) {
-        if (group.getState() == 0) {
-
-
-
-        } else {
-
-
+        try {
+            attemptSend(group);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
     }
-
+    private void attemptSend(Group group) throws JSONException {
+        group.setType(1);
+        if(group.getState()==0){
+            group.setState(1);
+        }else {
+            group.setState(0);
+        }
+        String groupMessage = new Gson().toJson(group);
+        mSocket.emit("request", groupMessage);
+    }
     public void getAllGroupSuccess(List<Group> groups) {
         mProgressBar.setVisibility(View.GONE);
         GridLayoutManager manager = new GridLayoutManager(v.getContext(), 3);
@@ -189,35 +234,6 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     }
 
 
-    public void turnOnGroupSuccess(Group group, Response response, ImageView imageView) {
-        if (response.getStatus() == 200) {
-            imageView.setImageResource(R.drawable.ic_ac);
-            group.setState(1);
-            Toast.makeText(v.getContext(), "Bật " + group.getName() + " thành công", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(v.getContext(), "Bật " + group.getName() + " thất bại", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void turnOnGroupFailure(String message) {
-        Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
-    }
-
-    public void turnOffGroupSuccess(Group group, Response response, ImageView imageView) {
-        if (response.getStatus() == 200) {
-            group.setState(0);
-            imageView.setImageResource(R.drawable.ic_ac_off);
-            Toast.makeText(v.getContext(), "Tắt " + group.getName() + " thành công", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(v.getContext(), "Tắt " + group.getName() + " thất bại", Toast.LENGTH_LONG).show();
-        }
-    }
-
-
-
-    public void turnOffGroupFailure(String message) {
-        Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
-    }
 
 
 }

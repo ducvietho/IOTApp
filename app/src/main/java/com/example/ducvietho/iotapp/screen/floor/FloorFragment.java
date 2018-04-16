@@ -23,6 +23,7 @@ import com.example.ducvietho.iotapp.data.resource.remote.api.EquipmentRemoteData
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.OnCLickItem;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -77,6 +78,8 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
         if(lan!=null){
             {
                 try {
@@ -98,6 +101,17 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                 }
             }
             mSocket.connect();
+            if (!mSocket.connected()) {
+                {
+                    try {
+                        mSocket = IO.socket(domain);
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            mSocket.connect();
         }
         else {
             {
@@ -106,6 +120,17 @@ public class FloorFragment extends Fragment implements OnCLickItem {
 
                 } catch (URISyntaxException e) {
                     e.printStackTrace();
+                }
+            }
+            mSocket.connect();
+            if (!mSocket.connected()) {
+                {
+                    try {
+                        mSocket = IO.socket(domain);
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             mSocket.connect();
@@ -149,22 +174,13 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     };
     @Override
     public void onClick(final Equipment equipment, final ImageView imageView, final TextView textView) {
-        if (equipment.getState() == 0) {
 
             try {
-                attemptSend(equipment.getId(), 2, 1);
+                attemptSend(equipment);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-        } else {
-
-            try {
-                attemptSend(equipment.getId(), 2, 0);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
 
@@ -184,13 +200,14 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         mRecyclerView.setAdapter(adapter);
     }
 
-    private void attemptSend(int id, int serial, int state) throws JSONException {
-        JSONObject object = new JSONObject();
-        object.put("idFloor", id);
-        object.put("serial", serial);
-        object.put("state", state);
-        String message = object.toString().substring(1, object.toString().length() - 1);
-        mSocket.emit("request", message);
+    private void attemptSend(Equipment equipment) throws JSONException {
+        equipment.setType(0);
+        if(equipment.getState()==0){
+            equipment.setState(1);
+        }else {
+            equipment.setState(0);
+        }
+        mSocket.emit("request", new Gson().toJson(equipment));
     }
     public void getAllEquipByFloorFailureLan() {
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
@@ -229,7 +246,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
             @Override
             public void onError(Throwable e) {
 
-//                getAllEquipByFloorFailure(e.getMessage());
+                getAllEquipByFloorFailure(e.getMessage());
             }
 
             @Override
@@ -240,35 +257,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     public void getAllEquipByFloorFailure(String message) {
-        Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
-    }
-
-
-    public void turnOnEquipSuccess(Equipment equipment, Response response, ImageView imageView, TextView textView) {
-
-        if (response.getStatus() == 200) {
-            File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/" + equipment.getIconOn().replaceAll("/", ""));
-            Picasso.with(v.getContext()).load(file).into(imageView);
-            //imageView.setImageResource(R.drawable.ic_ac);
-            Toast.makeText(v.getContext(), "Đã bật thiết bị :" + equipment.getName(), Toast.LENGTH_LONG).show();
-            equipment.setState(1);
-        } else {
-            Toast.makeText(v.getContext(), "Bật thiết bị " + equipment.getName() + " thất bại", Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    public void turnOffEquipSuccess(Equipment equipment, Response response, ImageView imageView, TextView textView) {
-
-        if (response.getStatus() == 200) {
-            File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/" + equipment.getIconOff().replaceAll("/", ""));
-            Picasso.with(v.getContext()).load(file).into(imageView);
-            //imageView.setImageResource(R.drawable.ic_ac_off);
-            equipment.setState(0);
-            Toast.makeText(v.getContext(), "Đã tắt thiết bị :" + equipment.getName(), Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(v.getContext(), "Tắt thiết bị " + equipment.getName() + " thất bại", Toast.LENGTH_LONG).show();
-        }
+       // Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
     }
 
 

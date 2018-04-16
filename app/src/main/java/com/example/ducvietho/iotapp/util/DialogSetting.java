@@ -125,7 +125,8 @@ public class DialogSetting {
                 editorDomain.commit();
                 Intent i = mContext.getPackageManager()
                         .getLaunchIntentForPackage( mContext.getPackageName() );
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 mContext.startActivity(i);
             }
         });
