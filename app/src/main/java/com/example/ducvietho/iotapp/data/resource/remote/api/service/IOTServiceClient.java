@@ -12,4 +12,7 @@ public class IOTServiceClient extends ServiceClient {
         }
         return mIOTAPi;
     }
+    public static void clear(){
+        mIOTAPi = null;
+    }
 }

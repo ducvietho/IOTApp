@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
+import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.screen.main.MainActivity;
 
 import butterknife.BindView;
@@ -123,6 +124,7 @@ public class DialogSetting {
                         MODE_PRIVATE).edit();
                 editorDomain.putString(Constant.EXTRA_DOMAIN,mEdDomain.getText().toString());
                 editorDomain.commit();
+                IOTServiceClient.clear();
                 Intent i = mContext.getPackageManager()
                         .getLaunchIntentForPackage( mContext.getPackageName() );
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

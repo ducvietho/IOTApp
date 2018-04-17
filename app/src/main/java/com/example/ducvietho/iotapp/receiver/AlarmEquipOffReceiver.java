@@ -63,14 +63,17 @@ public class AlarmEquipOffReceiver extends BroadcastReceiver {
             }
             mSocket.connect();
             if (!mSocket.connected()) {
-                {
-                    try {
-                        mSocket = IO.socket(domain);
+                if(domain!=null){
+                    {
+                        try {
+                            mSocket = IO.socket(domain);
 
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+
             }
             mSocket.connect();
         }
@@ -85,14 +88,17 @@ public class AlarmEquipOffReceiver extends BroadcastReceiver {
             }
             mSocket.connect();
             if (!mSocket.connected()) {
-                {
-                    try {
-                        mSocket = IO.socket(domain);
+                if(domain!=null){
+                    {
+                        try {
+                            mSocket = IO.socket(domain);
 
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+
             }
             mSocket.connect();
         }

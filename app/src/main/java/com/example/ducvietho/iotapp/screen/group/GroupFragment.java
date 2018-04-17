@@ -85,15 +85,19 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
                 }
             }
             mSocket.connect();
-            if (!mSocket.connected()) {
-                {
-                    try {
-                        mSocket = IO.socket(domain);
 
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
+            if (!mSocket.connected()) {
+                if(domain!=null){
+                    {
+                        try {
+                            mSocket = IO.socket(domain);
+
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+
             }
             mSocket.connect();
         }
@@ -108,14 +112,17 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
             }
             mSocket.connect();
             if (!mSocket.connected()) {
-                {
-                    try {
-                        mSocket = IO.socket(domain);
+                if(domain!=null){
+                    {
+                        try {
+                            mSocket = IO.socket(domain);
 
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+
             }
             mSocket.connect();
         }
