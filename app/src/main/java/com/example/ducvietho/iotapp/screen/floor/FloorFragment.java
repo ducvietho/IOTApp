@@ -62,6 +62,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     private EquipmentRemoteDataResource mRepository;
     private Socket mSocket;
     private List<Equipment> mList = new ArrayList<>();
+    EquipmentAdapter adapter;
     public static FloorFragment newInstance(int postion) {
         FloorFragment fragment = new FloorFragment();
         Bundle args = new Bundle();
@@ -169,11 +170,15 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
     private Emitter.Listener onTurnEquip = new Emitter.Listener() {
         @Override
-        public void call(Object... args) {
+        public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(v.getContext(),"Turn Success",Toast.LENGTH_LONG).show();
+                    Equipment equipment = new Gson().fromJson(args[0].toString(),Equipment.class);
+                    int position = mList.indexOf(equipment);
+                    mList.set(position, equipment);
+                    adapter.notifyItemChanged(position);
+
                 }
             });
         }
@@ -202,7 +207,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         GridLayoutManager manager = new GridLayoutManager(v.getContext(), 3);
         mRecyclerView.setLayoutManager(manager);
         mList = equipments;
-        EquipmentAdapter adapter = new EquipmentAdapter(v.getContext(),mList, FloorFragment.this);
+         adapter = new EquipmentAdapter(v.getContext(),mList, FloorFragment.this);
         mRecyclerView.setAdapter(adapter);
     }
 
@@ -214,6 +219,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
             equipment.setState(0);
         }
         mSocket.emit("request", new Gson().toJson(equipment));
+
     }
     public void getAllEquipByFloorFailureLan() {
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);

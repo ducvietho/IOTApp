@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
+import com.example.ducvietho.iotapp.data.model.Equipment;
 import com.example.ducvietho.iotapp.data.model.Group;
 import com.example.ducvietho.iotapp.data.model.Response;
 import com.example.ducvietho.iotapp.data.resource.remote.api.GroupRemoteDataResource;
@@ -27,6 +28,7 @@ import com.google.gson.Gson;
 import org.json.JSONException;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -50,6 +52,8 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     CompositeDisposable mDisposable;
     GroupRemoteDataResource mRepository;
     Socket mSocket;
+    List<Group> mGroups = new ArrayList<>();
+    GroupAdapter adapter;
     public GroupFragment() {
     }
 
@@ -149,11 +153,15 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     }
     private Emitter.Listener onTurnGroup = new Emitter.Listener() {
         @Override
-        public void call(Object... args) {
+        public void call(final Object... args) {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(v.getContext(),"Turn Success",Toast.LENGTH_LONG).show();
+                    Group group = new Gson().fromJson(args[0].toString(),Group.class);
+                    int position = mGroups.indexOf(group);
+                    mGroups.set(position,group);
+                    adapter.notifyItemChanged(position);
+
                 }
             });
         }
@@ -181,12 +189,15 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
         }
         String groupMessage = new Gson().toJson(group);
         mSocket.emit("request", groupMessage);
+
+
     }
     public void getAllGroupSuccess(List<Group> groups) {
         mProgressBar.setVisibility(View.GONE);
+        mGroups = groups;
         GridLayoutManager manager = new GridLayoutManager(v.getContext(), 3);
         mRecyclerView.setLayoutManager(manager);
-        GroupAdapter adapter = new GroupAdapter(v.getContext(),groups, this, this);
+         adapter = new GroupAdapter(v.getContext(),mGroups, this, this);
         mRecyclerView.setAdapter(adapter);
     }
 
