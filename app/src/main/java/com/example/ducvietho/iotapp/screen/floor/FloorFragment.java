@@ -1,13 +1,15 @@
 package com.example.ducvietho.iotapp.screen.floor;
 
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +20,20 @@ import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
-import com.example.ducvietho.iotapp.data.model.Response;
+import com.example.ducvietho.iotapp.data.model.Login;
 import com.example.ducvietho.iotapp.data.resource.remote.api.EquipmentRemoteDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.OnCLickItem;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
+import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +44,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -61,8 +63,10 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     private CompositeDisposable mDisposable;
     private EquipmentRemoteDataResource mRepository;
     private Socket mSocket;
+
     private List<Equipment> mList = new ArrayList<>();
     EquipmentAdapter adapter;
+
     public static FloorFragment newInstance(int postion) {
         FloorFragment fragment = new FloorFragment();
         Bundle args = new Bundle();
@@ -75,13 +79,14 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_floor, container, false);
         ButterKnife.bind(this, v);
+
         SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
         String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
         String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
-        if(lan!=null){
+        if (lan != null) {
             {
                 try {
                     mSocket = IO.socket(lan);
@@ -103,7 +108,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
             }
             mSocket.connect();
             if (!mSocket.connected()) {
-                if(domain!=null){
+                if (domain != null) {
                     {
                         try {
                             mSocket = IO.socket(domain);
@@ -116,8 +121,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
 
             }
             mSocket.connect();
-        }
-        else {
+        } else {
             {
                 try {
                     mSocket = IO.socket(internet);
@@ -128,7 +132,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
             }
             mSocket.connect();
             if (!mSocket.connected()) {
-                if(domain!=null){
+                if (domain != null) {
                     {
                         try {
                             mSocket = IO.socket(domain);
@@ -142,14 +146,11 @@ public class FloorFragment extends Fragment implements OnCLickItem {
             }
             mSocket.connect();
         }
-
-
+        Log.i("Connection status:",String.valueOf(mSocket.connected()));
         idFloor = getArguments().getInt(EXTRA_POS, 0);
-
         mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan));
         mDisposable = new CompositeDisposable();
-        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
             public void onNext(List<Equipment> value) {
                 getAllEquipByFloorSuccess(value);
@@ -165,32 +166,50 @@ public class FloorFragment extends Fragment implements OnCLickItem {
 
             }
         }));
-        mSocket.on("response",onTurnEquip);
+        mSocket.on("response", onTurnEquip);
         return v;
     }
+
     private Emitter.Listener onTurnEquip = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
+            FloorFragment.this.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Equipment equipment = new Gson().fromJson(args[0].toString(),Equipment.class);
-                    int position = mList.indexOf(equipment);
-                    mList.set(position, equipment);
-                    adapter.notifyItemChanged(position);
+                    String infor;
+                    Toast.makeText(v.getContext(), "Turn equipment" + args[0], Toast.LENGTH_LONG).show();
+                    try {
+                        JSONObject jsonObject = (JSONObject) args[0];
+                        infor = jsonObject.getString("object");
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                    Equipment equip = new Gson().fromJson(infor, Equipment.class);
+                    if(equip.getIdFloor()==idFloor){
+                        int position = mList.indexOf(equip);
+                        int size = mList.size();
+                        Log.i("size "+String.valueOf(idFloor)+":",String.valueOf(size));
+                        Log.i("equip infor", new Gson().toJson(equip));
+                        mList.set(position, equip);
+                        adapter.notifyItemChanged(position);
+                    }
+
 
                 }
             });
         }
     };
+
     @Override
     public void onClick(final Equipment equipment, final ImageView imageView, final TextView textView) {
 
-            try {
-                attemptSend(equipment);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+        try {
+            attemptSend(equipment);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -207,26 +226,27 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         GridLayoutManager manager = new GridLayoutManager(v.getContext(), 3);
         mRecyclerView.setLayoutManager(manager);
         mList = equipments;
-         adapter = new EquipmentAdapter(v.getContext(),mList, FloorFragment.this);
+        adapter = new EquipmentAdapter(v.getContext(), mList, FloorFragment.this);
         mRecyclerView.setAdapter(adapter);
     }
 
     private void attemptSend(Equipment equipment) throws JSONException {
-        equipment.setType(0);
-        if(equipment.getState()==0){
+
+        if (equipment.getState() == 0) {
             equipment.setState(1);
-        }else {
+        } else {
             equipment.setState(0);
         }
+        Log.i("Socket :", new Gson().toJson(equipment));
         mSocket.emit("request", new Gson().toJson(equipment));
 
     }
+
     public void getAllEquipByFloorFailureLan() {
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
         mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(internet));
-        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
             public void onNext(List<Equipment> value) {
                 getAllEquipByFloorSuccess(value);
@@ -243,13 +263,12 @@ public class FloorFragment extends Fragment implements OnCLickItem {
             }
         }));
     }
+
     public void getAllEquipByFloorFailureInternet() {
-        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
-                MODE_PRIVATE);
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
         String domain = sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET, null);
         mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(domain));
-        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
             public void onNext(List<Equipment> value) {
                 getAllEquipByFloorSuccess(value);
@@ -269,8 +288,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     public void getAllEquipByFloorFailure(String message) {
-       // Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
+        // Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
     }
-
 
 }

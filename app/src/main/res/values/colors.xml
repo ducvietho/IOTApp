@@ -17,5 +17,7 @@
     <color name="blueBlur_50">#7F04223e</color>
     <color name="blueBlur_85">#CF04223e</color>
     <color name="primary">#607D8B</color>
+    <color name="blue">#0B295B</color>
+    <color name="purple">#4E3875</color>
     <color name="primary_light_alpha50">#7FCFD8DC</color>
 </resources>

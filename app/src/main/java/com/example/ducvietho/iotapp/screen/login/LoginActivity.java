@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         mLoading = new DialogLoading(LoginActivity.this);
         if(login.getToken()==null){
             SharedPreferences.Editor editorLan = getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE).edit();
-            editorLan.putString(Constant.EXTRA_LAN, "http://159.65.113.146");
+            editorLan.putString(Constant.EXTRA_LAN, "http://superfastserver.ddns.net:8080");
             editorLan.commit();
             SharedPreferences.Editor editorInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE).edit();
             editorInternet.putString(Constant.EXTRA_INTERNET, "http://34.229.9.67:2021");

@@ -114,8 +114,6 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             boolean state = sharedPreferences.getBoolean(EXTRA_STATE, false);
             if(state){
                 mAlarmOn.setVisibility(View.VISIBLE);
-            }else {
-                mAlarmOff.setVisibility(View.VISIBLE);
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {

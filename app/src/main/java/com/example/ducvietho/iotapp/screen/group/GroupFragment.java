@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.DialogSettingAlarm;
 import com.example.ducvietho.iotapp.util.OnClickItemGroup;
 import com.example.ducvietho.iotapp.util.OnLongClickItem;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -37,9 +41,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import io.socket.client.IO;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
+
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -130,6 +132,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
             }
             mSocket.connect();
         }
+        Log.i("Connection status:",String.valueOf(mSocket.connected()));
         mDisposable = new CompositeDisposable();
         mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance(lan)));
         mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
@@ -148,13 +151,13 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
             }
         }));
-        mSocket.on("response",onTurnGroup);
+        mSocket.on("response_group",onTurnGroup);
         return v;
     }
     private Emitter.Listener onTurnGroup = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
+            GroupFragment.this.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Group group = new Gson().fromJson(args[0].toString(),Group.class);
@@ -181,13 +184,13 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
     }
     private void attemptSend(Group group) throws JSONException {
-        group.setType(1);
         if(group.getState()==0){
             group.setState(1);
         }else {
             group.setState(0);
         }
         String groupMessage = new Gson().toJson(group);
+        Log.i("Socket :" ,new Gson().toJson(group));
         mSocket.emit("request", groupMessage);
 
 
@@ -250,8 +253,5 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     public void getAllGroupFailure(String message) {
         Toast.makeText(v.getContext(), "Error" + message, Toast.LENGTH_LONG).show();
     }
-
-
-
 
 }

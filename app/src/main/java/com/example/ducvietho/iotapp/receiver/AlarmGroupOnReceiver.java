@@ -13,6 +13,8 @@ import com.example.ducvietho.iotapp.data.resource.remote.api.EquipmentRemoteData
 import com.example.ducvietho.iotapp.data.resource.remote.api.GroupRemoteDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.util.Constant;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 
 import java.net.URISyntaxException;
@@ -21,8 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-import io.socket.client.IO;
-import io.socket.client.Socket;
+
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.ducvietho.iotapp.util.Constant.PRE_STATE_GROUP;
@@ -107,7 +108,6 @@ public class AlarmGroupOnReceiver extends BroadcastReceiver {
         final String message = extra.getString(Constant.EXTRA_ID_GROUP);
         Group group = new Gson().fromJson(message,Group.class);
         group.setState(1);
-        group.setType(1);
         mSocket.emit("request",new Gson().toJson(group));
         String preSetting = PRE_STATE_GROUP + String.valueOf(group.getId());
         final SharedPreferences sharedPreferences = context.getSharedPreferences(preSetting, Context.MODE_PRIVATE);
