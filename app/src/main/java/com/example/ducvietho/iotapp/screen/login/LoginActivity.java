@@ -1,5 +1,6 @@
 package com.example.ducvietho.iotapp.screen.login;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,10 +15,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +36,7 @@ import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceC
 import com.example.ducvietho.iotapp.screen.main.MainActivity;
 import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.DialogLoading;
+import com.example.ducvietho.iotapp.util.DialogSetting;
 import com.example.ducvietho.iotapp.util.UserManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -64,6 +69,10 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     CheckBox mCheckBox;
     @BindView(R.id.tv_copy)
     TextView mCopy;
+    @BindView(R.id.layout)
+    RelativeLayout mLayout;
+    @BindView(R.id.img_setting)
+    ImageView imgSetting;
     private DialogLoading mLoading;
     ImageRemoteDataResource imageDataRepository;
     LoginDataRepository repository;
@@ -135,6 +144,19 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                     presenter.loginUserLan(mUserName.getText().toString(), mPass.getText().toString());
                 }
 
+            }
+        });
+        mLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideSoftKeyboard();
+                return false;
+            }
+        });
+        imgSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new DialogSetting(LoginActivity.this).showDialog();
             }
         });
     }
@@ -268,5 +290,12 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             }
         };
         return target;
+    }
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) LoginActivity.this.getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(
+                LoginActivity.this.getCurrentFocus().getWindowToken(), 0);
     }
 }
