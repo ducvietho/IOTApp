@@ -171,7 +171,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     };
     @Override
     public void onLongClick(Group object) {
-        new DialogSettingAlarm(v.getContext()).showDialogAlarmSettingGroup(object);
+        new DialogSettingAlarm(v.getContext()).showDialogAlarmSettingGroup(object,mGroups,adapter);
     }
 
     @Override

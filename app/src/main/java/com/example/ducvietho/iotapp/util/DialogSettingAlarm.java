@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
 import com.example.ducvietho.iotapp.data.model.Group;
+import com.example.ducvietho.iotapp.screen.floor.EquipmentAdapter;
+import com.example.ducvietho.iotapp.screen.group.GroupAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,8 @@ public class DialogSettingAlarm {
         mContext = context;
     }
 
-    public void showDialogAlarmSettingEquipment(final Equipment equipment) {
+    public void showDialogAlarmSettingEquipment(final Equipment equipment, final List<Equipment> equipments,
+                                                final EquipmentAdapter adapter) {
         String preSetting = PRE_STATE + String.valueOf(equipment.getId());
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -76,6 +79,9 @@ public class DialogSettingAlarm {
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int postision = equipments.indexOf(equipment);
+                equipments.set(postision,equipment);
+                adapter.notifyItemChanged(postision);
                 if (isChecked) {
                     editor.putBoolean(EXTRA_STATE, true);
                     final String pre = Constant.PRE_ALARM + String.valueOf(equipment.getId());
@@ -120,7 +126,7 @@ public class DialogSettingAlarm {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
-    public void showDialogAlarmSettingGroup(final Group group) {
+    public void showDialogAlarmSettingGroup(final Group group, final List<Group> groups, final GroupAdapter adapter) {
         String preSetting = PRE_STATE_GROUP + String.valueOf(group.getId());
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -146,6 +152,9 @@ public class DialogSettingAlarm {
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int pos = groups.indexOf(group);
+                groups.set(pos,group);
+                adapter.notifyItemChanged(pos);
                 if (isChecked) {
                     editor.putBoolean(EXTRA_STATE_GROUP, true);
                     final String preStringAlarm =  Constant.PRE_ALARM_GROUP + String.valueOf(group.getId());

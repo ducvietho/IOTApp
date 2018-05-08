@@ -125,7 +125,8 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                   new DialogSettingAlarm(itemView.getContext()).showDialogAlarmSettingEquipment(equipment);
+                   new DialogSettingAlarm(itemView.getContext()).showDialogAlarmSettingEquipment(equipment,mList,
+                           EquipmentAdapter.this);
                     return true;
                 }
             });
