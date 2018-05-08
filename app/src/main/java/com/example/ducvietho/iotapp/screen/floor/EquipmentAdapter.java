@@ -112,8 +112,16 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             final SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(preSetting, Context
                     .MODE_PRIVATE);
             boolean state = sharedPreferences.getBoolean(EXTRA_STATE, false);
+            final String pre = Constant.PRE_ALARM + String.valueOf(equipment.getId());
+            SharedPreferences preferences = mContext.getSharedPreferences(pre, Context.MODE_PRIVATE);
+            String alarmOnTime = preferences.getString(PRE_ON, null);
+            String alarmOffTime = preferences.getString(PRE_OFF, null);
             if(state){
                 mAlarmOn.setVisibility(View.VISIBLE);
+            }else {
+                if(alarmOffTime!=null||alarmOnTime !=null){
+                    mAlarmOff.setVisibility(View.VISIBLE);
+                }
             }
 
             itemView.setOnClickListener(new View.OnClickListener() {

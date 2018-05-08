@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -38,6 +39,7 @@ import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.CustomTypefaceSpan;
 import com.example.ducvietho.iotapp.util.DialogInfor;
 import com.example.ducvietho.iotapp.util.DialogSetting;
+import com.example.ducvietho.iotapp.util.OnChoseImage;
 import com.example.ducvietho.iotapp.util.UserManager;
 
 import butterknife.BindView;
@@ -45,7 +47,8 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.blurry.Blurry;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnChoseImage {
+    public static final int PICK_IMAGE = 100;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.drawer)
@@ -66,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView mImgScene;
     @BindView(R.id.img_floor)
     ImageView mImgFloor;
-
+    DialogSetting mSetting;
     private boolean doubleBackToExitPressedOnce = false;
     private boolean isDrawerOpened;
     private MaterialMenuDrawable materialMenu;
@@ -128,7 +131,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK){
+            Uri selectedImage = data.getData();
+            String path = selectedImage.getPath();
+            SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE).edit();
+            editor.putString(Constant.EXTRA_IMAGE,path);
+            editor.commit();
+            new DialogSetting(MainActivity.this,MainActivity.this).showDialog();
 
+        }
+    }
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -215,14 +230,14 @@ public class MainActivity extends AppCompatActivity {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 switch (item.getItemId()) {
                     case R.id.nav_config:
-                        new DialogSetting(MainActivity.this).showDialog();
+                        new DialogSetting(MainActivity.this,MainActivity.this).showDialog();
                         return true;
                     case R.id.nav_logout:
                         new UserManager(MainActivity.this).logoutUser();
 
                         return true;
                     case R.id.nav_infor:
-                        new DialogInfor(MainActivity.this).showDialog();
+
                         return true;
                     default:
                         return false;
@@ -246,6 +261,11 @@ public class MainActivity extends AppCompatActivity {
             transaction.addToBackStack(null);
             transaction.commit();
         }
+
+    }
+
+    @Override
+    public void onChoseImage() {
 
     }
 }

@@ -1,5 +1,6 @@
 package com.example.ducvietho.iotapp.util;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,20 +8,30 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
+import com.example.ducvietho.iotapp.data.model.Login;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
+import com.example.ducvietho.iotapp.screen.login.LoginActivity;
 import com.example.ducvietho.iotapp.screen.main.MainActivity;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -29,6 +40,8 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class DialogSetting {
+    @BindView(R.id.layout)
+    LinearLayout mScreen;
     @BindView(R.id.tv_setting)
     TextView mSetting;
     @BindView(R.id.tv_house)
@@ -59,11 +72,18 @@ public class DialogSetting {
     TextView mEdit;
     @BindView(R.id.layput_edit)
     RelativeLayout mLayoutEdit;
+    @BindView(R.id.layout_user)
+    RelativeLayout mLayoutUser;
+    @BindView(R.id.img_avatar)
+    CircleImageView mAvatar;
     private Context mContext;
+    private OnChoseImage mImage;
 
-    public DialogSetting(Context context) {
+    public DialogSetting(Context context, OnChoseImage image) {
         mContext = context;
+        mImage = image;
     }
+
     public void showDialog(){
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -98,10 +118,27 @@ public class DialogSetting {
         mEdDomain.setText(domain);
         UserManager userManager = new UserManager(mContext);
         mName.setText(userManager.getUserDetail().getName());
+        Login login = new UserManager(mContext).getUserDetail();
+        SharedPreferences preferencesImage  = mContext.getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE);
+        String path = preferencesImage.getString(Constant.EXTRA_IMAGE,null);
+        if(path!=null){
+            Picasso.with(mContext).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(mAvatar);
+        }
+
+        if(login.getToken()==null){
+            mLayoutUser.setVisibility(View.GONE);
+        }
         mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+            }
+        });
+        mEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                mImage.onChoseImage();
             }
         });
         mComplete.setOnClickListener(new View.OnClickListener() {
@@ -130,6 +167,16 @@ public class DialogSetting {
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 mContext.startActivity(i);
+            }
+        });
+        mScreen.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager inputMethodManager = (InputMethodManager)((Activity)mContext).getSystemService
+                        (Activity
+                        .INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(((Activity)mContext).getCurrentFocus().getWindowToken(), 0);
+                return false;
             }
         });
         final Window window = dialog.getWindow();

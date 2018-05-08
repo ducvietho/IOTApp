@@ -9,6 +9,8 @@ public class Constant {
     public static final String PRE_REPEAT_GROUP = "repeat_group_";
     public static final String PRE_REPEAT_EQUIP = "repeat_equip_";
     public static final String PREFS_NAME_HOUSE = "house";
+    public static final String PREFS_IMAGE = "image";
+    public static final String EXTRA_IMAGE = "image_avatar";
     public static final String PREFS_LAN = "lan";
     public static final String PREFS_INTERNET = "internet";
     public static final String PREFS_DOMAIN = "domain";

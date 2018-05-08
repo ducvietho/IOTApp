@@ -1,11 +1,8 @@
 package com.example.ducvietho.iotapp.screen.floor;
 
 
-import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +17,6 @@ import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
-import com.example.ducvietho.iotapp.data.model.Login;
 import com.example.ducvietho.iotapp.data.resource.remote.api.EquipmentRemoteDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.util.Constant;
@@ -29,7 +25,6 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +39,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -146,7 +140,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
             }
             mSocket.connect();
         }
-        Log.i("Connection status:",String.valueOf(mSocket.connected()));
+        Log.i("Connection status:", String.valueOf(mSocket.connected()));
         idFloor = getArguments().getInt(EXTRA_POS, 0);
         mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan));
         mDisposable = new CompositeDisposable();
@@ -173,7 +167,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     private Emitter.Listener onTurnEquip = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            FloorFragment.this.getActivity().runOnUiThread(new Runnable() {
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     String infor;
@@ -181,19 +175,23 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                     try {
                         JSONObject jsonObject = (JSONObject) args[0];
                         infor = jsonObject.getString("object");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return;
-                    }
-                    Equipment equip = new Gson().fromJson(infor, Equipment.class);
-                    if(equip.getIdFloor()==idFloor){
-                        int position = mList.indexOf(equip);
-                        int size = mList.size();
-                        Log.i("size "+String.valueOf(idFloor)+":",String.valueOf(size));
+                        Equipment equip = new Gson().fromJson(infor, Equipment.class);
                         Log.i("equip infor", new Gson().toJson(equip));
-                        mList.set(position, equip);
-                        adapter.notifyItemChanged(position);
+                        Toast.makeText(v.getContext(), "Floor:" + String.valueOf(idFloor) + "=" + String.valueOf(equip.getIdFloor()), Toast.LENGTH_LONG).show();
+                        if (equip.getIdFloor() == idFloor) {
+                            int position = mList.indexOf(equip);
+                            int size = mList.size();
+                            Log.i("size " + String.valueOf(idFloor) + ":", String.valueOf(size));
+
+                            if (position > -1) {
+                                mList.set(0, equip);
+                                adapter.notifyItemChanged(position);
+                            }
+
+                        }
+                    } catch (JSONException e) {
+                        Log.e("Error", e.getMessage());
+                        return;
                     }
 
 
@@ -288,6 +286,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     public void getAllEquipByFloorFailure(String message) {
+        mProgressBar.setVisibility(View.GONE);
         // Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
     }
 

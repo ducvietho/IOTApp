@@ -1,11 +1,13 @@
 package com.example.ducvietho.iotapp.screen.login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,6 +39,7 @@ import com.example.ducvietho.iotapp.screen.main.MainActivity;
 import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.DialogLoading;
 import com.example.ducvietho.iotapp.util.DialogSetting;
+import com.example.ducvietho.iotapp.util.OnChoseImage;
 import com.example.ducvietho.iotapp.util.UserManager;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -49,8 +52,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View {
+public class LoginActivity extends AppCompatActivity implements LoginContract.View,OnChoseImage {
     public static final int REQUEST_STORAGE = 112;
+    public static final int PICK_IMAGE = 100;
     @BindView(R.id.tv_login)
     TextView mLogin;
     @BindView(R.id.ed_user)
@@ -77,13 +81,21 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     ImageRemoteDataResource imageDataRepository;
     LoginDataRepository repository;
     UserManager mUserManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(LoginActivity.this);
+        SharedPreferences sharedPreferencesLan = getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
+        String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
+        SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
+        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_LAN, null);
+        SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_LAN, null);
+
         mUserManager = new UserManager(LoginActivity.this);
-        Login login = mUserManager.getUserDetail();
+
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/UTM Avo.ttf");
         mTextViewForget.setTypeface(tf);
         mCopy.setTypeface(tf);
@@ -114,7 +126,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             }
         });
         mLoading = new DialogLoading(LoginActivity.this);
-        if(login.getToken()==null){
+        if (lan == null && internet == null && domain == null) {
             SharedPreferences.Editor editorLan = getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE).edit();
             editorLan.putString(Constant.EXTRA_LAN, "http://superfastserver.ddns.net:8080");
             editorLan.commit();
@@ -123,13 +135,10 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             editorInternet.commit();
         }
 
-        SharedPreferences sharedPreferencesLan = getSharedPreferences(Constant.PREFS_LAN,MODE_PRIVATE);
-        String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN,"");
 
-        imageDataRepository = (new ImageRemoteDataResource
-                (IOTServiceClient.getInstance(lan)));
+        imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(lan)));
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(lan)));
-        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
+        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
         new UserManager(LoginActivity.this).checkUserLogin();
         presenter.downloadImageLan();
@@ -156,9 +165,30 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         imgSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DialogSetting(LoginActivity.this).showDialog();
+                new DialogSetting(LoginActivity.this,LoginActivity.this).showDialog();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK){
+            Uri selectedImage = data.getData();
+            String path = selectedImage.getPath();
+            SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE).edit();
+            editor.putString(Constant.EXTRA_IMAGE,path);
+            editor.commit();
+            new DialogSetting(LoginActivity.this,LoginActivity.this).showDialog();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_ACCOUNT, MODE_PRIVATE).edit();
+        editor.clear();
+        editor.commit();
     }
 
     @Override
@@ -180,28 +210,28 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     }
 
     @Override
-    public void loginFailureLan(String username,String pass) {
-        SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET,MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"");
+    public void loginFailureLan(String username, String pass) {
+        SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
+        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "");
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
-        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
+        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
-        presenter.loginUserInternet(username,pass);
+        presenter.loginUserInternet(username, pass);
     }
 
     @Override
-    public void loginFailureInternet(String username,String pass) {
-        SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN,MODE_PRIVATE);
-        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,"");
+    public void loginFailureInternet(String username, String pass) {
+        SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
+        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "");
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
-        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
+        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
-        presenter.loginUserDomain(username,pass);
+        presenter.loginUserDomain(username, pass);
     }
 
     @Override
     public void loginFailure(String message) {
-        Toast.makeText(LoginActivity.this, "Error:" + message, Toast.LENGTH_LONG).show();
+        Toast.makeText(LoginActivity.this, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -211,11 +241,10 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void downloadFailLan() {
-        SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET,MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"");
-        imageDataRepository = (new ImageRemoteDataResource
-                (IOTServiceClient.getInstance(internet)));
-        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository,repository, LoginActivity
+        SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
+        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "");
+        imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(internet)));
+        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
         presenter.downloadImageInternet();
     }
@@ -231,27 +260,26 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
         }
     }
+
     private void requestPermission(List<Image> list) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
 
         } else {
-                for(int i = 0;i<list.size();i++){
-                    imageDownload(list.get(i).getIconOff());
-                    imageDownload(list.get(i).getIconOn());
-                }
+            for (int i = 0; i < list.size(); i++) {
+                imageDownload(list.get(i).getIconOff());
+                imageDownload(list.get(i).getIconOn());
             }
         }
+    }
 
-    private void imageDownload(String url){
-        Picasso.with(LoginActivity.this)
-                .load(url)
-                .into(getTarget(url));
+    private void imageDownload(String url) {
+        Picasso.with(LoginActivity.this).load(url).into(getTarget(url));
     }
 
 
-    private  Target getTarget(final String url){
-        Target target = new Target(){
+    private Target getTarget(final String url) {
+        Target target = new Target() {
 
             @Override
             public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -259,12 +287,12 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
                     @Override
                     public void run() {
-                        File folder = new File(Environment.getExternalStorageDirectory().toString()+"/iot/");
+                        File folder = new File(Environment.getExternalStorageDirectory().toString() + "/iot/");
                         if (!folder.exists()) {
                             folder.mkdirs();
                         }
-                        String urlRe = url.replaceAll("/","");
-                        File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+urlRe );
+                        String urlRe = url.replaceAll("/", "");
+                        File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/" + urlRe);
                         try {
                             file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);
@@ -291,11 +319,17 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         };
         return target;
     }
+
     public void hideSoftKeyboard() {
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) LoginActivity.this.getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(
-                LoginActivity.this.getCurrentFocus().getWindowToken(), 0);
+        InputMethodManager inputMethodManager = (InputMethodManager) LoginActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(LoginActivity.this.getCurrentFocus().getWindowToken(), 0);
+    }
+
+    @Override
+    public void onChoseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
     }
 }
