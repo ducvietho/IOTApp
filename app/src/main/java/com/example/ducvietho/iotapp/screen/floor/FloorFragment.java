@@ -179,12 +179,16 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                         Log.i("equip infor", new Gson().toJson(equip));
                         Toast.makeText(v.getContext(), "Floor:" + String.valueOf(idFloor) + "=" + String.valueOf(equip.getIdFloor()), Toast.LENGTH_LONG).show();
                         if (equip.getIdFloor() == idFloor) {
-                            int position = mList.indexOf(equip);
+                            int position = -1;
                             int size = mList.size();
                             Log.i("size " + String.valueOf(idFloor) + ":", String.valueOf(size));
-
+                            for (int i=0;i<mList.size();i++){
+                                if(mList.get(i).getId()==equip.getId()){
+                                    position =i;
+                                }
+                            }
                             if (position > -1) {
-                                mList.set(0, equip);
+                                mList.set(position, equip);
                                 adapter.notifyItemChanged(position);
                             }
 
@@ -229,13 +233,13 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     private void attemptSend(Equipment equipment) throws JSONException {
-
-        if (equipment.getState() == 0) {
-            equipment.setState(1);
+        Equipment equip = equipment;
+        if (equip.getState() == 0) {
+            equip.setState(1);
         } else {
-            equipment.setState(0);
+            equip.setState(0);
         }
-        Log.i("Socket :", new Gson().toJson(equipment));
+        Log.i("Socket :", new Gson().toJson(equip));
         mSocket.emit("request", new Gson().toJson(equipment));
 
     }
