@@ -105,8 +105,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
             }
             if(group.getIconOff()!=null&&group.getIconOn()!=null){
                 if(group.getState()==0){
-                    File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+group
-                            .getIconOff().replaceAll("/","") );
+                    File file = new File(mContext.getCacheDir() + "/iot/"+group.getIconOff().replaceAll("/","") );
                     if(file.exists()){
                         Picasso.with(itemView.getContext()).load(file).into(mImageView);
                     }else {
@@ -115,8 +114,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.ViewHolder> 
                     }
                 }
                 else {
-                    File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+group
-                            .getIconOn().replaceAll("/","") );
+                    File file = new File(mContext.getCacheDir()+ "/iot/"+group.getIconOn().replaceAll("/","") );
                     if(file.exists()){
                         Picasso.with(itemView.getContext()).load(file).into(mImageView);
                     }else {

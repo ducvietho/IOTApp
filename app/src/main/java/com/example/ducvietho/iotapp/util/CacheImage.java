@@ -40,12 +40,12 @@ public class CacheImage {
 
                     @Override
                     public void run() {
-                        File folder = new File(Environment.getExternalStorageDirectory().toString()+"/iot/");
+                        File folder = new File(mContext.getCacheDir()+"/iot/");
                         if (!folder.exists()) {
                             folder.mkdirs();
                         }
                         String urlRe = url.replaceAll("/","");
-                        File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+urlRe );
+                        File file = new File(mContext.getCacheDir() + "/iot/"+urlRe );
                         try {
                             file.createNewFile();
                             FileOutputStream ostream = new FileOutputStream(file);

@@ -88,8 +88,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             mTextView.setTypeface(tf);
             if (equipment.getState() == 0) {
 
-                File file = new File(Environment.getExternalStorageDirectory().toString()+ "/iot/"+equipment
-                        .getIconOff().replaceAll("/","") );
+                File file = new File(mContext.getCacheDir()+ "/iot/"+equipment.getIconOff().replaceAll("/","") );
                 if(file.exists()){
                     Picasso.with(itemView.getContext()).load(file).into(mImageView);
                 }else{
@@ -98,8 +97,7 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
                 }
 
             } else {
-                File file = new File(Environment.getExternalStorageDirectory().toString() + "/iot/"+equipment
-                        .getIconOn().replaceAll("/","") );
+                File file = new File(mContext.getCacheDir() + "/iot/"+equipment.getIconOn().replaceAll("/","") );
                 if(file.exists()){
                     Picasso.with(itemView.getContext()).load(file).into(mImageView);
                 }else {
