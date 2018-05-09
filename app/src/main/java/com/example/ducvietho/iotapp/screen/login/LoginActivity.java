@@ -88,11 +88,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         setContentView(R.layout.activity_login);
         ButterKnife.bind(LoginActivity.this);
         SharedPreferences sharedPreferencesLan = getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
-        String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
         SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_LAN, null);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_LAN, null);
         SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_LAN, null);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_LAN, null);
 
         mUserManager = new UserManager(LoginActivity.this);
 
@@ -128,10 +128,10 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         mLoading = new DialogLoading(LoginActivity.this);
         if (lan == null && internet == null && domain == null) {
             SharedPreferences.Editor editorLan = getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE).edit();
-            editorLan.putString(Constant.EXTRA_LAN, "http://superfastserver.ddns.net:8080");
+            editorLan.putString(Constant.EXTRA_LAN, "superfastserver.ddns.net:8080");
             editorLan.commit();
             SharedPreferences.Editor editorInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE).edit();
-            editorInternet.putString(Constant.EXTRA_INTERNET, "http://34.229.9.67:2021");
+            editorInternet.putString(Constant.EXTRA_INTERNET, "34.229.9.67:2021");
             editorInternet.commit();
         }
 
@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void loginFailureLan(String username, String pass) {
         SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "");
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "");
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
@@ -222,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void loginFailureInternet(String username, String pass) {
         SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "");
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "");
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
@@ -242,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void downloadFailLan() {
         SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "");
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "");
         imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(internet)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);

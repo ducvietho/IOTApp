@@ -38,11 +38,11 @@ public class AlarmGroupOnReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, Intent intent) {
         SharedPreferences sharedPreferencesLan = context.getSharedPreferences(Constant.PREFS_LAN,
                 MODE_PRIVATE);
-        String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN,null);
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN,null);
         SharedPreferences sharedPreferencesInternet = context.getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        String internet =Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
         SharedPreferences sharedPreferencesDomain = context.getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
         if(lan!=null){
             {
                 try {

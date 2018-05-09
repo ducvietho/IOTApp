@@ -65,11 +65,11 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
         ButterKnife.bind(GroupFragment.this,v);
 
         SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
-        String lan = sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
         if(lan!=null){
             {
                 try {
@@ -207,7 +207,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
     public void getAllGroupFailureLan() {
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
         mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance(internet)));
         mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
@@ -229,7 +229,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     public void getAllGroupFailureInternet() {
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
-        String domain = sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET, null);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET, null);
         mRepository = new GroupRemoteDataResource(IOTServiceClient.getInstance(domain));
         mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
