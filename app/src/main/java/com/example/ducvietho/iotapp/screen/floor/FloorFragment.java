@@ -171,13 +171,11 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                 @Override
                 public void run() {
                     String infor;
-                    Toast.makeText(v.getContext(), "Turn equipment" + args[0], Toast.LENGTH_LONG).show();
+
                     try {
                         JSONObject jsonObject = (JSONObject) args[0];
                         infor = jsonObject.getString("object");
                         Equipment equip = new Gson().fromJson(infor, Equipment.class);
-                        Log.i("equip infor", new Gson().toJson(equip));
-                        Toast.makeText(v.getContext(), "Floor:" + String.valueOf(idFloor) + "=" + String.valueOf(equip.getIdFloor()), Toast.LENGTH_LONG).show();
                         if (equip.getIdFloor() == idFloor) {
                             int position = -1;
                             int size = mList.size();
@@ -187,9 +185,10 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                                     position =i;
                                 }
                             }
-                            if (position > -1) {
+                            if(position>-1){
+                                Log.i("equip infor", new Gson().toJson(equip));
                                 mList.set(position, equip);
-                                adapter.notifyItemChanged(position);
+                                adapter.notifyItemChanged(position,mList);
                             }
 
                         }

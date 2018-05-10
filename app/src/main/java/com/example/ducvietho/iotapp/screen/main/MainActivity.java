@@ -41,6 +41,9 @@ import com.example.ducvietho.iotapp.util.DialogInfor;
 import com.example.ducvietho.iotapp.util.DialogSetting;
 import com.example.ducvietho.iotapp.util.OnChoseImage;
 import com.example.ducvietho.iotapp.util.UserManager;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -189,6 +192,14 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
     private void setUpNavDrawer() {
         View header = mNavigationView.inflateHeaderView(R.layout.header_navigation);
         TextView textView = header.findViewById(R.id.tv_name);
+        CircleImageView imageView = header.findViewById(R.id.img_avatar);
+        SharedPreferences preferencesImage  = getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE);
+        String path = preferencesImage.getString(Constant.EXTRA_IMAGE,null);
+        if(path!=null){
+            Picasso.with(MainActivity.this).load(new File(path)).placeholder(R.drawable.ic_user_placeholder)
+                    .into(imageView);
+        }
+
         Typeface font = Typeface.createFromAsset(getAssets(),"fonts/UTM Penumbra.ttf");
         textView.setTypeface(font);
         UserManager userManager = new UserManager(MainActivity.this);
@@ -237,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
 
                         return true;
                     case R.id.nav_infor:
-
+                        new DialogInfor(MainActivity.this).showDialog();
                         return true;
                     default:
                         return false;

@@ -129,12 +129,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             editorLan.putString(Constant.EXTRA_LAN, "superfastserver.ddns.net:8080");
             editorLan.commit();
             SharedPreferences.Editor editorInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE).edit();
-            editorInternet.putString(Constant.EXTRA_INTERNET, "34.229.9.67:2021");
+            editorInternet.putString(Constant.EXTRA_INTERNET, "superfastserver.ddns.net:2021");
             editorInternet.commit();
         }
 
 
-        imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(lan)));
+        String lan1 = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, "");
+        imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(lan1)));
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(lan)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
