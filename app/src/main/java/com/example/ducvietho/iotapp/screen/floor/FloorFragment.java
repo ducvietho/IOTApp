@@ -190,6 +190,16 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                 @Override
                 public void run() {
                     String infor;
+                    SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+                    String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
+                    SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
+                    String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+port;
+                    internet = internet.replaceAll(" ","");
+                     SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant
+                             .PREFS_DOMAIN, MODE_PRIVATE);
+                    String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)
+                            +":"+port;
+                    domain = domain.replaceAll(" ","");
 
                     try {
                         JSONObject jsonObject = (JSONObject) args[0];
@@ -205,6 +215,17 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                                 }
                             }
                             if(position>-1){
+                                if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").equals("")){
+                                    equip.setIconOn(equip.getIconOn().replace("localhost",sharedPreferencesDomain
+                                            .getString(Constant.EXTRA_DOMAIN, "").replaceAll(" ","")));
+                                    equip.setIconOff(equip.getIconOff().replace("localhost",sharedPreferencesDomain
+                                            .getString(Constant.EXTRA_DOMAIN, "").replaceAll(" ","")));
+                                }else {
+                                    equip.setIconOn(equip.getIconOn().replace("localhost",sharedPreferencesInternet
+                                            .getString(Constant.EXTRA_INTERNET, "").replaceAll(" ","")));
+                                    equip.setIconOff(equip.getIconOff().replace("localhost",sharedPreferencesInternet
+                                            .getString(Constant.EXTRA_INTERNET, "").replaceAll(" ","")));
+                                }
                                 Log.i("equip infor", new Gson().toJson(equip));
                                 mList.set(position, equip);
                                 adapter.notifyItemChanged(position,mList);
