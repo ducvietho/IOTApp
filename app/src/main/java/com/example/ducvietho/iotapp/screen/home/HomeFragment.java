@@ -61,6 +61,7 @@ public class HomeFragment extends Fragment {
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,MODE_PRIVATE);
         String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN,"")+":"+port;
+        lan = lan.replaceAll(" ","");
         FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
                 .getInstance(lan)));
         mDisposable = new CompositeDisposable();
@@ -110,6 +111,7 @@ public class HomeFragment extends Fragment {
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
                 MODE_PRIVATE);
         String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"")+":"+port;
+        internet = internet.replaceAll(" ","");
         FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
                 .getInstance(internet)));
         mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
@@ -136,6 +138,7 @@ public class HomeFragment extends Fragment {
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET,"")+":"+port;
+        domain = domain.replaceAll(" ","");
         FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
                 .getInstance(domain)));
         mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers

@@ -42,13 +42,15 @@ public class AlarmEquipOnReceiver extends BroadcastReceiver {
         SharedPreferences sharedPreferencesLan = context.getSharedPreferences(Constant.PREFS_LAN,
                 MODE_PRIVATE);
         String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null)+":"+portSocket;
+        lan = lan.replaceAll(" ","");
         SharedPreferences sharedPreferencesInternet = context.getSharedPreferences(Constant.PREFS_INTERNET,
                 MODE_PRIVATE);
         String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+portSocket;
-
+        internet = internet.replaceAll(" ","");
         SharedPreferences sharedPreferencesDomain = context.getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
+        domain = domain.replaceAll(" ","");
         if(lan!=null){
             {
                 try {
