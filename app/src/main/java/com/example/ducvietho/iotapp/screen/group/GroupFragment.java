@@ -64,12 +64,19 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
         v = LayoutInflater.from(container.getContext()).inflate(R.layout.fragment_group,container,false);
         ButterKnife.bind(GroupFragment.this,v);
 
-        SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
-        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
-        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
-        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
+        SharedPreferences preferencesPortSocket = v.getContext().getSharedPreferences(Constant.PREFS_PORT_SOCKET,
+                MODE_PRIVATE);
+        String portSocket = preferencesPortSocket.getString(Constant.EXTRA_PORT_SOCKET,"");
+        SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
+                MODE_PRIVATE);
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null)+":"+portSocket;
+        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
+                MODE_PRIVATE);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+portSocket;
+
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
+                MODE_PRIVATE);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
         if(lan!=null){
             {
                 try {
@@ -133,8 +140,13 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
             mSocket.connect();
         }
         Log.i("Connection status:",String.valueOf(mSocket.connected()));
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
+        SharedPreferences sharedPreferencesLanInternet = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
+                MODE_PRIVATE);
+        String lan1 = Constant.HTTP+sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN, null)+":"+port;
         mDisposable = new CompositeDisposable();
-        mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance(lan)));
+        mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance(lan1)));
         mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
             public void onNext(List<Group> value) {
@@ -206,8 +218,10 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
 
     public void getAllGroupFailureLan() {
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+port;
         mRepository = (new GroupRemoteDataResource(IOTServiceClient.getInstance(internet)));
         mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override
@@ -227,9 +241,11 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
         }));
     }
     public void getAllGroupFailureInternet() {
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
-        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET, null);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+port;
         mRepository = new GroupRemoteDataResource(IOTServiceClient.getInstance(domain));
         mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
             @Override

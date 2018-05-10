@@ -24,6 +24,8 @@
         <string name="alarm_off">TẮT HẸN GIỜ</string>
         <string name="alarm_setting">CÀI ĐẶT HẸN GIỜ</string>
         <string name="house">Tên nhà</string>
+        <string name="http">PORT WEB</string>
+        <string name="socket">PORT SOCKET</string>
         <string name="mac">MAC</string>
         <string name="state">Trạng thái</string>
         <string name="version">Phiên bản</string>

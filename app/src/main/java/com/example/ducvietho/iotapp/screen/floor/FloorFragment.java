@@ -73,13 +73,19 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.fragment_floor, container, false);
         ButterKnife.bind(this, v);
+        SharedPreferences preferencesPortSocket = v.getContext().getSharedPreferences(Constant.PREFS_PORT_SOCKET,
+                MODE_PRIVATE);
+        String portSocket = preferencesPortSocket.getString(Constant.EXTRA_PORT_SOCKET,"");
+        SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
+                MODE_PRIVATE);
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null)+":"+portSocket;
+        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
+                MODE_PRIVATE);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+portSocket;
 
-        SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
-        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null);
-        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
-        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
+        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
+                MODE_PRIVATE);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
         if (lan != null) {
             {
                 try {
@@ -142,7 +148,11 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         }
         Log.i("Connection status:", String.valueOf(mSocket.connected()));
         idFloor = getArguments().getInt(EXTRA_POS, 0);
-        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan));
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
+        SharedPreferences sharedPreferencesLanInternet = v.getContext().getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
+        String lan1 = Constant.HTTP+sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN, null)+":"+port;
+        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan1));
         mDisposable = new CompositeDisposable();
         mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
@@ -244,8 +254,10 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     public void getAllEquipByFloorFailureLan() {
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+port;
         mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(internet));
         mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override
@@ -266,8 +278,10 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     public void getAllEquipByFloorFailureInternet() {
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET, null);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+port;
         mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(domain));
         mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
             @Override

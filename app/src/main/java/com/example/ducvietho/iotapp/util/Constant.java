@@ -15,10 +15,16 @@ public class Constant {
     public static final String PREFS_LAN = "lan";
     public static final String PREFS_INTERNET = "internet";
     public static final String PREFS_DOMAIN = "domain";
+
+    public static final String PREFS_PORT_WEB = "port_web";
+    public static final String PREFS_PORT_SOCKET = "port_socket";
     public static final String EXTRA_NAME_HOUSE = "house";
     public static final String EXTRA_LAN = "lan";
     public static final String EXTRA_INTERNET = "internet";
     public static final String EXTRA_DOMAIN = "domain";
+    public static final String EXTRA_PORT_SOCKET = "port_socket";
+    public static final String EXTRA_PORT_WEB = "port_web";
+
     public static final String PREFS_ACCOUNT = "account";
     public static final String EXTRA_USER = "user";
     public static final String EXTRA_PASS = "pass";

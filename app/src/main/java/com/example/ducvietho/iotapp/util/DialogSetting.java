@@ -60,6 +60,14 @@ public class DialogSetting {
     TextView mDomain;
     @BindView(R.id.ed_domain)
     EditText mEdDomain;
+    @BindView(R.id.tv_http)
+    TextView tvHttp;
+    @BindView(R.id.ed_http)
+    EditText edHttp;
+    @BindView(R.id.tv_socket)
+    TextView tvSocket;
+    @BindView(R.id.ed_socket)
+    EditText edSocket;
     @BindView(R.id.tv_complete)
     TextView mComplete;
     @BindView(R.id.img_back)
@@ -98,6 +106,10 @@ public class DialogSetting {
         mLan.setTypeface(tf);
         mInternet.setTypeface(tf);
         mDomain.setTypeface(tf);
+        tvHttp.setTypeface(tf);
+        tvSocket.setTypeface(tf);
+        edHttp.setTypeface(tf);
+        edSocket.setTypeface(tf);
         mEdDomain.setTypeface(tf);
         mEdHouse.setTypeface(tf);
         mEdInternet.setTypeface(tf);
@@ -116,6 +128,12 @@ public class DialogSetting {
         SharedPreferences prefDomain = mContext.getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
         String domain = prefDomain.getString(Constant.EXTRA_DOMAIN, null);
         mEdDomain.setText(domain);
+        SharedPreferences prefPortWeb = mContext.getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String portWeb = prefPortWeb.getString(Constant.EXTRA_PORT_WEB, null);
+        edHttp.setText(portWeb);
+        SharedPreferences prefPortSocket = mContext.getSharedPreferences(Constant.PREFS_PORT_SOCKET, MODE_PRIVATE);
+        String portSocket = prefPortSocket.getString(Constant.EXTRA_PORT_WEB, null);
+        edSocket.setText(portSocket);
         UserManager userManager = new UserManager(mContext);
         mName.setText(userManager.getUserDetail().getName());
         Login login = new UserManager(mContext).getUserDetail();
@@ -161,12 +179,21 @@ public class DialogSetting {
                         MODE_PRIVATE).edit();
                 editorDomain.putString(Constant.EXTRA_DOMAIN,mEdDomain.getText().toString());
                 editorDomain.commit();
+                SharedPreferences.Editor editorPortWeb = mContext.getSharedPreferences(Constant.PREFS_PORT_WEB,
+                        MODE_PRIVATE).edit();
+                editorPortWeb.putString(Constant.EXTRA_PORT_WEB,edHttp.getText().toString());
+                editorPortWeb.commit();
+                SharedPreferences.Editor editorPortSocket = mContext.getSharedPreferences(Constant.PREFS_PORT_SOCKET,
+                        MODE_PRIVATE).edit();
+                editorPortSocket.putString(Constant.EXTRA_PORT_WEB,edSocket.getText().toString());
+                editorPortSocket.commit();
                 IOTServiceClient.clear();
                 Intent i = mContext.getPackageManager()
                         .getLaunchIntentForPackage( mContext.getPackageName() );
                 i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
                 mContext.startActivity(i);
+                ((Activity)mContext).finish();
             }
         });
         mScreen.setOnTouchListener(new View.OnTouchListener() {

@@ -57,8 +57,10 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_home, container, false);
         ButterKnife.bind(this,v);
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,MODE_PRIVATE);
-        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN,"");
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN,"")+":"+port;
         FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
                 .getInstance(lan)));
         mDisposable = new CompositeDisposable();
@@ -103,9 +105,11 @@ public class HomeFragment extends Fragment {
 
     }
     public void getAllFloorFailureLan(){
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
                 MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"");
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"")+":"+port;
         FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
                 .getInstance(internet)));
         mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
@@ -127,9 +131,11 @@ public class HomeFragment extends Fragment {
         }));
     }
     public void getAllFloorFailureInternet(){
+        SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
-        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET,"");
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_INTERNET,"")+":"+port;
         FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
                 .getInstance(domain)));
         mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers

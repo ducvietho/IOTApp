@@ -35,13 +35,19 @@ public class AlarmEquipOffReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, Intent intent) {
 
+        SharedPreferences preferencesPortSocket = context.getSharedPreferences(Constant.PREFS_PORT_SOCKET,
+                MODE_PRIVATE);
+        String portSocket = preferencesPortSocket.getString(Constant.EXTRA_PORT_SOCKET,"");
         SharedPreferences sharedPreferencesLan = context.getSharedPreferences(Constant.PREFS_LAN,
                 MODE_PRIVATE);
-        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN,null);
-        SharedPreferences sharedPreferencesInternet = context.getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null);
-        SharedPreferences sharedPreferencesDomain = context.getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null);
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null)+":"+portSocket;
+        SharedPreferences sharedPreferencesInternet = context.getSharedPreferences(Constant.PREFS_INTERNET,
+                MODE_PRIVATE);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+portSocket;
+
+        SharedPreferences sharedPreferencesDomain = context.getSharedPreferences(Constant.PREFS_DOMAIN,
+                MODE_PRIVATE);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
         if(lan!=null){
             {
                 try {
