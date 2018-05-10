@@ -132,7 +132,7 @@ public class DialogSetting {
         String portWeb = prefPortWeb.getString(Constant.EXTRA_PORT_WEB, null);
         edHttp.setText(portWeb);
         SharedPreferences prefPortSocket = mContext.getSharedPreferences(Constant.PREFS_PORT_SOCKET, MODE_PRIVATE);
-        String portSocket = prefPortSocket.getString(Constant.EXTRA_PORT_WEB, null);
+        String portSocket = prefPortSocket.getString(Constant.EXTRA_PORT_SOCKET, null);
         edSocket.setText(portSocket);
         UserManager userManager = new UserManager(mContext);
         mName.setText(userManager.getUserDetail().getName());
@@ -185,7 +185,7 @@ public class DialogSetting {
                 editorPortWeb.commit();
                 SharedPreferences.Editor editorPortSocket = mContext.getSharedPreferences(Constant.PREFS_PORT_SOCKET,
                         MODE_PRIVATE).edit();
-                editorPortSocket.putString(Constant.EXTRA_PORT_WEB,edSocket.getText().toString());
+                editorPortSocket.putString(Constant.EXTRA_PORT_SOCKET,edSocket.getText().toString());
                 editorPortSocket.commit();
                 IOTServiceClient.clear();
                 Intent i = mContext.getPackageManager()

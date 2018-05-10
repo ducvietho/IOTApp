@@ -153,26 +153,32 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesLanInternet = v.getContext().getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
-        String lan1 = Constant.HTTP+sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN, null)+":"+port;
+        String lan1 = Constant.HTTP+sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN, "")+":"+port;
         lan1 = lan1.replaceAll(" ","");
-        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan1));
         mDisposable = new CompositeDisposable();
-        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
-            @Override
-            public void onNext(List<Equipment> value) {
-                getAllEquipByFloorSuccess(value);
-            }
+        if(sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN,"").equals("")){
+            getAllEquipByFloorFailureLan();
+        }else{
+            mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan1));
 
-            @Override
-            public void onError(Throwable e) {
-                getAllEquipByFloorFailureLan();
-            }
+            mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+                @Override
+                public void onNext(List<Equipment> value) {
+                    getAllEquipByFloorSuccess(value);
+                }
 
-            @Override
-            public void onComplete() {
+                @Override
+                public void onError(Throwable e) {
+                    getAllEquipByFloorFailureLan();
+                }
 
-            }
-        }));
+                @Override
+                public void onComplete() {
+
+                }
+            }));
+        }
+
         mSocket.on("response", onTurnEquip);
         return v;
     }
@@ -262,23 +268,28 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+port;
         internet = internet.replaceAll(" ","");
-        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(internet));
-        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
-            @Override
-            public void onNext(List<Equipment> value) {
-                getAllEquipByFloorSuccess(value);
-            }
+        if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"").equals("")){
+            getAllEquipByFloorFailureInternet();
+        }else {
+            mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(internet));
+            mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+                @Override
+                public void onNext(List<Equipment> value) {
+                    getAllEquipByFloorSuccess(value);
+                }
 
-            @Override
-            public void onError(Throwable e) {
-                getAllEquipByFloorFailureInternet();
-            }
+                @Override
+                public void onError(Throwable e) {
+                    getAllEquipByFloorFailureInternet();
+                }
 
-            @Override
-            public void onComplete() {
+                @Override
+                public void onComplete() {
 
-            }
-        }));
+                }
+            }));
+        }
+
     }
 
     public void getAllEquipByFloorFailureInternet() {

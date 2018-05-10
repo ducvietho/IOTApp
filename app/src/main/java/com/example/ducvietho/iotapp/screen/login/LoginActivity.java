@@ -52,7 +52,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity implements LoginContract.View,OnChoseImage {
+public class LoginActivity extends AppCompatActivity implements LoginContract.View, OnChoseImage {
     public static final int REQUEST_STORAGE = 112;
     public static final int PICK_IMAGE = 100;
     @BindView(R.id.tv_login)
@@ -118,32 +118,53 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             }
         });
         mLoading = new DialogLoading(LoginActivity.this);
-
+        new UserManager(LoginActivity.this).checkUserLogin();
         mLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SharedPreferences sharedPreferencesLan = getSharedPreferences(Constant.PREFS_LAN, MODE_PRIVATE);
+                SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
+                SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
                 SharedPreferences preferencesPort = getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
-                String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
-                String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, "")+":"+port;
-                lan = lan.replaceAll(" ","");
-                new UserManager(LoginActivity.this).checkUserLogin();
+                String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB, "");
+                String lan = Constant.HTTP + sharedPreferencesLan.getString(Constant.EXTRA_LAN, "") + ":" + port;
+                lan = lan.replaceAll(" ", "");
+
                 mLoading.showDialog();
-                Log.i("Text",mUserName.getText().toString());
-                if (mUserName.getText().toString().equals("")|| mPass.getText().toString().equals("")) {
+                Log.i("Text", mUserName.getText().toString());
+                if (mUserName.getText().toString().equals("") || mPass.getText().toString().equals("")) {
                     mLoading.dismissDialog();
                     Toast.makeText(LoginActivity.this, "Nhập Username và Pass", Toast.LENGTH_LONG).show();
                 } else {
-                    if(sharedPreferencesLan.getString(Constant.EXTRA_LAN, "").equals("")){
-                        Toast.makeText(LoginActivity.this, "Xin hãy cài đặt ip, internet, domain !", Toast.LENGTH_LONG)
-                                .show();
-                    }else {
-                        imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(lan)));
-                        repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(lan)));
-                        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
-                                .this);
-                        presenter.downloadImageLan();
-                        presenter.loginUserLan(mUserName.getText().toString(), mPass.getText().toString());
+                    if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, "").equals("") && sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").equals("") && sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "").equals("")) {
+                        Toast.makeText(LoginActivity.this, "Xin hãy cài đặt ip, internet, domain !", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, "").equals("")) {
+
+                            String internet = Constant.HTTP + sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "") + ":" + port;
+                            internet = internet.replaceAll(" ", "");
+                            if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").equals("")) {
+                                String domain = Constant.HTTP + sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,
+                                        "") + ":" + port;
+                                domain = domain.replaceAll(" ", "");
+                                repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
+                                final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
+                                        .this);
+                                presenter.loginUserDomain(mUserName.getText().toString(), mPass.getText().toString());
+                            }
+                            repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
+                            final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
+                                    .this);
+                            presenter.loginUserInternet(mUserName.getText().toString(), mPass.getText().toString());
+                        } else {
+                            imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(lan)));
+                            repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(lan)));
+                            final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
+                                    .this);
+                            presenter.downloadImageLan();
+                            presenter.loginUserLan(mUserName.getText().toString(), mPass.getText().toString());
+                        }
+
                     }
 
                 }
@@ -160,7 +181,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         imgSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DialogSetting(LoginActivity.this,LoginActivity.this).showDialog();
+                new DialogSetting(LoginActivity.this, LoginActivity.this).showDialog();
             }
         });
     }
@@ -168,13 +189,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK){
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String path = selectedImage.getPath();
-            SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE).edit();
-            editor.putString(Constant.EXTRA_IMAGE,path);
+            SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE).edit();
+            editor.putString(Constant.EXTRA_IMAGE, path);
             editor.commit();
-            new DialogSetting(LoginActivity.this,LoginActivity.this).showDialog();
+            new DialogSetting(LoginActivity.this, LoginActivity.this).showDialog();
         }
     }
 
@@ -199,9 +220,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             startActivity(new MainActivity().getIntent(LoginActivity.this));
             new UserManager(LoginActivity.this).createUserLoginSession(login.getLogin());
         } else {
-            if(login.getStatus()>0 && login.getStatus()!=9999){
+            if (login.getStatus() > 0 && login.getStatus() != 9999) {
                 Toast.makeText(LoginActivity.this, "Mật khẩu hoặc tài khoản không đúng !", Toast.LENGTH_LONG).show();
-            }else {
+            } else {
                 Toast.makeText(LoginActivity.this, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
             }
 
@@ -212,10 +233,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void loginFailureLan(String username, String pass) {
         SharedPreferences preferencesPort = getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
-        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB, "");
         SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "")+":"+port;
-        internet = internet.replaceAll(" ","");
+        String internet = Constant.HTTP + sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "") + ":" + port;
+        internet = internet.replaceAll(" ", "");
+        if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").equals("")) {
+            loginFailureInternet(username, pass);
+        }
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
@@ -225,10 +249,10 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void loginFailureInternet(String username, String pass) {
         SharedPreferences preferencesPort = getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
-        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB, "");
         SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
-        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "")+":"+port;
-        domain = domain.replaceAll(" ","");
+        String domain = Constant.HTTP + sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "") + ":" + port;
+        domain = domain.replaceAll(" ", "");
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
@@ -248,9 +272,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void downloadFailLan() {
         SharedPreferences preferencesPort = getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
-        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
+        String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB, "");
         SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
-        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "")+":"+port;
+        String internet = Constant.HTTP + sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "") + ":" + port;
         imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(internet)));
         final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                 .this);
