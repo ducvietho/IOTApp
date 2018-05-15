@@ -79,7 +79,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
                 MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
         domain = domain.replaceAll(" ","");
-        if(lan!=null){
+        if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, null) != null) {
             {
                 try {
                     mSocket = IO.socket(lan);
@@ -91,18 +91,19 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
             mSocket.connect();
             if (!mSocket.connected()) {
                 {
-                    try {
-                        mSocket = IO.socket(internet);
+                    if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                        try {
+                            mSocket = IO.socket(internet);
 
-                    } catch (URISyntaxException e) {
-                        e.printStackTrace();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
             mSocket.connect();
-
             if (!mSocket.connected()) {
-                if(domain!=null){
+                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
                     {
                         try {
                             mSocket = IO.socket(domain);
@@ -115,19 +116,21 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
             }
             mSocket.connect();
-        }
-        else {
+        } else {
             {
-                try {
-                    mSocket = IO.socket(internet);
+                if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                    try {
+                        mSocket = IO.socket(internet);
 
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 }
+
             }
             mSocket.connect();
             if (!mSocket.connected()) {
-                if(domain!=null){
+                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
                     {
                         try {
                             mSocket = IO.socket(domain);

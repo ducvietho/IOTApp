@@ -51,7 +51,7 @@ public class AlarmEquipOnReceiver extends BroadcastReceiver {
                 MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
         domain = domain.replaceAll(" ","");
-        if(lan!=null){
+        if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, null) != null) {
             {
                 try {
                     mSocket = IO.socket(lan);
@@ -63,6 +63,34 @@ public class AlarmEquipOnReceiver extends BroadcastReceiver {
             mSocket.connect();
             if (!mSocket.connected()) {
                 {
+                    if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                        try {
+                            mSocket = IO.socket(internet);
+
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            mSocket.connect();
+            if (!mSocket.connected()) {
+                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                    {
+                        try {
+                            mSocket = IO.socket(domain);
+
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+            mSocket.connect();
+        } else {
+            {
+                if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
                     try {
                         mSocket = IO.socket(internet);
 
@@ -70,10 +98,11 @@ public class AlarmEquipOnReceiver extends BroadcastReceiver {
                         e.printStackTrace();
                     }
                 }
+
             }
             mSocket.connect();
             if (!mSocket.connected()) {
-                if(domain!=null){
+                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
                     {
                         try {
                             mSocket = IO.socket(domain);
@@ -87,31 +116,7 @@ public class AlarmEquipOnReceiver extends BroadcastReceiver {
             }
             mSocket.connect();
         }
-        else {
-            {
-                try {
-                    mSocket = IO.socket(internet);
-
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            }
-            mSocket.connect();
-            if (!mSocket.connected()) {
-                if(domain!=null){
-                    {
-                        try {
-                            mSocket = IO.socket(domain);
-
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-            }
-            mSocket.connect();
-        }
+        Toast.makeText(context,"Connect socket:"+String.valueOf(mSocket.connected()),Toast.LENGTH_LONG).show();
         Bundle extra = intent.getExtras();
         final String message = extra.getString(Constant.EXTRA_ID_EQUIP);
         Equipment equipment = new Gson().fromJson(message,Equipment.class);

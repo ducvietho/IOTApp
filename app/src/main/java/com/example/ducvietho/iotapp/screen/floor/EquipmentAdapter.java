@@ -116,9 +116,14 @@ public class EquipmentAdapter extends RecyclerView.Adapter<EquipmentAdapter.View
             String alarmOffTime = preferences.getString(PRE_OFF, null);
             if(state){
                 mAlarmOn.setVisibility(View.VISIBLE);
+                mAlarmOff.setVisibility(View.GONE);
             }else {
                 if(alarmOffTime!=null||alarmOnTime !=null){
+                    mAlarmOn.setVisibility(View.GONE);
                     mAlarmOff.setVisibility(View.VISIBLE);
+                }else {
+                    mAlarmOn.setVisibility(View.GONE);
+                    mAlarmOff.setVisibility(View.GONE);
                 }
             }
 
