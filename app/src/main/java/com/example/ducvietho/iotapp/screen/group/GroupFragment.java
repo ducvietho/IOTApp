@@ -165,6 +165,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
                 @Override
                 public void onError(Throwable e) {
+                    Toast.makeText(v.getContext(),"Connect fail Lan !",Toast.LENGTH_LONG).show();
                     getAllGroupFailureLan();
                 }
 
@@ -247,6 +248,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
                 @Override
                 public void onError(Throwable e) {
+                    Toast.makeText(v.getContext(),"Connect fail Internet !",Toast.LENGTH_LONG).show();
                     getAllGroupFailureInternet();
                 }
 
@@ -286,7 +288,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
 
     public void getAllGroupFailure(String message) {
-        Toast.makeText(v.getContext(), "Error" + message, Toast.LENGTH_LONG).show();
+        Toast.makeText(v.getContext(), "Lỗi kết nối !" , Toast.LENGTH_LONG).show();
     }
 
 }

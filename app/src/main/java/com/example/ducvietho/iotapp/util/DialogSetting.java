@@ -78,7 +78,7 @@ public class DialogSetting {
     TextView mName;
     @BindView(R.id.tv_edit)
     TextView mEdit;
-    @BindView(R.id.layput_edit)
+    @BindView(R.id.layout_edit)
     RelativeLayout mLayoutEdit;
     @BindView(R.id.layout_user)
     RelativeLayout mLayoutUser;
@@ -152,7 +152,7 @@ public class DialogSetting {
                 dialog.dismiss();
             }
         });
-        mEdit.setOnClickListener(new View.OnClickListener() {
+        mLayoutEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();

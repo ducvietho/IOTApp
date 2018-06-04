@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onError(Throwable e) {
+                    Toast.makeText(v.getContext(),"Connect fail Lan !",Toast.LENGTH_LONG).show();
                     getAllFloorFailureLan();
                 }
 
@@ -132,6 +133,7 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onError(Throwable e) {
+                    Toast.makeText(v.getContext(),"Connect fail Internet !",Toast.LENGTH_LONG).show();
                     getAllFloorFailureInternet();
                 }
 
@@ -171,6 +173,6 @@ public class HomeFragment extends Fragment {
         }));
     }
     public void getAllFloorFailure(String message) {
-        Toast.makeText(v.getContext(),"Error:"+message,Toast.LENGTH_LONG).show();
+        Toast.makeText(v.getContext(),"Lỗi kết nối !",Toast.LENGTH_LONG).show();
     }
 }

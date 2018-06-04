@@ -50,7 +50,7 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import jp.wasabeef.blurry.Blurry;
 
-public class MainActivity extends AppCompatActivity implements OnChoseImage {
+public class MainActivity extends AppCompatActivity implements OnChoseImage,View.OnClickListener {
     public static final int PICK_IMAGE = 100;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -72,6 +72,11 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
     ImageView mImgScene;
     @BindView(R.id.img_floor)
     ImageView mImgFloor;
+    @BindView(R.id.layout_floor)
+    RelativeLayout layoutFloor;
+    @BindView(R.id.layout_group)
+    RelativeLayout layoutGroup;
+
     DialogSetting mSetting;
     private boolean doubleBackToExitPressedOnce = false;
     private boolean isDrawerOpened;
@@ -89,14 +94,13 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Typeface tf1 = Typeface.createFromAsset(getAssets(),"fonts/UTM PenumbraBold.ttf");
+        Typeface tf1 = Typeface.createFromAsset(getAssets(), "fonts/UTM PenumbraBold.ttf");
         mHome.setTypeface(tf1);
         SharedPreferences prefHouse = getSharedPreferences(Constant.PREFS_NAME_HOUSE, MODE_PRIVATE);
         String nameHouse = prefHouse.getString(Constant.EXTRA_NAME_HOUSE, null);
-        if(nameHouse!=null && !nameHouse.matches("")){
+        if (nameHouse != null && !nameHouse.matches("")) {
             mHome.setText(nameHouse);
-        }
-        else {
+        } else {
             mHome.setText("my home");
         }
         mScene.setTypeface(tf1);
@@ -105,11 +109,11 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
         setUpNavDrawer();
         startFragment(new HomeFragment());
         Menu menu = mNavigationView.getMenu();
-        for (int i=0;i<menu.size();i++) {
+        for (int i = 0; i < menu.size(); i++) {
             MenuItem mi = menu.getItem(i);
             SubMenu subMenu = mi.getSubMenu();
-            if (subMenu!=null && subMenu.size() >0 ) {
-                for (int j=0; j <subMenu.size();j++) {
+            if (subMenu != null && subMenu.size() > 0) {
+                for (int j = 0; j < subMenu.size(); j++) {
                     MenuItem subMenuItem = subMenu.getItem(j);
                     applyFontToMenuItem(subMenuItem);
                 }
@@ -117,36 +121,38 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
 
             applyFontToMenuItem(mi);
         }
-        mScene.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        layoutFloor.setOnClickListener(this);
+        layoutGroup.setOnClickListener(this);
+    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.layout_group:
                 mImgScene.setVisibility(View.VISIBLE);
                 mImgFloor.setVisibility(View.GONE);
                 startFragment(new GroupFragment());
-            }
-        });
-        mHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                break;
+            case R.id.layout_floor:
                 mImgFloor.setVisibility(View.VISIBLE);
                 mImgScene.setVisibility(View.GONE);
                 startFragment(new HomeFragment());
-            }
-        });
+                break;
+        }
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK){
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
             String path = selectedImage.getPath();
-            SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE).edit();
-            editor.putString(Constant.EXTRA_IMAGE,path);
+            SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE).edit();
+            editor.putString(Constant.EXTRA_IMAGE, path);
             editor.commit();
-            new DialogSetting(MainActivity.this,MainActivity.this).showDialog();
+            new DialogSetting(MainActivity.this, MainActivity.this).showDialog();
 
         }
     }
+
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -193,24 +199,20 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
         View header = mNavigationView.inflateHeaderView(R.layout.header_navigation);
         TextView textView = header.findViewById(R.id.tv_name);
         CircleImageView imageView = header.findViewById(R.id.img_avatar);
-        SharedPreferences preferencesImage  = getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE);
-        String path = preferencesImage.getString(Constant.EXTRA_IMAGE,null);
-        if(path!=null){
-            Picasso.with(MainActivity.this).load(new File(path)).placeholder(R.drawable.ic_user_placeholder)
-                    .into(imageView);
+        SharedPreferences preferencesImage = getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE);
+        String path = preferencesImage.getString(Constant.EXTRA_IMAGE, null);
+        if (path != null) {
+            Picasso.with(MainActivity.this).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(imageView);
         }
 
-        Typeface font = Typeface.createFromAsset(getAssets(),"fonts/UTM Penumbra.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/UTM Penumbra.ttf");
         textView.setTypeface(font);
         UserManager userManager = new UserManager(MainActivity.this);
         textView.setText(userManager.getUserDetail().getName());
         mDrawerLayout.setDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                materialMenu.setTransformationOffset(
-                        MaterialMenuDrawable.AnimationState.BURGER_ARROW,
-                        isDrawerOpened ? 2 - slideOffset : slideOffset
-                );
+                materialMenu.setTransformationOffset(MaterialMenuDrawable.AnimationState.BURGER_ARROW, isDrawerOpened ? 2 - slideOffset : slideOffset);
             }
 
             @Override
@@ -225,8 +227,8 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
 
             @Override
             public void onDrawerStateChanged(int newState) {
-                if(newState == DrawerLayout.STATE_IDLE) {
-                    if(isDrawerOpened) {
+                if (newState == DrawerLayout.STATE_IDLE) {
+                    if (isDrawerOpened) {
                         materialMenu.setIconState(MaterialMenuDrawable.IconState.ARROW);
                     } else {
                         materialMenu.setIconState(MaterialMenuDrawable.IconState.BURGER);
@@ -241,7 +243,7 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 switch (item.getItemId()) {
                     case R.id.nav_config:
-                        new DialogSetting(MainActivity.this,MainActivity.this).showDialog();
+                        new DialogSetting(MainActivity.this, MainActivity.this).showDialog();
                         return true;
                     case R.id.nav_logout:
                         new UserManager(MainActivity.this).logoutUser();
@@ -259,16 +261,18 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage {
         });
 
     }
+
     private void applyFontToMenuItem(MenuItem mi) {
-        Typeface font = Typeface.createFromAsset(getAssets(),"fonts/UTM Penumbra.ttf");
+        Typeface font = Typeface.createFromAsset(getAssets(), "fonts/UTM Penumbra.ttf");
         SpannableString mNewTitle = new SpannableString(mi.getTitle());
-        mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mi.setTitle(mNewTitle);
     }
+
     private void startFragment(Fragment fragment) {
-        if(fragment!=null){
+        if (fragment != null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.frame_layout, fragment,"nextFragment");
+            transaction.replace(R.id.frame_layout, fragment, "nextFragment");
             transaction.addToBackStack(null);
             transaction.commit();
         }
