@@ -30,6 +30,7 @@ import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -165,7 +166,6 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
                 @Override
                 public void onError(Throwable e) {
-                    Toast.makeText(v.getContext(),"Connect fail Lan !",Toast.LENGTH_LONG).show();
                     getAllGroupFailureLan();
                 }
 
@@ -185,10 +185,27 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
             GroupFragment.this.getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Group group = new Gson().fromJson(args[0].toString(),Group.class);
-                    int position = mGroups.indexOf(group);
-                    mGroups.set(position,group);
-                    adapter.notifyItemChanged(position);
+                    JSONObject jsonObject = (JSONObject) args[0];
+                    try {
+                        JSONObject groupInfor = (JSONObject)jsonObject.getJSONObject("data");
+                        int state = groupInfor.getInt("state");
+                        int idGroup = groupInfor.getInt("id_group");
+                        int position = -1;
+                        for (int i=0;i<mGroups.size();i++){
+                            if(idGroup==mGroups.get(i).getId()){
+                                position = i;
+                            }
+                        }
+                        if(position>-1){
+                            Group group = mGroups.get(position);
+                            group.setState(state);
+                            mGroups.set(position,group);
+                            adapter.notifyItemChanged(position,mGroups);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
 
                 }
             });
@@ -209,14 +226,19 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
     }
     private void attemptSend(Group group) throws JSONException {
-        if(group.getState()==0){
-            group.setState(1);
+        Group group1 = new Group();
+        group1.setName(group.getName());
+        group1.setIconOff(group.getIconOff());
+        group1.setId(group.getId());
+        group.setIconOn(group.getIconOn());
+        if(group1.getState()==0){
+            group1.setState(1);
         }else {
-            group.setState(0);
+            group1.setState(0);
         }
-        String groupMessage = new Gson().toJson(group);
-        Log.i("Socket :" ,new Gson().toJson(group));
-        mSocket.emit("request", groupMessage);
+        String groupMessage = new Gson().toJson(group1);
+        Log.i("Socket :" ,new Gson().toJson(group1));
+        mSocket.emit("request_group", groupMessage);
 
 
     }
@@ -231,6 +253,7 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
 
     public void getAllGroupFailureLan() {
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
@@ -248,7 +271,6 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
                 @Override
                 public void onError(Throwable e) {
-                    Toast.makeText(v.getContext(),"Connect fail Internet !",Toast.LENGTH_LONG).show();
                     getAllGroupFailureInternet();
                 }
 
@@ -261,33 +283,39 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
 
     }
     public void getAllGroupFailureInternet() {
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+port;
         domain = domain.replaceAll(" ","");
-        mRepository = new GroupRemoteDataResource(IOTServiceClient.getInstance(domain));
-        mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
-            @Override
-            public void onNext(List<Group> value) {
-                getAllGroupSuccess(value);
-            }
+        if(!sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,"").replace(" ","").equals("")){
+            mRepository = new GroupRemoteDataResource(IOTServiceClient.getInstance(domain));
+            mDisposable.add(mRepository.getAllGroup().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Group>>() {
+                @Override
+                public void onNext(List<Group> value) {
+                    getAllGroupSuccess(value);
+                }
 
-            @Override
-            public void onError(Throwable e) {
-                getAllGroupFailure(e.getMessage());
-            }
+                @Override
+                public void onError(Throwable e) {
+                    getAllGroupFailure();
+                }
 
-            @Override
-            public void onComplete() {
+                @Override
+                public void onComplete() {
 
-            }
-        }));
+                }
+            }));
+        }else {
+            getAllGroupFailure();
+        }
+
     }
 
-
-    public void getAllGroupFailure(String message) {
+    public void getAllGroupFailure() {
+        mProgressBar.setVisibility(View.GONE);
         Toast.makeText(v.getContext(), "Lỗi kết nối !" , Toast.LENGTH_LONG).show();
     }
 

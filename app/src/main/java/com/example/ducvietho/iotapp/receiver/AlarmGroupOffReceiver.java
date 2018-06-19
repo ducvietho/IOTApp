@@ -122,7 +122,7 @@ public class AlarmGroupOffReceiver extends BroadcastReceiver {
         Group group = new Gson().fromJson(message,Group.class);
         group.setState(0);
 
-        mSocket.emit("request",new Gson().toJson(group));
+        mSocket.emit("request_group",new Gson().toJson(group));
         String preSetting = PRE_STATE_GROUP + String.valueOf(group.getId());
         final SharedPreferences sharedPreferences = context.getSharedPreferences(preSetting, Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedPreferences.edit();

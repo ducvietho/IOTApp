@@ -46,7 +46,7 @@ public class AlarmGroup {
             cal_alarm.add(Calendar.DATE,1);
         }
         Intent myIntent = new Intent(mContext, AlarmGroupOnReceiver.class);
-        myIntent.putExtra(Constant.EXTRA_ID_GROUP, group.getId());
+        myIntent.putExtra(Constant.EXTRA_ID_GROUP, new Gson().toJson(group));
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, 0);
         manager.set(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pendingIntent);
@@ -71,7 +71,7 @@ public class AlarmGroup {
             cal_alarm.add(Calendar.DATE,1);
         }
         Intent myIntent = new Intent(mContext, AlarmGroupOffReceiver.class);
-        myIntent.putExtra(Constant.EXTRA_ID_EQUIP, new Gson().toJson(group));
+        myIntent.putExtra(Constant.EXTRA_ID_GROUP, new Gson().toJson(group));
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, 0);
         manager.set(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(), pendingIntent);
 
@@ -90,7 +90,7 @@ public class AlarmGroup {
         cal_alarm.set(Calendar.SECOND, 0);
         cal_alarm.set(Calendar.DAY_OF_WEEK, dayWeek);
         Intent myIntent = new Intent(mContext, AlarmGroupOnReceiver.class);
-        myIntent.putExtra(Constant.EXTRA_ID_EQUIP, new Gson().toJson(group));
+        myIntent.putExtra(Constant.EXTRA_ID_GROUP, new Gson().toJson(group));
         myIntent.putExtra(Constant.EXTRA_TIME, time);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, 0);
         manager.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),1*60*60*100, pendingIntent);

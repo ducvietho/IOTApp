@@ -233,7 +233,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         String lan1 = Constant.HTTP+sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN, "")+":"+port;
         lan1 = lan1.replaceAll(" ","");
         mDisposable = new CompositeDisposable();
-        if(sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN,"").equals("")){
+        if(sharedPreferencesLanInternet.getString(Constant.EXTRA_LAN,"").replace(" ","").equals("")){
             getAllEquipByFloorFailureLan();
         }else{
             mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(lan1));
@@ -330,24 +330,32 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     private void attemptSend(Equipment equipment) throws JSONException {
-        Equipment equip = equipment;
+        Equipment equip = new Equipment();
+        equip.setId(equipment.getId());
+        equip.setIOTDeviceId(equipment.getIOTDeviceId());
+        equip.setName(equipment.getName());
+        equip.setSTT(equipment.getSTT());
+        equip.setIdFloor(equipment.getIdFloor());
+        equip.setIconOff(equipment.getIconOff());
+        equip.setIconOn(equipment.getIconOn());
         if (equip.getState() == 0) {
             equip.setState(1);
         } else {
             equip.setState(0);
         }
         Log.i("Socket :", new Gson().toJson(equip));
-        mSocket.emit("request", new Gson().toJson(equipment));
+        mSocket.emit("request", new Gson().toJson(equip));
 
     }
 
     public void getAllEquipByFloorFailureLan() {
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+port;
         internet = internet.replaceAll(" ","");
-        if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"").equals("")){
+        if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET,"").replace(" ","").equals("")){
             getAllEquipByFloorFailureInternet();
         }else {
             mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(internet));
@@ -372,34 +380,40 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     }
 
     public void getAllEquipByFloorFailureInternet() {
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+port;
         domain = domain.replaceAll(" ","");
-        mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(domain));
-        mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
-            @Override
-            public void onNext(List<Equipment> value) {
-                getAllEquipByFloorSuccess(value);
-            }
+        if(!sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,"").replace(" ","").equals("")){
+            mRepository = new EquipmentRemoteDataResource(IOTServiceClient.getInstance(domain));
+            mDisposable.add(mRepository.getAllEquipmentByFloor(idFloor).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribeWith(new DisposableObserver<List<Equipment>>() {
+                @Override
+                public void onNext(List<Equipment> value) {
+                    getAllEquipByFloorSuccess(value);
+                }
 
-            @Override
-            public void onError(Throwable e) {
+                @Override
+                public void onError(Throwable e) {
 
-                getAllEquipByFloorFailure(e.getMessage());
-            }
+                    getAllEquipByFloorFailure(e.getMessage());
+                }
 
-            @Override
-            public void onComplete() {
+                @Override
+                public void onComplete() {
 
-            }
-        }));
+                }
+            }));
+        }else{
+            getAllEquipByFloorFailure("");
+        }
+
     }
 
     public void getAllEquipByFloorFailure(String message) {
         mProgressBar.setVisibility(View.GONE);
-        // Toast.makeText(v.getContext(), "Error :" + message, Toast.LENGTH_LONG).show();
+         Toast.makeText(v.getContext(), "Lỗi kết nối !" , Toast.LENGTH_LONG).show();
     }
 
 }

@@ -16,6 +16,7 @@ import com.example.ducvietho.iotapp.data.resource.remote.api.FloorRemoteDataReso
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.screen.floor.FloorFragment;
 import com.example.ducvietho.iotapp.util.Constant;
+import com.github.nkzawa.socketio.client.IO;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.List;
@@ -78,7 +79,6 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onError(Throwable e) {
-                    Toast.makeText(v.getContext(),"Connect fail Lan !",Toast.LENGTH_LONG).show();
                     getAllFloorFailureLan();
                 }
 
@@ -113,6 +113,7 @@ public class HomeFragment extends Fragment {
 
     }
     public void getAllFloorFailureLan(){
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
@@ -133,7 +134,7 @@ public class HomeFragment extends Fragment {
 
                 @Override
                 public void onError(Throwable e) {
-                    Toast.makeText(v.getContext(),"Connect fail Internet !",Toast.LENGTH_LONG).show();
+
                     getAllFloorFailureInternet();
                 }
 
@@ -146,33 +147,40 @@ public class HomeFragment extends Fragment {
 
     }
     public void getAllFloorFailureInternet(){
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
         SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,"")+":"+port;
         domain = domain.replaceAll(" ","");
-        FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
-                .getInstance(domain)));
-        mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
-            @Override
-            public void onNext(List<Floor> value) {
-                getAllFloorSuccess(value);
-            }
+        if(!sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,"").replace(" ","").equals("")){
+            FloorRemoteDataResource repository = (new FloorRemoteDataResource(IOTServiceClient
+                    .getInstance(domain)));
+            mDisposable.add(repository.getAllFloor().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                    .mainThread()).subscribeWith(new DisposableObserver<List<Floor>>() {
+                @Override
+                public void onNext(List<Floor> value) {
+                    getAllFloorSuccess(value);
+                }
 
-            @Override
-            public void onError(Throwable e) {
-                getAllFloorFailure(e.getMessage());
-            }
+                @Override
+                public void onError(Throwable e) {
+                    getAllFloorFailure(e.getMessage());
+                }
 
-            @Override
-            public void onComplete() {
+                @Override
+                public void onComplete() {
 
-            }
-        }));
+                }
+            }));
+        }else {
+            getAllFloorFailure("");
+        }
+
     }
     public void getAllFloorFailure(String message) {
+        mProgressBar.setVisibility(View.GONE);
         Toast.makeText(v.getContext(),"Lỗi kết nối !",Toast.LENGTH_LONG).show();
     }
 }

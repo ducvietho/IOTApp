@@ -41,6 +41,7 @@ import com.example.ducvietho.iotapp.util.DialogLoading;
 import com.example.ducvietho.iotapp.util.DialogSetting;
 import com.example.ducvietho.iotapp.util.OnChoseImage;
 import com.example.ducvietho.iotapp.util.UserManager;
+import com.github.nkzawa.socketio.client.IO;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -232,12 +233,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void loginFailureLan(String username, String pass) {
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB, "");
         SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = Constant.HTTP + sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "") + ":" + port;
         internet = internet.replaceAll(" ", "");
-        if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").equals("")) {
+        if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").replace(" ","").equals("")) {
             loginFailureInternet(username, pass);
         }
         repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
@@ -248,6 +250,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     @Override
     public void loginFailureInternet(String username, String pass) {
+        IOTServiceClient.clear();
         SharedPreferences preferencesPort = getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB, "");
         SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
