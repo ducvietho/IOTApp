@@ -16,7 +16,6 @@ import com.example.ducvietho.iotapp.data.resource.remote.api.FloorRemoteDataReso
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.screen.floor.FloorFragment;
 import com.example.ducvietho.iotapp.util.Constant;
-import com.github.nkzawa.socketio.client.IO;
 import com.nshmura.recyclertablayout.RecyclerTabLayout;
 
 import java.util.List;
@@ -102,6 +101,7 @@ public class HomeFragment extends Fragment {
         }
         mViewPager.setAdapter(viewPagerAdapter);
         mTabLayout.setUpWithViewPager(mViewPager);
+//        mViewPager.setOffscreenPageLimit(floors.size());
 //        for (int i = 0; i < floors.size(); i++) {
 //            //noinspection ConstantConditions
 //            TextView tv=(TextView)LayoutInflater.from(v.getContext()).inflate(R.layout.custom_tab,null);

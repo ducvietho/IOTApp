@@ -10,11 +10,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -29,7 +26,6 @@ import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Image;
-import com.example.ducvietho.iotapp.data.model.Login;
 import com.example.ducvietho.iotapp.data.model.LoginResponse;
 import com.example.ducvietho.iotapp.data.resource.remote.LoginDataRepository;
 import com.example.ducvietho.iotapp.data.resource.remote.api.ImageRemoteDataResource;
@@ -41,7 +37,6 @@ import com.example.ducvietho.iotapp.util.DialogLoading;
 import com.example.ducvietho.iotapp.util.DialogSetting;
 import com.example.ducvietho.iotapp.util.OnChoseImage;
 import com.example.ducvietho.iotapp.util.UserManager;
-import com.github.nkzawa.socketio.client.IO;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -152,11 +147,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                                 final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                                         .this);
                                 presenter.loginUserDomain(mUserName.getText().toString(), mPass.getText().toString());
+                            }else {
+                                repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
+                                final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
+                                        .this);
+                                presenter.loginUserInternet(mUserName.getText().toString(), mPass.getText().toString());
                             }
-                            repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
-                            final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
-                                    .this);
-                            presenter.loginUserInternet(mUserName.getText().toString(), mPass.getText().toString());
+
                         } else {
                             imageDataRepository = (new ImageRemoteDataResource(IOTServiceClient.getInstance(lan)));
                             repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(lan)));
@@ -241,11 +238,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         internet = internet.replaceAll(" ", "");
         if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").replace(" ","").equals("")) {
             loginFailureInternet(username, pass);
+        }else{
+            repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
+            final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
+                    .this);
+            presenter.loginUserInternet(username, pass);
         }
-        repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
-        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
-                .this);
-        presenter.loginUserInternet(username, pass);
+
     }
 
     @Override
@@ -256,14 +255,20 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
         String domain = Constant.HTTP + sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "") + ":" + port;
         domain = domain.replaceAll(" ", "");
-        repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
-        final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
-                .this);
-        presenter.loginUserDomain(username, pass);
+        if(sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "").replace(" ","").equals("")){
+            loginFailure("");
+        }else {
+            repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
+            final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
+                    .this);
+            presenter.loginUserDomain(username, pass);
+        }
+
     }
 
     @Override
     public void loginFailure(String message) {
+        mLoading.dismissDialog();
         Toast.makeText(LoginActivity.this, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
     }
 

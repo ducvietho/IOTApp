@@ -15,7 +15,12 @@ public class Constant {
     public static final String PREFS_LAN = "lan";
     public static final String PREFS_INTERNET = "internet";
     public static final String PREFS_DOMAIN = "domain";
-
+    public static final String PRES_ALARM_EQUI = "alarm_state_";
+    public static final String PRES_ALARM_GROUP = "alarm_group_";
+    public static final String EXTRA_ALARM_ON_EQUI = "alarm_on_equi";
+    public static final String EXTRA_ALARM_OFF_EQUI = "alarm_off_equi";
+    public static final String EXTRA_ALARM_ON_GROUP = "alarm_on_group";
+    public static final String EXTRA_ALARM_OFF_GROUP = "alarm_on_group";
     public static final String PREFS_PORT_WEB = "port_web";
     public static final String PREFS_PORT_SOCKET = "port_socket";
     public static final String EXTRA_NAME_HOUSE = "house";

@@ -136,7 +136,7 @@ public class DialogSetting {
         edSocket.setText(portSocket);
         UserManager userManager = new UserManager(mContext);
         mName.setText(userManager.getUserDetail().getName());
-        Login login = new UserManager(mContext).getUserDetail();
+        final Login login = new UserManager(mContext).getUserDetail();
         SharedPreferences preferencesImage  = mContext.getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE);
         String path = preferencesImage.getString(Constant.EXTRA_IMAGE,null);
         if(path!=null){
@@ -162,6 +162,7 @@ public class DialogSetting {
         mComplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 dialog.dismiss();
                 SharedPreferences.Editor editorHouse = mContext.getSharedPreferences(Constant.PREFS_NAME_HOUSE,
                         MODE_PRIVATE).edit();
@@ -188,12 +189,16 @@ public class DialogSetting {
                 editorPortSocket.putString(Constant.EXTRA_PORT_SOCKET,edSocket.getText().toString());
                 editorPortSocket.commit();
                 IOTServiceClient.clear();
-                Intent i = mContext.getPackageManager()
-                        .getLaunchIntentForPackage( mContext.getPackageName() );
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if(login.getToken()!=null){
+                    Intent i = mContext.getPackageManager()
+                            .getLaunchIntentForPackage( mContext.getPackageName() );
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    mContext.startActivity(i);
+                    ((Activity)mContext).finish();
+                }
 
-                mContext.startActivity(i);
-                ((Activity)mContext).finish();
+
+
             }
         });
         mScreen.setOnTouchListener(new View.OnTouchListener() {

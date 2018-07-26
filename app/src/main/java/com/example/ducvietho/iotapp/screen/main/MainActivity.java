@@ -22,14 +22,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.example.ducvietho.iotapp.R;
@@ -48,7 +46,6 @@ import java.io.File;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
-import jp.wasabeef.blurry.Blurry;
 
 public class MainActivity extends AppCompatActivity implements OnChoseImage,View.OnClickListener {
     public static final int PICK_IMAGE = 100;
@@ -84,8 +81,8 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
 
     public Intent getIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 

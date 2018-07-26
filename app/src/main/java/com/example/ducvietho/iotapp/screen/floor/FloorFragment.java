@@ -1,8 +1,10 @@
 package com.example.ducvietho.iotapp.screen.floor;
 
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,7 +15,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
@@ -81,15 +82,15 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         SharedPreferences preferencesPortSocket = v.getContext().getSharedPreferences(Constant.PREFS_PORT_SOCKET,
                 MODE_PRIVATE);
         String portSocket = preferencesPortSocket.getString(Constant.EXTRA_PORT_SOCKET,"");
-        SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
+        final SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
                 MODE_PRIVATE);
         String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null)+":"+portSocket;
         lan = lan.replaceAll(" ","");
-        SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
+        final SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
                 MODE_PRIVATE);
         String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+portSocket;
         internet = internet.replaceAll(" ","");
-        SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
+        final SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
                 MODE_PRIVATE);
         String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
         domain = domain.replaceAll(" ","");
@@ -225,7 +226,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                 mSocket.connect();
             }
         }
-        Toast.makeText(v.getContext(),"Connect socket:"+String.valueOf(mSocket.connected()),Toast.LENGTH_LONG).show();
+        //Toast.makeText(v.getContext(),"Connect socket:"+String.valueOf(mSocket.connected()),Toast.LENGTH_LONG).show();
         idFloor = getArguments().getInt(EXTRA_POS, 0);
         SharedPreferences preferencesPort = v.getContext().getSharedPreferences(Constant.PREFS_PORT_WEB, MODE_PRIVATE);
         String port = preferencesPort.getString(Constant.EXTRA_PORT_WEB,"");
@@ -257,13 +258,14 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         }
 
         mSocket.on("response", onTurnEquip);
+
         return v;
     }
 
     private Emitter.Listener onTurnEquip = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            getActivity().runOnUiThread(new Runnable() {
+            ((Activity)v.getContext()).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     String infor;
@@ -302,6 +304,158 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     };
 
     @Override
+    public void onStart() {
+        super.onStart();
+        SharedPreferences preferencesPortSocket = v.getContext().getSharedPreferences(Constant.PREFS_PORT_SOCKET,
+                MODE_PRIVATE);
+        String portSocket = preferencesPortSocket.getString(Constant.EXTRA_PORT_SOCKET,"");
+        final SharedPreferences sharedPreferencesLan = v.getContext().getSharedPreferences(Constant.PREFS_LAN,
+                MODE_PRIVATE);
+        String lan = Constant.HTTP+sharedPreferencesLan.getString(Constant.EXTRA_LAN, null)+":"+portSocket;
+        lan = lan.replaceAll(" ","");
+        final SharedPreferences sharedPreferencesInternet = v.getContext().getSharedPreferences(Constant.PREFS_INTERNET,
+                MODE_PRIVATE);
+        String internet = Constant.HTTP+sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)+":"+portSocket;
+        internet = internet.replaceAll(" ","");
+        final SharedPreferences sharedPreferencesDomain = v.getContext().getSharedPreferences(Constant.PREFS_DOMAIN,
+                MODE_PRIVATE);
+        String domain = Constant.HTTP+sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null)+":"+portSocket;
+        domain = domain.replaceAll(" ","");
+        if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, null) != null) {
+            {
+                try {
+                    mSocket = IO.socket(lan);
+
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                }
+            }
+            mSocket.connect();
+            if (!mSocket.connected()) {
+                {
+                    if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                        try {
+                            mSocket = IO.socket(internet);
+
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            mSocket.connect();
+            if (!mSocket.connected()) {
+                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                    {
+                        try {
+                            mSocket = IO.socket(domain);
+
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+            mSocket.connect();
+        } else {
+            {
+                if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                    try {
+                        mSocket = IO.socket(internet);
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+            mSocket.connect();
+            if (!mSocket.connected()) {
+                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                    {
+                        try {
+                            mSocket = IO.socket(domain);
+
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+            mSocket.connect();
+        }
+        if(!mSocket.connected()){
+            if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, null) != null) {
+                {
+                    try {
+                        mSocket = IO.socket(lan);
+
+                    } catch (URISyntaxException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mSocket.connect();
+                if (!mSocket.connected()) {
+                    {
+                        if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                            try {
+                                mSocket = IO.socket(internet);
+
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+                mSocket.connect();
+                if (!mSocket.connected()) {
+                    if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                        {
+                            try {
+                                mSocket = IO.socket(domain);
+
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                }
+                mSocket.connect();
+            } else {
+                {
+                    if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                        try {
+                            mSocket = IO.socket(internet);
+
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+                mSocket.connect();
+                if (!mSocket.connected()) {
+                    if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                        {
+                            try {
+                                mSocket = IO.socket(domain);
+
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                }
+                mSocket.connect();
+            }
+        }
+    }
+
+    @Override
     public void onClick(final Equipment equipment, final ImageView imageView, final TextView textView) {
 
         try {
@@ -316,7 +470,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        mSocket.disconnect();
     }
 
     public void getAllEquipByFloorSuccess(List<Equipment> equipments) {
@@ -338,7 +492,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         equip.setIdFloor(equipment.getIdFloor());
         equip.setIconOff(equipment.getIconOff());
         equip.setIconOn(equipment.getIconOn());
-        if (equip.getState() == 0) {
+        if (equipment.getState() == 0) {
             equip.setState(1);
         } else {
             equip.setState(0);
@@ -413,7 +567,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
 
     public void getAllEquipByFloorFailure(String message) {
         mProgressBar.setVisibility(View.GONE);
-         Toast.makeText(v.getContext(), "Lỗi kết nối !" , Toast.LENGTH_LONG).show();
+         //Toast.makeText(v.getContext(), "Lỗi kết nối !" , Toast.LENGTH_LONG).show();
     }
 
 }

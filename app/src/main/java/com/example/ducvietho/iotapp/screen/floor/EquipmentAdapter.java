@@ -2,13 +2,9 @@ package com.example.ducvietho.iotapp.screen.floor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Environment;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -16,19 +12,14 @@ import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
-import com.example.ducvietho.iotapp.data.model.Image;
-import com.example.ducvietho.iotapp.util.AlarmEquip;
 import com.example.ducvietho.iotapp.util.CacheImage;
 import com.example.ducvietho.iotapp.util.Constant;
-import com.example.ducvietho.iotapp.util.DialogAlarm;
 import com.example.ducvietho.iotapp.util.DialogSettingAlarm;
 import com.example.ducvietho.iotapp.util.OnCLickItem;
-import com.example.ducvietho.iotapp.util.OnLongClickItem;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -3,7 +3,6 @@ package com.example.ducvietho.iotapp.screen.group;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Group;
-import com.example.ducvietho.iotapp.util.AlarmGroup;
 import com.example.ducvietho.iotapp.util.CacheImage;
 import com.example.ducvietho.iotapp.util.Constant;
 import com.example.ducvietho.iotapp.util.OnClickItemGroup;

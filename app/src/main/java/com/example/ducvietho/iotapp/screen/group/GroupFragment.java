@@ -1,5 +1,6 @@
 package com.example.ducvietho.iotapp.screen.group;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,9 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
-import com.example.ducvietho.iotapp.data.model.Equipment;
 import com.example.ducvietho.iotapp.data.model.Group;
-import com.example.ducvietho.iotapp.data.model.Response;
 import com.example.ducvietho.iotapp.data.resource.remote.api.GroupRemoteDataResource;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
 import com.example.ducvietho.iotapp.util.Constant;
@@ -42,7 +41,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
-
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -182,9 +180,10 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
     private Emitter.Listener onTurnGroup = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            GroupFragment.this.getActivity().runOnUiThread(new Runnable() {
+            ((Activity)v.getContext()).runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+
                     JSONObject jsonObject = (JSONObject) args[0];
                     try {
                         JSONObject groupInfor = (JSONObject)jsonObject.getJSONObject("data");
@@ -230,8 +229,8 @@ public class GroupFragment extends Fragment implements OnLongClickItem<Group>, O
         group1.setName(group.getName());
         group1.setIconOff(group.getIconOff());
         group1.setId(group.getId());
-        group.setIconOn(group.getIconOn());
-        if(group1.getState()==0){
+        group1.setIconOn(group.getIconOn());
+        if(group.getState()==0){
             group1.setState(1);
         }else {
             group1.setState(0);

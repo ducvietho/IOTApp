@@ -27,7 +27,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile ('com.github.nkzawa:socket.io-client:0.3.0'){
+        exclude group: 'org.json', module: 'json'
+    }
     //noinspection GradleCompatible
     //noinspection GradleCompatible
     //noinspection GradleCompatible
