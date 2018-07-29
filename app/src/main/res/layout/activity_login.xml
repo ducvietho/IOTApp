@@ -20,7 +20,7 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_logo"
-            android:background="@drawable/logo"
+            android:background="@drawable/logo_ultraw"
             android:layout_marginLeft="@dimen/_40dp"
             android:layout_marginRight="@dimen/_40dp"
             android:layout_marginBottom="@dimen/_40dp"

@@ -140,14 +140,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                             String internet = Constant.HTTP + sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "") + ":" + port;
                             internet = internet.replaceAll(" ", "");
                             if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").equals("")) {
-                                String domain = Constant.HTTP + sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN,
-                                        "") + ":" + port;
+                                String domain = Constant.HTTP + sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "") + ":" + port;
                                 domain = domain.replaceAll(" ", "");
                                 repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
                                 final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                                         .this);
                                 presenter.loginUserDomain(mUserName.getText().toString(), mPass.getText().toString());
-                            }else {
+                            } else {
                                 repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
                                 final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                                         .this);
@@ -180,6 +179,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             @Override
             public void onClick(View v) {
                 new DialogSetting(LoginActivity.this, LoginActivity.this).showDialog();
+            }
+        });
+        mTextViewForget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("http://www.stackoverflow.com/"));
+                startActivity(viewIntent);
             }
         });
     }
@@ -218,12 +224,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             startActivity(new MainActivity().getIntent(LoginActivity.this));
             new UserManager(LoginActivity.this).createUserLoginSession(login.getLogin());
         } else {
-            if (login.getStatus() > 0 && login.getStatus() != 9999) {
-                Toast.makeText(LoginActivity.this, "Mật khẩu hoặc tài khoản không đúng !", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(LoginActivity.this, "Lỗi kết nối !", Toast.LENGTH_LONG).show();
-            }
-
+            mLoading.dismissDialog();
+            Toast.makeText(LoginActivity.this, "Mật khẩu hoặc tài khoản không đúng !", Toast.LENGTH_LONG).show();
         }
 
     }
@@ -236,9 +238,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         SharedPreferences sharedPreferencesInternet = getSharedPreferences(Constant.PREFS_INTERNET, MODE_PRIVATE);
         String internet = Constant.HTTP + sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "") + ":" + port;
         internet = internet.replaceAll(" ", "");
-        if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").replace(" ","").equals("")) {
+        if (sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, "").replace(" ", "").equals("")) {
             loginFailureInternet(username, pass);
-        }else{
+        } else {
             repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(internet)));
             final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                     .this);
@@ -255,9 +257,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         SharedPreferences sharedPreferencesDomain = getSharedPreferences(Constant.PREFS_DOMAIN, MODE_PRIVATE);
         String domain = Constant.HTTP + sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "") + ":" + port;
         domain = domain.replaceAll(" ", "");
-        if(sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "").replace(" ","").equals("")){
+        if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, "").replace(" ", "").equals("")) {
             loginFailure("");
-        }else {
+        } else {
             repository = new LoginDataRepository(new LoginRemoteDataResource(IOTServiceClient.getInstance(domain)));
             final LoginContract.Presenter presenter = new LoginPresenter(imageDataRepository, repository, LoginActivity
                     .this);

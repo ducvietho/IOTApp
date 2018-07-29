@@ -256,7 +256,150 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                 }
             }));
         }
+        final Handler handler = new Handler();
+        final String finalLan = lan;
+        final String finalInternet = internet;
+        final String finalDomain = domain;
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(!mSocket.connected()){
+                    if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, null) != null) {
+                        {
+                            try {
+                                mSocket = IO.socket(finalLan);
 
+                            } catch (URISyntaxException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        mSocket.connect();
+                        if (!mSocket.connected()) {
+                            {
+                                if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                                    try {
+                                        mSocket = IO.socket(finalInternet);
+
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+                        }
+                        mSocket.connect();
+                        if (!mSocket.connected()) {
+                            if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                                {
+                                    try {
+                                        mSocket = IO.socket(finalDomain);
+
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                        }
+                        mSocket.connect();
+                    } else {
+                        {
+                            if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                                try {
+                                    mSocket = IO.socket(finalInternet);
+
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+                        mSocket.connect();
+                        if (!mSocket.connected()) {
+                            if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                                {
+                                    try {
+                                        mSocket = IO.socket(finalDomain);
+
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
+
+                        }
+                        mSocket.connect();
+                    }
+                    if(!mSocket.connected()){
+                        if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, null) != null) {
+                            {
+                                try {
+                                    mSocket = IO.socket(finalLan);
+
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            mSocket.connect();
+                            if (!mSocket.connected()) {
+                                {
+                                    if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                                        try {
+                                            mSocket = IO.socket(finalInternet);
+
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                            mSocket.connect();
+                            if (!mSocket.connected()) {
+                                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                                    {
+                                        try {
+                                            mSocket = IO.socket(finalDomain);
+
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                            }
+                            mSocket.connect();
+                        } else {
+                            {
+                                if(sharedPreferencesInternet.getString(Constant.EXTRA_INTERNET, null)!=null){
+                                    try {
+                                        mSocket = IO.socket(finalInternet);
+
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+                            }
+                            mSocket.connect();
+                            if (!mSocket.connected()) {
+                                if (sharedPreferencesDomain.getString(Constant.EXTRA_DOMAIN, null) != null) {
+                                    {
+                                        try {
+                                            mSocket = IO.socket(finalDomain);
+
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+
+                            }
+                            mSocket.connect();
+                        }
+                    }
+                    handler.postDelayed(this,1000);
+                }
+            }
+        },1000);
         mSocket.on("response", onTurnEquip);
 
         return v;
