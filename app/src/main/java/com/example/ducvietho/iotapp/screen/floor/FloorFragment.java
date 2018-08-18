@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Equipment;
@@ -263,6 +264,7 @@ public class FloorFragment extends Fragment implements OnCLickItem {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                //Toast.makeText(getActivity(),"Connect socket!",Toast.LENGTH_LONG).show();
                 if(!mSocket.connected()){
                     if (sharedPreferencesLan.getString(Constant.EXTRA_LAN, null) != null) {
                         {
@@ -396,10 +398,10 @@ public class FloorFragment extends Fragment implements OnCLickItem {
                             mSocket.connect();
                         }
                     }
-                    handler.postDelayed(this,1000);
+                    handler.postDelayed(this,500);
                 }
             }
-        },1000);
+        },500);
         mSocket.on("response", onTurnEquip);
 
         return v;
