@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -81,6 +82,11 @@ public class DialogInfor {
         mWeb.setTypeface(tf2);
         mVersionContent.setTypeface(tf2);
         mGmail.setTypeface(tf2);
+        SharedPreferences sharedPreferencesMac = mContext.getSharedPreferences(Constant.PRE_MAC,MODE_PRIVATE);
+        String mac = sharedPreferencesMac.getString(Constant.EXTRA_MAC,"");
+        if(!TextUtils.isEmpty(mac)){
+            mMacId.setText(mac);
+        }
         SharedPreferences prefHouse = mContext.getSharedPreferences(Constant.PREFS_NAME_HOUSE, MODE_PRIVATE);
         String nameHouse = prefHouse.getString(Constant.EXTRA_NAME_HOUSE, null);
         mNameHouse.setText(nameHouse);

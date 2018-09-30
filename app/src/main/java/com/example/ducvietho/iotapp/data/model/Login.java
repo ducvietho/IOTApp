@@ -11,9 +11,18 @@ public class Login {
     private String mName;
     @SerializedName("token_user")
     private String mToken;
-
+    @SerializedName("mac")
+    private String mMac;
     public Login() {
 
+    }
+
+    public String getMac() {
+        return mMac;
+    }
+
+    public void setMac(String mac) {
+        mMac = mac;
     }
 
     public String getName() {

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -215,7 +217,10 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
         SharedPreferences preferencesImage = getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE);
         String path = preferencesImage.getString(Constant.EXTRA_IMAGE, null);
         if (path != null) {
-            Picasso.with(MainActivity.this).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(imageView);
+            if(decodeFile(path)!= null){
+                imageView.setImageBitmap(decodeFile(path));
+            }
+
         }
 
         Typeface font = Typeface.createFromAsset(getAssets(), "fonts/UTM Penumbra.ttf");
@@ -305,6 +310,30 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         }
+
+    }
+    public Bitmap decodeFile(String path) {
+        try {
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(path, o);
+            // The new size we want to scale to
+            final int REQUIRED_SIZE = 70;
+
+            // Find the correct scale value. It should be the power of 2.
+            int scale = 1;
+            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE)
+                scale *= 2;
+
+            // Decode with inSampleSize
+            BitmapFactory.Options o2 = new BitmapFactory.Options();
+            o2.inSampleSize = scale;
+            return BitmapFactory.decodeFile(path, o2);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
 
     }
 }

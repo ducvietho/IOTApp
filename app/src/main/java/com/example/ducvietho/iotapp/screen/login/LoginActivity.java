@@ -2,6 +2,7 @@ package com.example.ducvietho.iotapp.screen.login;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -226,6 +227,9 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
                 editor.putString(Constant.EXTRA_PASS, mPass.getText().toString());
                 editor.commit();
             }
+            SharedPreferences.Editor editor = getSharedPreferences(Constant.PRE_MAC, Context.MODE_PRIVATE).edit();
+            editor.putString(Constant.EXTRA_MAC,login.getLogin().getMac());
+            editor.commit();
 
             startActivity(new MainActivity().getIntent(LoginActivity.this));
             new UserManager(LoginActivity.this).createUserLoginSession(login.getLogin());
