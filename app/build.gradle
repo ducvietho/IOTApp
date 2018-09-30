@@ -5,8 +5,8 @@ android {
     buildToolsVersion "26.0.2"
     defaultConfig {
         applicationId "com.example.ducvietho.iotapp"
-        minSdkVersion 15
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -17,9 +17,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dexOptions {
-        javaMaxHeapSize "2g"
-    }
+
 }
 
 dependencies {
@@ -58,4 +56,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.github.zcweng:switch-button:0.0.3@aar'
+    compile 'com.github.darsh2:MultipleImageSelect:3474549'
+    compile 'id.zelory:compressor:2.1.0'
 }

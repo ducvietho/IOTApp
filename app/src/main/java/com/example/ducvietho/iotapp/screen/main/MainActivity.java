@@ -1,17 +1,22 @@
 package com.example.ducvietho.iotapp.screen.main;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -49,6 +54,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity implements OnChoseImage,View.OnClickListener {
     public static final int PICK_IMAGE = 100;
+    public static final int REQUEST_PERMISSION = 101;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.drawer)
@@ -81,8 +87,6 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
 
     public Intent getIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         return intent;
     }
 
@@ -146,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
             editor.putString(Constant.EXTRA_IMAGE, path);
             editor.commit();
             new DialogSetting(MainActivity.this, MainActivity.this).showDialog();
-
         }
     }
 
@@ -178,7 +181,20 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
 
 
     }
-
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+            } else {
+                // User refused to grant permission.
+            }
+        }
+    }
     private void setUpToolbar() {
 
         if (mToolbar != null) {
@@ -278,9 +294,17 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
 
     @Override
     public void onChoseImage() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    REQUEST_PERMISSION);
+            return;
+        }else{
+            Intent intent = new Intent();
+            intent.setType("image/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
+        }
+
     }
 }
