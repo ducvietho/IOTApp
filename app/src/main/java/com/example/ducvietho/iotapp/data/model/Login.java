@@ -11,7 +11,7 @@ public class Login {
     private String mName;
     @SerializedName("token_user")
     private String mToken;
-    @SerializedName("mac")
+    @SerializedName("max")
     private String mMac;
     public Login() {
 

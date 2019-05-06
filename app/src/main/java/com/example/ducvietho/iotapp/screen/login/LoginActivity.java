@@ -191,7 +191,8 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         mTextViewForget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse("http://www.stackoverflow.com/"));
+                Intent viewIntent = new Intent("android.intent.action.VIEW",
+                        Uri.parse("http://superfastserver.ddns.net:8080/volumn/email-reset-pass"));
                 startActivity(viewIntent);
             }
         });

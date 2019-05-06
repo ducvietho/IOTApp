@@ -219,6 +219,8 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
         if (path != null) {
             if(decodeFile(path)!= null){
                 imageView.setImageBitmap(decodeFile(path));
+            }else {
+                Picasso.with(this).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(imageView);
             }
 
         }

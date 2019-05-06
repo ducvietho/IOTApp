@@ -143,12 +143,17 @@ public class DialogSetting {
         SharedPreferences preferencesImage  = mContext.getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE);
         String path = preferencesImage.getString(Constant.EXTRA_IMAGE,null);
         if(!TextUtils.isEmpty(path)){
-            mAvatar.setImageBitmap(decodeFile(path));
+            if(decodeFile(path)!=null){
+                mAvatar.setImageBitmap(decodeFile(path));
+            }else {
+                Picasso.with(mContext).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(mAvatar);
+            }
+
         }
 
-        if(TextUtils.isEmpty(login.getToken())){
-            mLayoutUser.setVisibility(View.GONE);
-        }
+//        if(TextUtils.isEmpty(login.getToken())){
+//            mLayoutUser.setVisibility(View.GONE);
+//        }
         mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

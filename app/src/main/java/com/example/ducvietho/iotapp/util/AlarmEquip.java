@@ -94,7 +94,7 @@ public class AlarmEquip {
         myIntent.putExtra(Constant.EXTRA_ID_FLOOR, equipment.getIdFloor());
         myIntent.putExtra(Constant.EXTRA_TIME, time);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, 0);
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),1*60*60*100, pendingIntent);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),7*24*60*60*1000, pendingIntent);
 
     }
 
@@ -113,7 +113,7 @@ public class AlarmEquip {
         myIntent.putExtra(Constant.EXTRA_ID_FLOOR, equipment.getIdFloor());
         myIntent.putExtra(Constant.EXTRA_TIME, time);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, myIntent, 0);
-        manager.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),1*60*60*100, pendingIntent);
+        manager.setRepeating(AlarmManager.RTC_WAKEUP, cal_alarm.getTimeInMillis(),7*24*60*60*1000, pendingIntent);
 
     }
 }
