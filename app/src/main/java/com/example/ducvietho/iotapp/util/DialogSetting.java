@@ -20,14 +20,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Login;
 import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceClient;
-import com.example.ducvietho.iotapp.screen.login.LoginActivity;
-import com.example.ducvietho.iotapp.screen.main.MainActivity;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -151,9 +148,9 @@ public class DialogSetting {
 
         }
 
-//        if(TextUtils.isEmpty(login.getToken())){
-//            mLayoutUser.setVisibility(View.GONE);
-//        }
+        if(TextUtils.isEmpty(login.getToken())){
+            mLayoutUser.setVisibility(View.GONE);
+        }
         mLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

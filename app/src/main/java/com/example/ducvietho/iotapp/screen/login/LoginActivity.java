@@ -223,17 +223,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void loginSuccess(LoginResponse login) {
         if (login.getStatus() == 200) {
             if (mCheckBox.isChecked() == true) {
-                SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_ACCOUNT, MODE_PRIVATE).edit();
-                editor.putString(Constant.EXTRA_USER, mUserName.getText().toString());
-                editor.putString(Constant.EXTRA_PASS, mPass.getText().toString());
-                editor.commit();
+                new UserManager(LoginActivity.this).createUserLoginSession(login.getLogin());
             }
             SharedPreferences.Editor editor = getSharedPreferences(Constant.PRE_MAC, Context.MODE_PRIVATE).edit();
             editor.putString(Constant.EXTRA_MAC,login.getLogin().getMac());
             editor.commit();
 
             startActivity(new MainActivity().getIntent(LoginActivity.this));
-            new UserManager(LoginActivity.this).createUserLoginSession(login.getLogin());
+
         } else {
             mLoading.dismissDialog();
             Toast.makeText(LoginActivity.this, "Mật khẩu hoặc tài khoản không đúng !", Toast.LENGTH_LONG).show();

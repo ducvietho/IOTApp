@@ -19,7 +19,7 @@
         android:focusableInTouchMode="true">
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/height_logo"
+            android:layout_height="wrap_content"
             android:background="@drawable/logo_ultraw"
             android:layout_marginLeft="@dimen/_40dp"
             android:layout_marginRight="@dimen/_40dp"
@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             card_view:cardCornerRadius="6dp"
             android:id="@+id/form_login"
+            card_view:cardElevation="0dp"
             android:layout_marginLeft="@dimen/_10dp"
             android:layout_marginRight="@dimen/_10dp"
             android:layout_below="@+id/imge_logo"
