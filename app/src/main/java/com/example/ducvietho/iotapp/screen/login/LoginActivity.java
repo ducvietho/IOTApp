@@ -192,7 +192,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             @Override
             public void onClick(View v) {
                 Intent viewIntent = new Intent("android.intent.action.VIEW",
-                        Uri.parse("http://superfastserver.ddns.net:8080/volumn/email-reset-pass"));
+                        Uri.parse("http://superfastserver.ddns.net:8081/volumn/email-reset-pass"));
                 startActivity(viewIntent);
             }
         });
