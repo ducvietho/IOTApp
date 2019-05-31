@@ -14,7 +14,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -27,6 +29,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -51,12 +54,13 @@ import com.example.ducvietho.iotapp.util.UserManager;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity implements OnChoseImage,View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnChoseImage, View.OnClickListener {
     public static final int PICK_IMAGE = 100;
     public static final int REQUEST_PERMISSION = 101;
     @BindView(R.id.toolbar)
@@ -99,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         Typeface tf1 = Typeface.createFromAsset(getAssets(), "fonts/UTM PenumbraBold.ttf");
         mHome.setTypeface(tf1);
         SharedPreferences prefHouse = getSharedPreferences(Constant.PREFS_NAME_HOUSE, MODE_PRIVATE);
@@ -129,9 +134,10 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
         layoutFloor.setOnClickListener(this);
         layoutGroup.setOnClickListener(this);
     }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.layout_group:
                 mImgScene.setVisibility(View.VISIBLE);
                 mImgFloor.setVisibility(View.GONE);
@@ -144,22 +150,15 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
                 break;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            cursor.close();
+            String path = getFileName(selectedImage);
             SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE).edit();
-            editor.putString(Constant.EXTRA_IMAGE, picturePath);
+            editor.putString(Constant.EXTRA_IMAGE, path);
             editor.commit();
             new DialogSetting(MainActivity.this, MainActivity.this).showDialog();
         }
@@ -193,20 +192,23 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
 
 
     }
+
     @Override
     public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Intent i = new Intent(
-                        Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(i, PICK_IMAGE);
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
             } else {
                 // User refused to grant permission.
             }
         }
     }
+
     private void setUpToolbar() {
 
         if (mToolbar != null) {
@@ -227,11 +229,9 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
         SharedPreferences preferencesImage = getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE);
         String path = preferencesImage.getString(Constant.EXTRA_IMAGE, null);
         if (path != null) {
-            if(decodeFile(path)!= null){
-                imageView.setImageBitmap(decodeFile(path));
-            }else {
-                Picasso.with(this).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(imageView);
-            }
+
+            Picasso.with(this).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(imageView);
+
 
         }
 
@@ -316,36 +316,37 @@ public class MainActivity extends AppCompatActivity implements OnChoseImage,View
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_PERMISSION);
             return;
-        }else{
+        } else {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);
+            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE);
         }
 
     }
-    public Bitmap decodeFile(String path) {
-        try {
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, o);
-            // The new size we want to scale to
-            final int REQUIRED_SIZE = 70;
 
-            // Find the correct scale value. It should be the power of 2.
-            int scale = 1;
-            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE)
-                scale *= 2;
+    public String getFileName(Uri uri) {
+        String wholeID = DocumentsContract.getDocumentId(uri);
 
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeFile(path, o2);
-        } catch (Throwable e) {
-            e.printStackTrace();
+        // Split at colon, use second item in the array
+        String id = wholeID.split(":")[1];
+        String[] column = { MediaStore.Images.Media.DATA };
+        // where id is equal to
+        String sel = MediaStore.Images.Media._ID + "=?";
+
+        Cursor cursor = getContentResolver().
+                query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,column, sel, new String[]{ id }, null);
+
+        String filePath = "";
+        int columnIndex = cursor != null ? cursor.getColumnIndex(column[0]) : 0;
+        if (cursor != null && cursor.moveToFirst()) {
+            filePath = cursor.getString(columnIndex);
         }
-        return null;
-
+        if (cursor != null) {
+            cursor.close();
+        }
+        return filePath;
     }
 }

@@ -203,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             Uri selectedImage = data.getData();
-            String path = selectedImage.getPath();
+            String path = selectedImage.toString();
             SharedPreferences.Editor editor = getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE).edit();
             editor.putString(Constant.EXTRA_IMAGE, path);
             editor.commit();
@@ -222,11 +222,11 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     @Override
     public void loginSuccess(LoginResponse login) {
         if (login.getStatus() == 200) {
-            if (mCheckBox.isChecked() == true) {
-                new UserManager(LoginActivity.this).createUserLoginSession(login.getLogin());
-            }
+
+            new UserManager(LoginActivity.this).createUserLoginSession(login.getLogin(), mCheckBox.isChecked());
+
             SharedPreferences.Editor editor = getSharedPreferences(Constant.PRE_MAC, Context.MODE_PRIVATE).edit();
-            editor.putString(Constant.EXTRA_MAC,login.getLogin().getMac());
+            editor.putString(Constant.EXTRA_MAC, login.getLogin().getMac());
             editor.commit();
 
             startActivity(new MainActivity().getIntent(LoginActivity.this));
@@ -314,6 +314,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             }
         }
     }
+
     private void requestPermission(List<Image> list) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
@@ -385,7 +386,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_PERMISSION);
             return;
-        }else{
+        } else {
             Intent intent = new Intent();
             intent.setType("image/*");
             intent.setAction(Intent.ACTION_GET_CONTENT);

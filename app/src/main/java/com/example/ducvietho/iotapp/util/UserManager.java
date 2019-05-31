@@ -28,9 +28,11 @@ public class UserManager {
         editor = sharedPreferences.edit();
     }
 
-    public void createUserLoginSession(Login login) {
+    public void createUserLoginSession(Login login, boolean check) {
         editor.putBoolean(IS_USER_LOGIN, true);
-        editor.putString(KEY_TOKEN, login.getToken());
+        if(check){
+            editor.putString(KEY_TOKEN, login.getToken());
+        }
         editor.putString(USER_NAME, login.getName());
         editor.commit();
     }

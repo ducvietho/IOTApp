@@ -10,6 +10,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.ducvietho.iotapp.R;
 import com.example.ducvietho.iotapp.data.model.Login;
@@ -28,6 +32,7 @@ import com.example.ducvietho.iotapp.data.resource.remote.api.service.IOTServiceC
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,14 +97,14 @@ public class DialogSetting {
         mImage = image;
     }
 
-    public void showDialog(){
+    public void showDialog() {
         final Dialog dialog = new Dialog(mContext);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_setting);
-        ButterKnife.bind(this,dialog);
-        Typeface tf = Typeface.createFromAsset(mContext.getAssets(),"fonts/UTM Penumbra.ttf");
-        Typeface tf1 = Typeface.createFromAsset(mContext.getAssets(),"fonts/UTM PenumbraBold.ttf");
-        Typeface tf2 = Typeface.createFromAsset(mContext.getAssets(),"fonts/UTM Avo.ttf");
+        ButterKnife.bind(this, dialog);
+        Typeface tf = Typeface.createFromAsset(mContext.getAssets(), "fonts/UTM Penumbra.ttf");
+        Typeface tf1 = Typeface.createFromAsset(mContext.getAssets(), "fonts/UTM PenumbraBold.ttf");
+        Typeface tf2 = Typeface.createFromAsset(mContext.getAssets(), "fonts/UTM Avo.ttf");
         mSetting.setTypeface(tf1);
         mComplete.setTypeface(tf);
         mHouse.setTypeface(tf);
@@ -137,18 +142,14 @@ public class DialogSetting {
         UserManager userManager = new UserManager(mContext);
         mName.setText(userManager.getUserDetail().getName());
         final Login login = new UserManager(mContext).getUserDetail();
-        SharedPreferences preferencesImage  = mContext.getSharedPreferences(Constant.PREFS_IMAGE,MODE_PRIVATE);
-        String path = preferencesImage.getString(Constant.EXTRA_IMAGE,null);
-        if(!TextUtils.isEmpty(path)){
-            if(decodeFile(path)!=null){
-                mAvatar.setImageBitmap(decodeFile(path));
-            }else {
-                Picasso.with(mContext).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(mAvatar);
-            }
+        SharedPreferences preferencesImage = mContext.getSharedPreferences(Constant.PREFS_IMAGE, MODE_PRIVATE);
+        String path = preferencesImage.getString(Constant.EXTRA_IMAGE, null);
 
+        if (!TextUtils.isEmpty(path)) {
+            Picasso.with(mContext).load(new File(path)).placeholder(R.drawable.ic_user_placeholder).into(mAvatar);
         }
 
-        if(TextUtils.isEmpty(login.getToken())){
+        if (TextUtils.isEmpty(login.getName())) {
             mLayoutUser.setVisibility(View.GONE);
         }
         mLayout.setOnClickListener(new View.OnClickListener() {
@@ -171,37 +172,36 @@ public class DialogSetting {
                 dialog.dismiss();
                 SharedPreferences.Editor editorHouse = mContext.getSharedPreferences(Constant.PREFS_NAME_HOUSE,
                         MODE_PRIVATE).edit();
-                editorHouse.putString(Constant.EXTRA_NAME_HOUSE,mEdHouse.getText().toString());
+                editorHouse.putString(Constant.EXTRA_NAME_HOUSE, mEdHouse.getText().toString());
                 editorHouse.commit();
                 SharedPreferences.Editor editorLan = mContext.getSharedPreferences(Constant.PREFS_LAN,
                         MODE_PRIVATE).edit();
-                editorLan.putString(Constant.EXTRA_LAN,mEdLan.getText().toString());
+                editorLan.putString(Constant.EXTRA_LAN, mEdLan.getText().toString());
                 editorLan.commit();
                 SharedPreferences.Editor editorInternet = mContext.getSharedPreferences(Constant.PREFS_INTERNET,
                         MODE_PRIVATE).edit();
-                editorInternet.putString(Constant.EXTRA_INTERNET,mEdInternet.getText().toString());
+                editorInternet.putString(Constant.EXTRA_INTERNET, mEdInternet.getText().toString());
                 editorInternet.commit();
                 SharedPreferences.Editor editorDomain = mContext.getSharedPreferences(Constant.PREFS_DOMAIN,
                         MODE_PRIVATE).edit();
-                editorDomain.putString(Constant.EXTRA_DOMAIN,mEdDomain.getText().toString());
+                editorDomain.putString(Constant.EXTRA_DOMAIN, mEdDomain.getText().toString());
                 editorDomain.commit();
                 SharedPreferences.Editor editorPortWeb = mContext.getSharedPreferences(Constant.PREFS_PORT_WEB,
                         MODE_PRIVATE).edit();
-                editorPortWeb.putString(Constant.EXTRA_PORT_WEB,edHttp.getText().toString());
+                editorPortWeb.putString(Constant.EXTRA_PORT_WEB, edHttp.getText().toString());
                 editorPortWeb.commit();
                 SharedPreferences.Editor editorPortSocket = mContext.getSharedPreferences(Constant.PREFS_PORT_SOCKET,
                         MODE_PRIVATE).edit();
-                editorPortSocket.putString(Constant.EXTRA_PORT_SOCKET,edSocket.getText().toString());
+                editorPortSocket.putString(Constant.EXTRA_PORT_SOCKET, edSocket.getText().toString());
                 editorPortSocket.commit();
                 IOTServiceClient.clear();
-                if(login.getToken()!=null){
+                if (login.getName() != null) {
                     Intent i = mContext.getPackageManager()
-                            .getLaunchIntentForPackage( mContext.getPackageName() );
+                            .getLaunchIntentForPackage(mContext.getPackageName());
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(i);
-                    ((Activity)mContext).finish();
+                    ((Activity) mContext).finish();
                 }
-
 
 
             }
@@ -209,10 +209,10 @@ public class DialogSetting {
         mScreen.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                InputMethodManager inputMethodManager = (InputMethodManager)((Activity)mContext).getSystemService
+                InputMethodManager inputMethodManager = (InputMethodManager) ((Activity) mContext).getSystemService
                         (Activity
-                        .INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(((Activity)mContext).getCurrentFocus().getWindowToken(), 0);
+                                .INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(((Activity) mContext).getCurrentFocus().getWindowToken(), 0);
                 return false;
             }
         });
@@ -221,28 +221,5 @@ public class DialogSetting {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
-    public Bitmap decodeFile(String path) {
-        try {
-            // Decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(path, o);
-            // The new size we want to scale to
-            final int REQUIRED_SIZE = 70;
 
-            // Find the correct scale value. It should be the power of 2.
-            int scale = 1;
-            while (o.outWidth / scale / 2 >= REQUIRED_SIZE && o.outHeight / scale / 2 >= REQUIRED_SIZE)
-                scale *= 2;
-
-            // Decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeFile(path, o2);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return null;
-
-    }
 }
