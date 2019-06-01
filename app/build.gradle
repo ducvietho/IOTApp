@@ -12,6 +12,15 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            storeFile file("C:\\Users\\Ho Duc Viet\\Desktop\\IOTApp\\iotapp.jks")
+            storePassword "123456"
+            keyAlias "iotapp"
+            keyPassword "123456"
+            v2SigningEnabled false
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
